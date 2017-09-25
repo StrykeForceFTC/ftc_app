@@ -53,12 +53,15 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  *
  * test test2ladedagftygcdfygcfng
  * test mscott
+ *
+ * test arush
  */
 
 @TeleOp(name="Tele Op 2017", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
 // @Disabled
 public class Tele_Op_2017 extends OpMode
 {
+    private Drive go = new Drive();
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftMotor = null;
@@ -109,10 +112,25 @@ public class Tele_Op_2017 extends OpMode
         telemetry.addData("Status", "Running: " + runtime.toString());
 
         // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
-        // leftMotor.setPower(-gamepad1.left_stick_y);
-        // rightMotor.setPower(-gamepad1.right_stick_y);
-        // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
 
+        //leftMotor.setPower(-gamepad1.left_stick_y);
+        //rightMotor.setPower(-gamepad1.right_stick_y);
+        if (gamepad1.right_stick_y>0) {
+        go.forward();
+
+        }
+        if (gamepad1.right_stick_y<0) {
+            go.backward();
+
+        }
+        if (gamepad1.right_stick_x>0) {
+            go.right();
+
+        }
+        if (gamepad1.right_stick_x<0) {
+            go.left();
+
+        }
 
         // Use gamepad Y & A raise and lower the arm
         if (gamepad1.a)
