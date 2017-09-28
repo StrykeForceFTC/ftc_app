@@ -104,13 +104,31 @@ public class Tele_Op_2017 extends OpMode
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
     @Override
-    public void loop() {
+    public void loop()
+    {
         telemetry.addData("Status", "Running: " + runtime.toString());
 
         // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
         // leftMotor.setPower(-gamepad1.left_stick_y);
         // rightMotor.setPower(-gamepad1.right_stick_y);
+        if (gamepad2.y = true)
+        {
+            Claw.open;
+        }
+        if (gamepad2.a = true)
+        {
+            Claw.close;
+        }
+        if (gamepad2.dpad_up = true)
+        {
+            Arm.extend;
+        }
+        if (gamepad2.dpad_down = true)
+        {
+            Arm.retract;
+        }
     }
+
 
     /*
      * Code to run ONCE after the driver hits STOP
@@ -120,3 +138,4 @@ public class Tele_Op_2017 extends OpMode
     }
 
 }
+
