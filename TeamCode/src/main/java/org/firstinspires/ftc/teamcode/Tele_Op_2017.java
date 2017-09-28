@@ -36,6 +36,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -59,9 +60,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name="Tele Op 2017", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
 // @Disabled
+
 public class Tele_Op_2017 extends OpMode
 {
-    private Drive go = new Drive();
+    private HardwareMap ahwMap=null;
+    private Drive go = new Drive(&ahwMap);
+
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftMotor = null;
@@ -116,19 +120,19 @@ public class Tele_Op_2017 extends OpMode
         //leftMotor.setPower(-gamepad1.left_stick_y);
         //rightMotor.setPower(-gamepad1.right_stick_y);
         if (gamepad1.right_stick_y>0) {
-        go.forward();
+            go.forward(1,-1);
 
         }
         if (gamepad1.right_stick_y<0) {
-            go.backward();
+            go.backward(-1,1);
 
         }
         if (gamepad1.right_stick_x>0) {
-            go.right();
+            go.right(1,-1);
 
         }
         if (gamepad1.right_stick_x<0) {
-            go.left();
+            go.left(1,-1);
 
         }
 
