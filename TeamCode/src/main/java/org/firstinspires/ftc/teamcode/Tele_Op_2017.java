@@ -108,45 +108,38 @@ public class Tele_Op_2017 extends OpMode
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
     @Override
-    public void loop() {
+    public void loop()
+    {
         telemetry.addData("Status", "Running: " + runtime.toString());
 
         // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
 
-        //leftMotor.setPower(-gamepad1.left_stick_y);
-        //rightMotor.setPower(-gamepad1.right_stick_y);
-        if (gamepad1.right_stick_y>0) {
-        go.forward();
-
+        // leftMotor.setPower(-gamepad1.left_stick_y);
+        // rightMotor.setPower(-gamepad1.right_stick_y);
+        if (gamepad2.x = true)
+        {
+            Claw.open;
         }
-        if (gamepad1.right_stick_y<0) {
-            go.backward();
-
+        if (gamepad2.b = true)
+        {
+            Claw.close;
         }
-        if (gamepad1.right_stick_x>0) {
-            go.right();
-
+        if (gamepad2.dpad_up = true)
+        {
+            Arm.extend;
         }
-        if (gamepad1.right_stick_x<0) {
-            go.left();
-
+        if (gamepad2.dpad_down = true)
+        {
+            Arm.retract;
         }
-
-        // Use gamepad Y & A raise and lower the arm
-        if (gamepad1.a)
-           wep.lift();
-        else
-            wep.liftstop();
-
-            if (gamepad1.y)
-           wep.lower();
-
-        // Use gamepad X & B to extend and retract the arm
-        if (gamepad1.x)
-           wep.extend();
-        else if (gamepad1.b)
-           wep.retract();
-
+        if (gamepad2.y = true )
+        {
+            Pole.extend;
+        }
+        if (gamepad2.a = true)
+        {
+            Pole.retract;
+        }
     }
 
     /*
@@ -157,3 +150,4 @@ public class Tele_Op_2017 extends OpMode
     }
 
 }
+
