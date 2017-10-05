@@ -53,16 +53,20 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  *
  * test test2ladedagftygcdfygcfng
  * test mscott
+ *
+ * test arush
  */
 
 @TeleOp(name="Tele Op 2017", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
 // @Disabled
 public class Tele_Op_2017 extends OpMode
 {
+    private Drive go = new Drive();
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftMotor = null;
     private DcMotor rightMotor = null;
+    private Pole wep = new Pole();
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -109,6 +113,7 @@ public class Tele_Op_2017 extends OpMode
         telemetry.addData("Status", "Running: " + runtime.toString());
 
         // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
+
         // leftMotor.setPower(-gamepad1.left_stick_y);
         // rightMotor.setPower(-gamepad1.right_stick_y);
         if (gamepad2.x = true)
@@ -136,7 +141,6 @@ public class Tele_Op_2017 extends OpMode
             Pole.retract;
         }
     }
-
 
     /*
      * Code to run ONCE after the driver hits STOP
