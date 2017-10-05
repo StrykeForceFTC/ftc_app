@@ -166,7 +166,7 @@ public class Drive
     public void diagonal( double power )
     {
         frontLeft.setPower( power );
-        rearRight.setPower( power );
+        frontRight.setPower( power );
         rearRight.setPower( -power );
         rearLeft.setPower( -power );
     }

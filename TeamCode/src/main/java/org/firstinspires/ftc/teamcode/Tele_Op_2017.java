@@ -111,11 +111,11 @@ public class Tele_Op_2017 extends OpMode
         // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
         // leftMotor.setPower(-gamepad1.left_stick_y);
         // rightMotor.setPower(-gamepad1.right_stick_y);
-        if (gamepad2.y = true)
+        if (gamepad2.x = true)
         {
             Claw.open;
         }
-        if (gamepad2.a = true)
+        if (gamepad2.b = true)
         {
             Claw.close;
         }
@@ -126,6 +126,14 @@ public class Tele_Op_2017 extends OpMode
         if (gamepad2.dpad_down = true)
         {
             Arm.retract;
+        }
+        if (gamepad2.y = true )
+        {
+            Pole.extend;
+        }
+        if (gamepad2.a = true)
+        {
+            Pole.retract;
         }
     }
 
