@@ -61,13 +61,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 // @Disabled
 public class Tele_Op_2017 extends OpMode
 {
-    private Drive go = new Drive();
+    private Drive go = new Drive(;
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftMotor = null;
     private DcMotor rightMotor = null;
     private Pole wep = new Pole();
-
+    private Claw princeclaw = new Claw();
+    private Arm LTT = new Arm();
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -116,29 +117,29 @@ public class Tele_Op_2017 extends OpMode
 
         // leftMotor.setPower(-gamepad1.left_stick_y);
         // rightMotor.setPower(-gamepad1.right_stick_y);
-        if (gamepad2.x = true)
+        if (gamepad2.x == true)
         {
-            Claw.open;
+            princeclaw.open();
         }
-        if (gamepad2.b = true)
+        if (gamepad2.b == true)
         {
-            Claw.close;
+            princeclaw.close();
         }
-        if (gamepad2.dpad_up = true)
+        if (gamepad2.dpad_up == true)
         {
-            Arm.extend;
+            LTT.extend();
         }
-        if (gamepad2.dpad_down = true)
+        if (gamepad2.dpad_down == true)
         {
-            Arm.retract;
+            LTT.retract();
         }
-        if (gamepad2.y = true )
+        if (gamepad2.y == true)
         {
-            Pole.extend;
-        }
-        if (gamepad2.a = true)
+            wep.extend();
+          }
+        if (gamepad2.a == true)
         {
-            Pole.retract;
+            wep.extend();
         }
     }
 
@@ -151,3 +152,18 @@ public class Tele_Op_2017 extends OpMode
 
 }
 
+// Claw = princeclaw
+
+// Arm = Long Thingy-Thing (LTT)
+
+// Hello out there........ how is it out there?... i hope i get out of here... someday... soon,
+// so soon!
+
+
+// so soon... i will be free... to take over again!!!
+
+
+// THE LAST HOME a horror story by Sylvia Wood.
+/* when Lowanna saw the "home for trobeld children" she knew that this was where she would stay
+for the rest of her life
+ */

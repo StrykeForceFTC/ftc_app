@@ -5,4 +5,9 @@ package org.firstinspires.ftc.teamcode;
  */
 
 public class Arm {
+    public void extend() {
+    }
+
+    public void retract() {
+    }
 }

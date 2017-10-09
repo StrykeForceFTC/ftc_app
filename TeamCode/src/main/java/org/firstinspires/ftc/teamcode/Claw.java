@@ -5,4 +5,9 @@ package org.firstinspires.ftc.teamcode;
  */
 
 public class Claw {
+    public void open() {
+    }
+
+    public void close() {
+    }
 }
