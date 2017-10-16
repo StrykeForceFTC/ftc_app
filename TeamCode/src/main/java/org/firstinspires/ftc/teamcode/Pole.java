@@ -34,6 +34,5 @@ public class Pole {
     public void liftstop(){
 
         high.setPower(0);
-
     }
 }
