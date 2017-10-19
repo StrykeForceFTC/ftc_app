@@ -23,20 +23,20 @@ public class Claw {
                 leftClawMotor.setDirection( Servo.Direction.FORWARD );
 
                 //Setting power to 0
-                rightClawMotor.setPower( 0 );
-                leftClawMotor.setPower( 0 );
+                rightClawMotor.setPosition( 0 );
+                leftClawMotor.setPosition( 0 );
         }
 
         //
 //Claw inward motion
         public void claw_Inward(){
-                leftClawMotor.setPower(0.1);
-                rightClawMotor.setPower(-0.1);
+                leftClawMotor.setPosition(0.1);
+                rightClawMotor.setPosition(-0.1);
         }
         //Claw outward motion
         public void claw_Outward(){
-                leftClawMotor.setPower(-0.1);
-                rightClawMotor.setPower(0.1);
+                leftClawMotor.setPosition(-0.1);
+                rightClawMotor.setPosition(0.1);
 
         }
 
