@@ -83,8 +83,10 @@ public class Auton_2017 extends OpMode {
             rearRight  = hardwareMap.dcMotor.get("rear_right");
 
             go = new Drive(frontLeft, frontRight, rearLeft, rearRight);
+            /*
             robotArm = new Arm();
             robotClaw = new Claw();
+            */
 
             /**
              * Start up Vuforia, telling it the id of the view that we wish to use as the parent for
