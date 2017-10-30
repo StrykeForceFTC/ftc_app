@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * Created by gstaats on 21/09/17.
  */
 
-// test comment
+// Pole Class
 public class Pole {
     //extends\retracts the pole
     private DcMotor far;
