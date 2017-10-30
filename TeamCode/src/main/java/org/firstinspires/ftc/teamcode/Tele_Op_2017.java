@@ -62,6 +62,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 // @Disabled
 public class Tele_Op_2017 extends OpMode
 {
+    private Drive go = new Drive();
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
 
