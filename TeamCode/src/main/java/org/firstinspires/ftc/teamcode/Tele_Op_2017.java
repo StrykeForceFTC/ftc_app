@@ -196,63 +196,10 @@ public class Tele_Op_2017 extends OpMode
 
         go.MoveSimple( gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x );
 
-        /*
-        if (gamepad1.left_stick_y > 0.0)
-        {
-            // go.forward(gamepad1.left_stick_y);
-            go.forward( );
-        }
-        else if (gamepad1.left_stick_y < 0.0)
-        {
-            // go.backward(gamepad1.left_stick_y);
-            go.backward( );
-        } else{
-            go.forward(0.0);
-            // go.backward(0);
-        }
-
-        if (gamepad1.right_stick_x < 0.0) {
-            // go.left(gamepad1.right_stick_x);
-            go.diagonal45( );
-        }
-        else if (gamepad1.right_stick_x > 0.0)
-        {
-            // go.right(gamepad1.right_stick_x);
-            go.diagonal135( );
-        } else {
-            go.left(0.0);
-            // go.right(0);
-        }
-        */
 
 
-/*
-        if (gamepad1.left_stick_y > 0)
-        {
-            go.forward(1);
-        }
-        else if (gamepad1.left_stick_y < 0)
-        {
-            go.backward(1);
-        } else {
-            go.backward(0);
-            go.forward(0);
-        }
 
-        if (gamepad1.left_stick_x > 0)
-        {
-            go.left(1);
-        }
-        else if (gamepad1.left_stick_x < 0)
-        {
-            go.right(1);
-        }
-        else
-        {
-            go.left(0);
-            go.right(0);
-        }
-*/
+
         telemetry.update();
     }
 
