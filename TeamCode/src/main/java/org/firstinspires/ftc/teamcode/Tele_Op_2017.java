@@ -93,35 +93,6 @@ public class Tele_Op_2017 extends OpMode
         rearRight  = hardwareMap.dcMotor.get("rear_right");
 
         go = new Drive(frontLeft, frontRight, rearLeft, rearRight);
-/*
-        // Set direction so positive is always forward with respect to
-        // the robot. Right side motors need to be set to reverse, because
-        // they spin counter-clockwise to move the robot forward.
-        frontRight.setDirection( DcMotor.Direction.REVERSE );
-        rearRight.setDirection( DcMotor.Direction.REVERSE );
-        frontRight.setDirection( DcMotor.Direction.FORWARD );
-        rearRight.setDirection( DcMotor.Direction.FORWARD );
-
-        // Set all motors to zero power. Don't want robot moving till
-        // we're ready.
-        frontLeft.setPower( 0 );
-        frontRight.setPower( 0 );
-        rearLeft.setPower( 0 );
-        rearRight.setPower( 0 );
-
-        // Set all motors to run with encoders.
-
-        frontLeft.setMode( DcMotor.RunMode.RUN_WITHOUT_ENCODER );
-        frontRight.setMode( DcMotor.RunMode.RUN_WITHOUT_ENCODER );
-        rearLeft.setMode( DcMotor.RunMode.RUN_WITHOUT_ENCODER );
-        rearRight.setMode( DcMotor.RunMode.RUN_WITHOUT_ENCODER );
-*/
-        // rightMotor = hardwareMap.dcMotor.get("right_drive");
-
-        // eg: Set the drive motor directions:
-        // Reverse the motor that runs backwards when connected directly to the battery
-        // leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        //  rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
         telemetry.addData("Status", "Initialized");
     }
 
