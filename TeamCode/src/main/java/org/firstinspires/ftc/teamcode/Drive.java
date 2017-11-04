@@ -17,10 +17,19 @@ public class Drive
     private DcMotor rearRight = null;
     HardwareMap hwMap = null;
 
+    // Constants for calculating number of ticks per cm to allow calculation of how many ticks
+    // to go a given distance.
+    final private static double WHEEL_DIAM_IN = 4;
+    final private static double IN_2_CM = 2.54;
+
+    // wheel circumference is PI times diameter, but diameter needs to be converted to cm from inches
+    final private static double WHEEL_CIRCUM_CM = Math.PI * WHEEL_DIAM_IN * IN_2_CM;
+    final private static double TICKS_PER_REV = 1120.0;
+    final private static double TICKS_PER_CM = TICKS_PER_REV / WHEEL_CIRCUM_CM;
+
     public Drive(DcMotor FL, DcMotor FR, DcMotor RL, DcMotor RR )
     {
         // Define and Initialize Motors
-
         frontRight = FR;
         frontLeft  = FL;
         rearRight  = RR;
@@ -160,8 +169,86 @@ public class Drive
         frontRight.setPower(frontRightPower);
         rearLeft.setPower(rearLeftPower);
         rearRight.setPower(rearRightPower);
+    }
 
+    /*
+     * Method to move the robot forward a specified distance. For use in auton modes.
+     * Parameter is distance to move forward in centimeters.
+     */
+    public void AutonForward( double distance_cm )
+    {
+        /*
+         This algorithm calculates the total number encoder ticks we need to move for
+         the given distance, and then keeps running the wheels in forward and continually
+         sums in the ticks moved to get total ticks moved. Once the objective is met, it sets
+         wheel power back to 0. When the encoder rolls over (from ~1120 back to near 0), we account
+         for this in an if statement that looks for rollover
+         */
+        int encoderLast = frontLeft.getCurrentPosition();
+        int totalTicks = (int) ( distance_cm * TICKS_PER_CM );
+        int ticksMoved = 0;
+
+        while ( ticksMoved < totalTicks )
+        {
+            MoveSimple( 0.0, 0.5, 0.0 );
+            int encoderNow = frontLeft.getCurrentPosition();
+            if ( encoderNow > encoderLast )
+            {
+                ticksMoved += encoderNow - encoderLast;
+            }
+            else
+            {
+                // encoder must have rolled over, so calculate how far moved before and after
+                // rolling over
+                ticksMoved += encoderNow + ( TICKS_PER_REV - encoderLast );
+            }
+
+            // Update last position for next loop
+            encoderLast = encoderNow;
+        }
+
+        // Stop moving
+        MoveSimple( 0.0, 0.0, 0.0 );
+    }
+
+    /*
+     * Method to move the robot backwards a specified distance. For use in auton modes.
+     * Parameter is distance to move backwards in centimeters.
+     */
+    public void AutonReverse( double distance_cm )
+    {
+        /*
+         This algorithm calculates the total number encoder ticks we need to move for
+         the given distance, and then keeps running the wheels in reverse and continually
+         sums in the ticks moved to get total ticks moved. Once the objective is met, it sets
+         wheel power back to 0. When the encoder under flows (from 0 to near 1120), we account
+         for this in an if statement that looks for underflow
+         */
+        int encoderLast = frontLeft.getCurrentPosition();
+        int totalTicks = (int) ( distance_cm * TICKS_PER_CM );
+        int ticksMoved = 0;
+
+        while ( ticksMoved < totalTicks )
+        {
+            MoveSimple( 0.0, -0.5, 0.0 );
+            int encoderNow = frontLeft.getCurrentPosition();
+            if ( encoderNow < encoderLast )
+            {
+                ticksMoved += encoderLast - encoderNow;
+            }
+            else
+            {
+                // encoder must have rolled over, so calculate how far moved before and after
+                // rolling over
+                ticksMoved += encoderLast + ( TICKS_PER_REV - encoderNow );
+            }
+
+            // Update last position for next loop
+            encoderLast = encoderNow;
+        }
+
+        // Stop moving
+        MoveSimple( 0.0, 0.0, 0.0 );
     }
 
 }
-
