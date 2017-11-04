@@ -27,6 +27,15 @@ public class Drive
     final private static double TICKS_PER_REV = 1120.0;
     final private static double TICKS_PER_CM = TICKS_PER_REV / WHEEL_CIRCUM_CM;
 
+    // Constants for rotating robot a certain number of degrees. The robot wheels are
+    // set at the corners of a 14" square, so this is used to calculate the circumference of
+    // the circle that the robot wheels rotatate about. This is used to determine a number of
+    // ticks per degree.
+    final private static double ROBOT_LENGTH_IN = 14.0;
+    final private static double ROBOT_DIAM_CM = Math.sqrt( 2 * ( ROBOT_LENGTH_IN * ROBOT_LENGTH_IN ) ) * IN_2_CM;
+    final private static double ROBOT_CIRCUM_CM = ROBOT_DIAM_CM * Math.PI;
+    final private static double CM_PER_DEGREE = ROBOT_CIRCUM_CM / 360.0;
+
     public Drive(DcMotor FL, DcMotor FR, DcMotor RL, DcMotor RR )
     {
         // Define and Initialize Motors
@@ -151,7 +160,6 @@ public class Drive
         double rearLeftPower = xLeftRight + yFwdRev + rotate;
         double rearRightPower = (-xLeftRight) + ( yFwdRev) + (-rotate);
 
-
         // Powers can be > 1 using above equations, so scale if they are
         double biggestFront = Math.max( Math.abs( frontLeftPower ), Math.abs( frontRightPower ) );
         double biggestRear = Math.max( Math.abs( rearLeftPower ), Math.abs( rearRightPower ) );
@@ -250,5 +258,90 @@ public class Drive
         // Stop moving
         MoveSimple( 0.0, 0.0, 0.0 );
     }
+
+
+    /*
+     * Method to rotate the robot clockwise a specified number of degrees. For use in auton modes.
+     * Parameter is number of degrees to rotate clockwise.
+     */
+    public void AutonRotateClockwise( double degrees )
+    {
+        /*
+         This algorithm calculates the number encoder ticks we need to rotate a wheel to
+         rotate the requested angle. Then the robot is continually run in the correct rotation
+         until the ticks value is met. Once the objective is met, it sets
+         wheel power back to 0. When the encoder rolls over (from ~1120 back to near 0), we account
+         for this in an if statement that looks for rollover
+         */
+        int encoderLast = frontLeft.getCurrentPosition();
+        int totalTicks = (int) ( degrees * CM_PER_DEGREE * TICKS_PER_CM );
+        int ticksMoved = 0;
+
+        while ( ticksMoved < totalTicks )
+        {
+            MoveSimple( 0.0, 0.0, 0.5 );
+            int encoderNow = frontLeft.getCurrentPosition();
+            if ( encoderNow > encoderLast )
+            {
+                ticksMoved += encoderNow - encoderLast;
+            }
+            else
+            {
+                // encoder must have rolled over, so calculate how far moved before and after
+                // rolling over
+                ticksMoved += encoderNow + ( TICKS_PER_REV - encoderLast );
+            }
+
+            // Update last position for next loop
+            encoderLast = encoderNow;
+        }
+
+        // Stop moving
+        MoveSimple( 0.0, 0.0, 0.0 );
+    }
+
+
+    /*
+    * Method to rotate the robot counterclockwise a specified number of degrees. For use in auton modes.
+    * Parameter is number of degrees to rotate counterclockwise.
+    */
+    public void AutonRotateCounterclockwise( double degrees )
+    {
+        /*
+         This algorithm calculates the number encoder ticks we need to rotate a wheel to
+         rotate the requested angle. Then the robot is continually run in the correct rotation
+         until the ticks value is met. Once the objective is met, it sets
+         wheel power back to 0. When the encoder rolls over (from ~1120 back to near 0), we account
+         for this in an if statement that looks for rollover
+         */
+        int encoderLast = frontRight.getCurrentPosition();
+        int totalTicks = (int) ( degrees * CM_PER_DEGREE * TICKS_PER_CM );
+        int ticksMoved = 0;
+
+        while ( ticksMoved < totalTicks )
+        {
+            MoveSimple( 0.0, 0.0, 0.5 );
+            int encoderNow = frontRight.getCurrentPosition();
+            if ( encoderNow > encoderLast )
+            {
+                ticksMoved += encoderNow - encoderLast;
+            }
+            else
+            {
+                // encoder must have rolled over, so calculate how far moved before and after
+                // rolling over
+                ticksMoved += encoderNow + ( TICKS_PER_REV - encoderLast );
+            }
+
+            // Update last position for next loop
+            encoderLast = encoderNow;
+        }
+
+        // Stop moving
+        MoveSimple( 0.0, 0.0, 0.0 );
+    }
+
+
+
 
 }
