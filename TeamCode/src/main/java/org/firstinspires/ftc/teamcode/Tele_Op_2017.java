@@ -35,7 +35,9 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -62,20 +64,28 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 // @Disabled
 public class Tele_Op_2017 extends OpMode
 {
-    private Drive go = new Drive();
+
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
 
+    // Drive hardware
     private DcMotor frontLeft = null;
     private DcMotor frontRight = null;
     private DcMotor rearLeft = null;
     private DcMotor rearRight = null;
 
+    // Jewel Knocker hardware
+    /*
+    private Servo knockerServo = null;
+    private ColorSensor colorSensor = null;
+    */
+
     HardwareMap robotMap = hardwareMap;
     private Drive go = null;
-   // private Drive go = new Drive(hardwareMap);
-
     private Pole wep = new Pole();
+    /*
+    private JewelKnocker jewelKnocker = null;
+    */
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -93,7 +103,15 @@ public class Tele_Op_2017 extends OpMode
         rearLeft  = hardwareMap.dcMotor.get("rear_left");
         rearRight  = hardwareMap.dcMotor.get("rear_right");
 
+        /*
+        knockerServo = hardwareMap.servo.get("knocker_servo");
+        colorSensor = hardwareMap.colorSensor.get("color");
+        */
+
         go = new Drive(frontLeft, frontRight, rearLeft, rearRight);
+        /*
+        jewelKnocker = new JewelKnocker( knockerServo, colorSensor );
+        */
         telemetry.addData("Status", "Initialized");
     }
 
@@ -134,22 +152,15 @@ public class Tele_Op_2017 extends OpMode
         telemetry.addLine("right joystick2 | ")
                 .addData("x", gamepad2.right_stick_x)
                 .addData("y", gamepad2.right_stick_y);
+        /*
+        telemetry.addLine("Knocker Positon | ")
+                .addData( "Pos", jewelKnocker.KnockerPositionGet() );
+        telemetry.addLine("Color Values | ")
+                .addData("Red", jewelKnocker.RedValue())
+                .addData("Blue", jewelKnocker.BlueValue());
+        */
 
-        telemetry.addLine("Front Motors | ")
-                .addData("l", frontLeft.getPower())
-                .addData("r", frontRight.getPower());
-        telemetry.addLine("Rear Motors | ")
-                .addData("l", frontLeft.getPower())
-                .addData("r", frontRight.getPower());
-
-
-
-        // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
-        // leftMotor.setPower(-gamepad1.left_stick_y);
-        // rightMotor.setPower(-gamepad1.right_stick_y);
-        // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-
-/*
+        /*
         // Use gamepad Y & A raise and lower the arm
         if (gamepad1.a)
            wep.lift();
@@ -166,11 +177,52 @@ public class Tele_Op_2017 extends OpMode
            wep.retract();
            */
 
+        // Move robot based on joystick inputs from gamepad 1 / driver 1
         go.MoveSimple( gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x );
 
+        // ******* Test code for JewelKnocker ***********
+        /*
+        // Gamepad1.x used to increase jewel knocker position
+        if ( gamepad1.x )
+        {
+            double position = jewelKnocker.KnockerPositionGet();
+            if ( position <= 0.9 ) {
+                jewelKnocker.KnockerPositionSet(position + 0.1);
+            }
+        }
 
+        // Gamepad1.y to decrease jewel knocker position
+        if ( gamepad1.y )
+        {
+            double position = jewelKnocker.KnockerPositionGet();
+            if ( position >= 0.1 ) {
+                jewelKnocker.KnockerPositionSet(position - 0.1);
+            }
+        }
+        */
 
+        // ************* Test code for drive auto methods **************
+        /*
+        if ( gamepad1.a )
+        {
+            go.AutonForward( 30.0 );
+        }
 
+        if ( gamepad1.b )
+        {
+            go.AutonReverse( 30.0 );
+        }
+
+        if ( gamepad1.x )
+        {
+            go.AutonRotateClockwise( 90.0 );
+        }
+
+        if ( gamepad1.y )
+        {
+            go.AutonRotateCounterclockwise( 90.0 );
+        }
+        */
 
         telemetry.update();
     }
