@@ -54,10 +54,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  *
- * test test2ladedagftygcdfygcfng
- * test mscott
- *
- * test arush
  */
 
 @TeleOp(name="Tele Op 2017", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
@@ -83,6 +79,7 @@ public class Tele_Op_2017 extends OpMode
     HardwareMap robotMap = hardwareMap;
     private Drive go = null;
     private Pole wep = new Pole();
+    private Claw claw = null;
     /*
     private JewelKnocker jewelKnocker = null;
     */
@@ -112,6 +109,10 @@ public class Tele_Op_2017 extends OpMode
         /*
         jewelKnocker = new JewelKnocker( knockerServo, colorSensor );
         */
+
+        // Set up Claw
+        claw = new Claw( hardwareMap );
+
         telemetry.addData("Status", "Initialized");
     }
 
@@ -223,6 +224,19 @@ public class Tele_Op_2017 extends OpMode
             go.AutonRotateCounterclockwise( 90.0 );
         }
         */
+
+        // ************* Test code for Claw methods **************
+
+        if ( gamepad1.a )
+        {
+            claw.claw_Inward();
+        }
+
+        if ( gamepad1.x )
+        {
+            claw.claw_Outward();
+        }
+
 
         telemetry.update();
     }
