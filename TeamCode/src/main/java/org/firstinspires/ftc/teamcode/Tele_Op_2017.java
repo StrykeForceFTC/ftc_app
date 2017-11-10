@@ -138,6 +138,9 @@ public class Tele_Op_2017 extends OpMode
     public void loop() {
         telemetry.addData("Status", "Running: " + runtime.toString());
 
+        double leftClawPosition = claw.GetLeftPosition();
+        double rightClawPosition = claw.GetRightPosition();
+
         // Show joystick information as some other illustrative data
         telemetry.addLine("left joystick | ")
                 .addData("x", gamepad1.left_stick_x)
@@ -160,6 +163,9 @@ public class Tele_Op_2017 extends OpMode
                 .addData("Red", jewelKnocker.RedValue())
                 .addData("Blue", jewelKnocker.BlueValue());
         */
+        telemetry.addLine("Claw Positions | ")
+                .addData( "Right", rightClawPosition )
+                .addData( "Left", leftClawPosition );
 
         /*
         // Use gamepad Y & A raise and lower the arm
