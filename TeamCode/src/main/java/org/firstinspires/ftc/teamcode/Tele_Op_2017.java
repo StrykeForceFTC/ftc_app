@@ -78,7 +78,7 @@ public class Tele_Op_2017 extends OpMode
 
     HardwareMap robotMap = hardwareMap;
     private Drive go = null;
-    private Pole wep = new Pole();
+    private Pole wep = null;
     private Claw claw = null;
     /*
     private JewelKnocker jewelKnocker = null;
@@ -112,6 +112,9 @@ public class Tele_Op_2017 extends OpMode
 
         // Set up Claw
         claw = new Claw( hardwareMap );
+
+        // Set up Pole
+        wep = new Pole( hardwareMap );
 
         telemetry.addData("Status", "Initialized");
     }
