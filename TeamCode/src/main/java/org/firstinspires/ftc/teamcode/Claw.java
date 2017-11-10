@@ -23,7 +23,7 @@ public class Claw {
 
                 //Setting direction of Servos
                 rightClawMotor.setDirection( Servo.Direction.FORWARD );
-                leftClawMotor.setDirection( Servo.Direction.FORWARD );
+                leftClawMotor.setDirection( Servo.Direction.REVERSE );
 
                 // Get initial position
                 leftClawPosition = leftClawMotor.getPosition();
@@ -35,15 +35,15 @@ public class Claw {
         public void claw_Inward(){
 
 
-                leftClawMotor.setPosition( -1 );
+                leftClawMotor.setPosition( 1 );
                 rightClawMotor.setPosition( 1 );
         }
 
         //Claw outward motion
         public void claw_Outward(){
 
-               
-                leftClawMotor.setPosition( -0.5 );
+
+                leftClawMotor.setPosition( 0.5 );
                 rightClawMotor.setPosition( 0.5 );
         }
 
