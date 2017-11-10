@@ -24,6 +24,10 @@ public class Claw {
                 //Setting direction of Servos
                 rightClawMotor.setDirection( Servo.Direction.FORWARD );
                 leftClawMotor.setDirection( Servo.Direction.FORWARD );
+
+                // Get initial position
+                leftClawPosition = leftClawMotor.getPosition();
+                rightClawPosition = rightClawMotor.getPosition();
         }
 
         //
@@ -43,6 +47,15 @@ public class Claw {
                 rightClawPosition += +0.1;
                 leftClawMotor.setPosition( leftClawPosition );
                 rightClawMotor.setPosition( rightClawPosition );
+        }
+
+        public double GetLeftPosition( ) {
+                return leftClawPosition;
+        }
+
+        public double GetRightPosition( )
+        {
+                return rightClawPosition;
         }
 
 }
