@@ -34,19 +34,17 @@ public class Claw {
         //Claw inward motion
         public void claw_Inward(){
 
-                leftClawPosition += 0.1;
-                rightClawPosition += -0.1;
-                leftClawMotor.setPosition( leftClawPosition );
-                rightClawMotor.setPosition( rightClawPosition );
+
+                leftClawMotor.setPosition( -1 );
+                rightClawMotor.setPosition( 1 );
         }
 
         //Claw outward motion
         public void claw_Outward(){
 
-                leftClawPosition += -0.1;
-                rightClawPosition += +0.1;
-                leftClawMotor.setPosition( leftClawPosition );
-                rightClawMotor.setPosition( rightClawPosition );
+               
+                leftClawMotor.setPosition( -0.5 );
+                rightClawMotor.setPosition( 0.5 );
         }
 
         public double GetLeftPosition( ) {
