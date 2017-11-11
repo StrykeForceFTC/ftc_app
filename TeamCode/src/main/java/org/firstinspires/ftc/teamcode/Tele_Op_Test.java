@@ -162,7 +162,8 @@ public class Tele_Op_Test extends OpMode
                 .addData("Position", wep.GetPosition() );
         telemetry.addLine("Lift" )
                 .addData( "Position ", lift.GetPosition() );
-
+        telemetry.addLine("relic ")
+                .addData("Position ", wep.clawPosition());
 
         // ************* Test code for pole **************
         // Use gamepad Y & A raise and lower the arm
@@ -199,27 +200,29 @@ public class Tele_Op_Test extends OpMode
         // Gamepad1.x used to increase jewel knocker position
         if ( gamepad1.x )
         {
-            double position = knockerServo.getPosition();
-            if ( position <= 0.9 )
-            {
-                knockerServo.setPosition(position + 0.1);
-            }
+            knockerServo.setPosition(0.6);
         }
 
         // Gamepad1.y to decrease jewel knocker position
         if ( gamepad1.y )
         {
-            double position = knockerServo.getPosition();
-            if ( position >= 0.1 )
-            {
-                knockerServo.setPosition(position - 0.1);
-            }
+            knockerServo.setPosition(0.1);
         }
 
 
         // ************* Test code for lift **************
         lift.Raise( gamepad2.left_stick_y );
 
+        //testcode for relic
+        if ( gamepad2.left_bumper)
+        {
+            wep.closeClaw();
+        }
+
+        if (gamepad2.right_bumper)
+        {
+         wep.openClaw();
+        }
         // ************* Test code for drive auto methods **************
         /*
         if ( gamepad1.a )
