@@ -175,16 +175,21 @@ public class Tele_Op_2017 extends OpMode
 
 
         // Use gamepad Y & A raise and lower the arm
-        wep.lift( gamepad2.right_stick_y );
+        wep.lift( gamepad2.right_stick_x );
 
 
         lift.Raise(gamepad2.left_stick_y);
 
         // Use gamepad X & B to extend and retract the arm
-        if (gamepad2.dpad_up)
-           wep.extend();
-        else if (gamepad2.dpad_down)
-           wep.retract();
+        if (gamepad2.dpad_up) {
+            wep.extend();
+        }
+        else if (gamepad2.dpad_down) {
+            wep.retract();
+        }
+        else {
+            wep.stay();
+        }
 
 
         // Move robot based on joystick inputs from gamepad 1 / driver 1
