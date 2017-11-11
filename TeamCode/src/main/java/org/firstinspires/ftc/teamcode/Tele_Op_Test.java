@@ -144,17 +144,20 @@ public class Tele_Op_Test extends OpMode
         telemetry.addLine("left joystick | ")
                 .addData("x", gamepad1.left_stick_x)
                 .addData("y", gamepad1.left_stick_y);
+/*
         telemetry.addLine("right joystick | ")
                 .addData("x", gamepad1.right_stick_x)
                 .addData("y", gamepad1.right_stick_y);
 
         telemetry.addLine("Knocker ")
                 .addData( "Position", knockerServo.getPosition() );
+*/
         /*
         telemetry.addLine("Color Values | ")
                 .addData("Red", jewelKnocker.RedValue())
                 .addData("Blue", jewelKnocker.BlueValue());
         */
+/*
         telemetry.addLine("Claw Positions | ")
                 .addData( "Right", rightClawPosition )
                 .addData( "Left", leftClawPosition );
@@ -164,9 +167,11 @@ public class Tele_Op_Test extends OpMode
                 .addData( "Position ", lift.GetPosition() );
         telemetry.addLine("relic ")
                 .addData("Position ", wep.clawPosition());
+*/
 
         // ************* Test code for pole **************
         // Use gamepad Y & A raise and lower the arm
+/*
         wep.lift( gamepad2.right_stick_y );
 
         // Use gamepad2 D padd to extend and retract the arm
@@ -180,9 +185,11 @@ public class Tele_Op_Test extends OpMode
         {
             wep.stay();
         }
+*/
 
         // ************* Test code for Claw methods **************
 
+/*
         if ( gamepad2.x )
         {
             claw.claw_Inward();
@@ -192,12 +199,14 @@ public class Tele_Op_Test extends OpMode
         {
             claw.claw_Outward();
         }
+*/
 
         // Move robot based on joystick inputs from gamepad 1 / driver 1
         go.MoveSimple( gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x );
 
         // ******* Test code for JewelKnocker ***********
         // Gamepad1.x used to increase jewel knocker position
+/*
         if ( gamepad1.x )
         {
             knockerServo.setPosition(0.6);
@@ -212,8 +221,10 @@ public class Tele_Op_Test extends OpMode
 
         // ************* Test code for lift **************
         lift.Raise( gamepad2.left_stick_y );
+*/
 
         //testcode for relic
+/*
         if ( gamepad2.left_bumper)
         {
             wep.closeClaw();
@@ -223,8 +234,9 @@ public class Tele_Op_Test extends OpMode
         {
          wep.openClaw();
         }
+*/
         // ************* Test code for drive auto methods **************
-        /*
+
         if ( gamepad1.a )
         {
             go.AutonForward( 30.0 );
@@ -244,7 +256,10 @@ public class Tele_Op_Test extends OpMode
         {
             go.AutonRotateCounterclockwise( 90.0 );
         }
-        */
+
+        telemetry.addLine("Encoders ")
+                .addData("FL ", frontLeft.getCurrentPosition() )
+                .addData("FR ", frontRight.getCurrentPosition() );
 
 
         telemetry.update();
