@@ -20,7 +20,7 @@ public class Lift {
     public Lift(HardwareMap ahwMap )
     {
         // Hardware Map
-        liftMotor = ahwMap.dcMotor.get( "lift_motor" );
+        liftMotor = ahwMap.dcMotor.get( "claw_lift" );
 
         // Set direction and off operation for each motor
         liftMotor.setDirection( DcMotor.Direction.FORWARD );
