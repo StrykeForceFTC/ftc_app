@@ -80,6 +80,7 @@ public class Tele_Op_2017 extends OpMode
     private Drive go = null;
     private Pole wep = null;
     private Claw claw = null;
+    private Lift lift = null;
     /*
     private JewelKnocker jewelKnocker = null;
     */
@@ -115,6 +116,8 @@ public class Tele_Op_2017 extends OpMode
 
         // Set up Pole
         wep = new Pole( hardwareMap );
+
+        lift = new Lift( hardwareMap );
 
         telemetry.addData("Status", "Initialized");
     }
@@ -159,7 +162,7 @@ public class Tele_Op_2017 extends OpMode
         telemetry.addLine("right joystick2 | ")
                 .addData("x", gamepad2.right_stick_x)
                 .addData("y", gamepad2.right_stick_y);
-        /*
+       /*
         telemetry.addLine("Knocker Positon | ")
                 .addData( "Pos", jewelKnocker.KnockerPositionGet() );
         telemetry.addLine("Color Values | ")
@@ -168,24 +171,21 @@ public class Tele_Op_2017 extends OpMode
         */
         telemetry.addLine("Claw Positions | ")
                 .addData( "Right", rightClawPosition )
-                .addData( "Left", leftClawPosition );
+                .addData( "Left",leftClawPosition );
 
-        /*
+
         // Use gamepad Y & A raise and lower the arm
-        if (gamepad1.a)
-           wep.lift();
-        else
-            wep.liftstop();
+        wep.lift( gamepad2.right_stick_y );
 
-            if (gamepad1.y)
-           wep.lower();
+
+        lift.Raise(gamepad2.left_stick_y);
 
         // Use gamepad X & B to extend and retract the arm
-        if (gamepad1.x)
+        if (gamepad2.dpad_up)
            wep.extend();
-        else if (gamepad1.b)
+        else if (gamepad2.dpad_down)
            wep.retract();
-           */
+
 
         // Move robot based on joystick inputs from gamepad 1 / driver 1
         go.MoveSimple( gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x );
@@ -236,12 +236,12 @@ public class Tele_Op_2017 extends OpMode
 
         // ************* Test code for Claw methods **************
 
-        if ( gamepad1.a )
+        if ( gamepad1.x )
         {
             claw.claw_Inward();
         }
 
-        if ( gamepad1.x )
+        if ( gamepad1.y )
         {
             claw.claw_Outward();
         }
