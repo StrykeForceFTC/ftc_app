@@ -280,5 +280,89 @@ public class Drive
         MoveSimple( 0.0, 0.0, 0.0 );
     }
 
+    /*
+     * Method to move the robot right a specified distance. For use in auton modes.
+     * Parameter is distance to move right in centimeters.
+     */
+    public void AutonRight( double distance_cm )
+    {
+        /*
+         This algorithm calculates the total number encoder ticks we need to move for
+         the given distance, and then keeps running the wheels to the right and continually
+         sums in the ticks moved to get total ticks moved. Once the objective is met, it sets
+         wheel power back to 0. When the encoder rolls over (from ~1120 back to near 0), we account
+         for this in an if statement that looks for rollover
+         */
+        int encoderLast = frontLeft.getCurrentPosition();
+        int totalTicks = (int) ( distance_cm * TICKS_PER_CM );
+        int ticksMoved = 0;
+
+        double timeLimit = MAX_SECONDS_PER_CM * distance_cm;
+        limitTimer.reset();
+        MoveSimple( 0.5, 0.0, 0.0 );
+        while ( ( ticksMoved <= totalTicks ) && ( limitTimer.time() < timeLimit ) )
+        {
+            int encoderNow = frontLeft.getCurrentPosition();
+            if ( encoderNow > encoderLast )
+            {
+                ticksMoved += encoderNow - encoderLast;
+            }
+            else
+            {
+                // encoder must have rolled over, so calculate how far moved before and after
+                // rolling over
+                ticksMoved += encoderNow + ( TICKS_PER_REV - encoderLast );
+            }
+
+            // Update last position for next loop
+            encoderLast = encoderNow;
+        }
+
+        // Stop moving
+        MoveSimple( 0.0, 0.0, 0.0 );
+    }
+
+    /*
+     * Method to move the robot left a specified distance. For use in auton modes.
+     * Parameter is distance to move left in centimeters.
+     */
+    public void AutonLeft( double distance_cm )
+    {
+        /*
+         This algorithm calculates the total number encoder ticks we need to move for
+         the given distance, and then keeps running the wheels left and continually
+         sums in the ticks moved to get total ticks moved. Once the objective is met, it sets
+         wheel power back to 0. When the encoder under flows (from 0 to near 1120), we account
+         for this in an if statement that looks for underflow
+         */
+        int encoderLast = frontLeft.getCurrentPosition();
+        int totalTicks = (int) ( distance_cm * TICKS_PER_CM );
+        int ticksMoved = 0;
+
+        double timeLimit = MAX_SECONDS_PER_CM * distance_cm;
+        limitTimer.reset();
+        MoveSimple( -0.5, 0.0, 0.0 );
+        while ( ( ticksMoved <= totalTicks ) && ( limitTimer.time() < timeLimit ) )
+        {
+            int encoderNow = frontLeft.getCurrentPosition();
+            if ( encoderNow <= encoderLast )
+            {
+                ticksMoved += encoderLast - encoderNow;
+            }
+            else
+            {
+                // encoder must have rolled over, so calculate how far moved before and after
+                // rolling over
+                ticksMoved += encoderLast + ( TICKS_PER_REV - encoderNow );
+            }
+
+            // Update last position for next loop
+            encoderLast = encoderNow;
+        }
+
+        // Stop moving
+        MoveSimple( 0.0, 0.0, 0.0 );
+    }
+
 
 }
