@@ -35,7 +35,7 @@ public class Pole {
         // Claw setup
         relicClaw.setDirection(Servo.Direction.FORWARD);
     }
-
+//ssssswss
     public void extend( )
     {
         far.setPower(0.5);
