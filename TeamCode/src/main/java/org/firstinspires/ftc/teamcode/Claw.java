@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode;
  * Created by gstaats on 21/09/17.
  */
 //Hello!
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -13,6 +14,7 @@ public class Claw {
         private Servo rightClawMotor = null;
         private double leftClawPosition = 0.0;
         private double rightClawPosition = 0.0;
+
         public Claw( HardwareMap ahwMap )
         {
                 //Hardware Map
@@ -23,13 +25,13 @@ public class Claw {
                 rightClawMotor.setDirection( Servo.Direction.FORWARD );
                 leftClawMotor.setDirection( Servo.Direction.FORWARD );
 
-                //Setting power to 0
-                rightClawMotor.setPosition( 0 );
-                leftClawMotor.setPosition( 0 );
+                // Get initial position
+                leftClawPosition = leftClawMotor.getPosition();
+                rightClawPosition = rightClawMotor.getPosition();
         }
 
         //
-//Claw inward motion
+        //Claw inward motion
         public void claw_Inward(){
 
                 leftClawPosition += 0.1;
@@ -47,10 +49,13 @@ public class Claw {
                 rightClawMotor.setPosition( rightClawPosition );
         }
 
-
-        public void clawZen() {
-            rightClawMotor.setPosition( 0 );
-            leftClawMotor.setPosition( 0 );
+        public double GetLeftPosition( ) {
+                return leftClawPosition;
         }
-    }
+
+        public double GetRightPosition( )
+        {
+                return rightClawPosition;
+        }
+
 }
