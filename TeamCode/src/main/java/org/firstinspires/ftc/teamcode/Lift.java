@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * Created by jscott on 11/10/17.
@@ -13,8 +14,11 @@ public class Lift {
     // Raises/lowers the scissor lift
     private DcMotor liftMotor;
 
+    // Timer for limiting amount of time raising/lowering in Auton
+    ElapsedTime limitTimer = new ElapsedTime();
+
     // Constants for raising / lowering in auton
-    final private static int TICKS_TO_RAISE = 300;
+    final private static int TICKS_TO_RAISE = 100;
     final private static int TICKS_PER_REV = 1120;
 
     public Lift(HardwareMap ahwMap )
@@ -42,11 +46,12 @@ public class Lift {
         int encoderLast = liftMotor.getCurrentPosition();
         int ticksMoved = 0;
 
-        while ( ticksMoved < TICKS_TO_RAISE )
+        Raise(1.0);
+        limitTimer.reset();
+        while ( ( ticksMoved < TICKS_TO_RAISE ) && ( limitTimer.time() < 3 ) )
         {
-            Raise(1.0);
             int encoderNow = liftMotor.getCurrentPosition();
-            if ( encoderNow > encoderLast )
+            if ( encoderNow >= encoderLast )
             {
                 ticksMoved += encoderNow - encoderLast;
             }
@@ -71,13 +76,14 @@ public class Lift {
         int encoderLast = liftMotor.getCurrentPosition();
         int ticksMoved = 0;
 
-        // Lowering 20 fewer ticks than raising just makes sure we don't
-        // crash the lift
-        while ( ticksMoved < ( TICKS_TO_RAISE - 20 ) )
+        // Lowering 40 fewer ticks than raising just makes sure we don't
+        // crash the lift and also limit time to less
+        Raise(-1.0);
+        limitTimer.reset();
+        while ( ( ticksMoved < ( TICKS_TO_RAISE - 40 ) ) && ( limitTimer.time() < 2.8 ) )
         {
-            Raise(-1.0);
             int encoderNow = liftMotor.getCurrentPosition();
-            if ( encoderNow < encoderLast )
+            if ( encoderNow <= encoderLast )
             {
                 ticksMoved += encoderLast - encoderNow;
             }

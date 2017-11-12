@@ -2,23 +2,15 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.matrices.MatrixF;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 import java.util.ArrayList;
@@ -27,11 +19,11 @@ import java.util.List;
 /**
  * Created by jscott on 11/10/17.
  *
- * Example auton program based on the front position for the blue team.
+ * Example auton program using time for movement based on red back position.
  *
  */
-@Autonomous(name = "Auton Test Example", group = "Iterative Opmode")
-public class Auton_Test_Example extends OpMode {
+@Autonomous(name = "Auton Time Based Example", group = "Iterative Opmode")
+public class Auton_Time_Based_Example extends OpMode {
 
     public static final String TAG = "Vuforia Navigation Sample";
 
@@ -69,23 +61,13 @@ public class Auton_Test_Example extends OpMode {
     private VuforiaLocalizer vuforia;
 
     // Enumeration for auton steps
-    private enum AUTON_STEPS { START, PICK_UP_GLYPH, MOVE_BACK_TO_START, KNOCK_OFF_JEWEL,
-                               MOVE_IN_FRONT_OF_BOX, ROTATE_TO_FACE_BOX, MOVE_FORWARD_TO_BOX,
-                               DROP_GYLPH, BACK_UP, STOP }
+    private enum AUTON_STEPS { START, KNOCK_OFF_JEWEL, MOVE_TO_CRYPTO_BOX, STOP }
 
     private AUTON_STEPS step = AUTON_STEPS.START;
 
     // Constants for controlling / tuning auton
-    private static double DISTANCE_FORWARD_4_GLYPH = 10.0;      // This is in cm
-    private static double DISTANCE_FOR_LEFT_COLUMN = 30.0;      // TODO: VALUE NEEDS TO BE CHOSEN
-    private static double DISTANCE_FOR_CENTER_COLUMN = 35.0;      // TODO: VALUE NEEDS TO BE CHOSEN
-    private static double DISTANCE_FOR_RIGHT_COLUMN = 40.0;      // TODO: VALUE NEEDS TO BE CHOSEN
-    private static double DEGREES_2_ROTATE = 90.0;
-    private static double DISTANCE_FORWARD_2_DROP = 12.5;        // TODO: VALUE NEEDS TO BE CHOSEN
-    private static double DISTANCE_BACK_FINAL = 5.0;            // TODO: VALUE NEEDS TO BE CHOSEN
-
-    // Used to compensate for movement to knock off jewel
-    private static double yDistanceFromStart = 0.0;
+    private static double TIME_2_KNOCK_JEWEL = 3.0;         // TODO: VALUE NEEDS TO BE CHOSEN
+    private static double TIME_2_MOVE_2_CRYPTO = 10.0;      // TODO: VALUE NEEDS TO BE CHOSEN
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -205,26 +187,6 @@ public class Auton_Test_Example extends OpMode {
         switch (step)
         {
             case START:
-                step = AUTON_STEPS.PICK_UP_GLYPH;
-                break;
-
-            case PICK_UP_GLYPH:
-                // To pick up the glyph, open the claw, move forward a bit,
-                // and close the claw and raise the lift a little
-                claw.claw_Outward();
-                go.AutonForward( DISTANCE_FORWARD_4_GLYPH );
-                claw.claw_Inward();
-
-                // short delay to let claw close
-                Delay_s( 0.1 );
-
-                lift.AutonRaise();
-                step = AUTON_STEPS.MOVE_BACK_TO_START;
-                break;
-
-            case MOVE_BACK_TO_START:
-                // Move back the amount moved forward to pick up the glyph
-                go.AutonReverse( DISTANCE_FORWARD_4_GLYPH );
                 step = AUTON_STEPS.KNOCK_OFF_JEWEL;
                 break;
 
@@ -233,52 +195,20 @@ public class Auton_Test_Example extends OpMode {
                 // read color sensor
                 // move forward or reverse based on color sensor
 
-                // set yDistanceFromStart to distance moved (+ for forward, - for negative)
-                step = AUTON_STEPS.MOVE_IN_FRONT_OF_BOX;
+                step = AUTON_STEPS.MOVE_TO_CRYPTO_BOX;
                 break;
 
-            case MOVE_IN_FRONT_OF_BOX:
+            case MOVE_TO_CRYPTO_BOX:
             {
-                switch (vuMark)
-                {
-                    case LEFT:
-                        go.AutonForward( DISTANCE_FOR_LEFT_COLUMN + yDistanceFromStart );
-                        break;
+                // Move backwards for red side
+                go.MoveSimple( 0.0, -1.0, 0.0 );
+                Delay_s( TIME_2_MOVE_2_CRYPTO );
 
-                    case RIGHT:
-                        go.AutonForward( DISTANCE_FOR_RIGHT_COLUMN + yDistanceFromStart );
-                        break;
+                // Stop moving
+                go.MoveSimple( 0.0, 0.0, 0.0 );
 
-                    default:  // Default is for unknown or center
-                    {
-                        go.AutonForward( DISTANCE_FOR_CENTER_COLUMN + yDistanceFromStart );
-                    }
-                    break;
-                }
-
-                step = AUTON_STEPS.ROTATE_TO_FACE_BOX;
-            }
-                break;
-
-            case ROTATE_TO_FACE_BOX:
-                go.AutonRotateClockwise( DEGREES_2_ROTATE );
-                step = AUTON_STEPS.MOVE_FORWARD_TO_BOX;
-                break;
-
-            case MOVE_FORWARD_TO_BOX:
-                go.AutonForward( DISTANCE_FORWARD_2_DROP );
-                step = AUTON_STEPS.DROP_GYLPH;
-                break;
-
-            case DROP_GYLPH:
-                claw.claw_Outward();
-                lift.AutonLower();
-                step = AUTON_STEPS.BACK_UP;
-                break;
-
-            case BACK_UP:
-                go.AutonReverse( DISTANCE_BACK_FINAL );
                 step = AUTON_STEPS.STOP;
+            }
                 break;
 
             case STOP:
@@ -318,9 +248,12 @@ public class Auton_Test_Example extends OpMode {
         delayTimer.reset();
         while ( delayTimer.time() < seconds )
         {
-
+            telemetry.addLine( "Encoder " )
+                    .addData( "Value", frontLeft.getCurrentPosition() );
+            telemetry.update();
         }
     }
+
 
 }
 

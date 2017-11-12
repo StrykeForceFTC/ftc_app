@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 /**
@@ -16,6 +18,9 @@ public class Drive
     private DcMotor rearLeft = null;
     private DcMotor rearRight = null;
     HardwareMap hwMap = null;
+
+    // Limit timer
+    ElapsedTime limitTimer = new ElapsedTime();
 
     // Constants for calculating number of ticks per cm to allow calculation of how many ticks
     // to go a given distance.
@@ -35,6 +40,7 @@ public class Drive
     final private static double ROBOT_DIAM_CM = Math.sqrt( 2 * ( ROBOT_LENGTH_IN * ROBOT_LENGTH_IN ) ) * IN_2_CM;
     final private static double ROBOT_CIRCUM_CM = ROBOT_DIAM_CM * Math.PI;
     final private static double CM_PER_DEGREE = ROBOT_CIRCUM_CM / 360.0;
+    final private static double MAX_SECONDS_PER_CM = 1;
 
     public Drive(DcMotor FL, DcMotor FR, DcMotor RL, DcMotor RR )
     {
@@ -121,9 +127,11 @@ public class Drive
         int totalTicks = (int) ( distance_cm * TICKS_PER_CM );
         int ticksMoved = 0;
 
-        while ( ticksMoved < totalTicks )
+        double timeLimit = MAX_SECONDS_PER_CM * distance_cm;
+        limitTimer.reset();
+        MoveSimple( 0.0, 0.5, 0.0 );
+        while ( ( ticksMoved <= totalTicks ) && ( limitTimer.time() < timeLimit ) )
         {
-            MoveSimple( 0.0, 0.5, 0.0 );
             int encoderNow = frontLeft.getCurrentPosition();
             if ( encoderNow > encoderLast )
             {
@@ -161,11 +169,13 @@ public class Drive
         int totalTicks = (int) ( distance_cm * TICKS_PER_CM );
         int ticksMoved = 0;
 
-        while ( ticksMoved < totalTicks )
+        double timeLimit = MAX_SECONDS_PER_CM * distance_cm;
+        limitTimer.reset();
+        MoveSimple( 0.0, -0.5, 0.0 );
+        while ( ( ticksMoved <= totalTicks ) && ( limitTimer.time() < timeLimit ) )
         {
-            MoveSimple( 0.0, -0.5, 0.0 );
             int encoderNow = frontLeft.getCurrentPosition();
-            if ( encoderNow < encoderLast )
+            if ( encoderNow <= encoderLast )
             {
                 ticksMoved += encoderLast - encoderNow;
             }
@@ -202,11 +212,13 @@ public class Drive
         int totalTicks = (int) ( degrees * CM_PER_DEGREE * TICKS_PER_CM );
         int ticksMoved = 0;
 
-        while ( ticksMoved < totalTicks )
+        double timeLimit = MAX_SECONDS_PER_CM * CM_PER_DEGREE * degrees;
+        limitTimer.reset();
+        MoveSimple( 0.0, 0.0, 0.5 );
+        while ( ( ticksMoved <= totalTicks ) && ( limitTimer.time() < timeLimit ) )
         {
-            MoveSimple( 0.0, 0.0, 0.5 );
             int encoderNow = frontLeft.getCurrentPosition();
-            if ( encoderNow > encoderLast )
+            if ( encoderNow >= encoderLast )
             {
                 ticksMoved += encoderNow - encoderLast;
             }
@@ -243,11 +255,13 @@ public class Drive
         int totalTicks = (int) ( degrees * CM_PER_DEGREE * TICKS_PER_CM );
         int ticksMoved = 0;
 
-        while ( ticksMoved < totalTicks )
+        double timeLimit = MAX_SECONDS_PER_CM * CM_PER_DEGREE * degrees;
+        limitTimer.reset();
+        MoveSimple( 0.0, 0.0, -0.5 );
+        while ( ( ticksMoved <= totalTicks ) && ( limitTimer.time() < timeLimit ) )
         {
-            MoveSimple( 0.0, 0.0, 0.5 );
             int encoderNow = frontRight.getCurrentPosition();
-            if ( encoderNow > encoderLast )
+            if ( encoderNow >= encoderLast )
             {
                 ticksMoved += encoderNow - encoderLast;
             }
