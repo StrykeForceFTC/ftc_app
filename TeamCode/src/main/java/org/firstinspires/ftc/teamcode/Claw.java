@@ -12,8 +12,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class Claw {
         private Servo leftClawMotor = null;
         private Servo rightClawMotor = null;
-        private double leftClawPosition = 0.0;
-        private double rightClawPosition = 0.0;
 
         public Claw( HardwareMap ahwMap )
         {
@@ -23,39 +21,33 @@ public class Claw {
 
                 //Setting direction of Servos
                 rightClawMotor.setDirection( Servo.Direction.FORWARD );
-                leftClawMotor.setDirection( Servo.Direction.FORWARD );
-
-                // Get initial position
-                leftClawPosition = leftClawMotor.getPosition();
-                rightClawPosition = rightClawMotor.getPosition();
+                leftClawMotor.setDirection( Servo.Direction.REVERSE );
         }
 
         //
         //Claw inward motion
         public void claw_Inward(){
 
-                leftClawPosition += 0.1;
-                rightClawPosition += -0.1;
-                leftClawMotor.setPosition( leftClawPosition );
-                rightClawMotor.setPosition( rightClawPosition );
+
+                leftClawMotor.setPosition( 1 );
+                rightClawMotor.setPosition( 1 );
         }
 
         //Claw outward motion
         public void claw_Outward(){
 
-                leftClawPosition += -0.1;
-                rightClawPosition += +0.1;
-                leftClawMotor.setPosition( leftClawPosition );
-                rightClawMotor.setPosition( rightClawPosition );
+
+                leftClawMotor.setPosition( -1 );
+                rightClawMotor.setPosition( -1 );
         }
 
         public double GetLeftPosition( ) {
-                return leftClawPosition;
+            return leftClawMotor.getPosition();
         }
 
         public double GetRightPosition( )
         {
-                return rightClawPosition;
+            return rightClawMotor.getPosition();
         }
 
 }

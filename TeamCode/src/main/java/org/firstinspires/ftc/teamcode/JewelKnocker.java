@@ -20,8 +20,8 @@ public class JewelKnocker
     final private static int RED_LOWER_LIMIT = 5;
 
     // Position values for servo
-    final private static double KNOCKER_DOWN_POSITION = 1.0;
-    final private static double KNOCKER_UP_POSITION = 0.0;
+    final private static double KNOCKER_DOWN_POSITION = 0.6;
+    final private static double KNOCKER_UP_POSITION = 0.1;
 
     public JewelKnocker( Servo servo, ColorSensor color )
     {
