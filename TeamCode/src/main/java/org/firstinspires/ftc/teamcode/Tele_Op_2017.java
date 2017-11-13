@@ -35,7 +35,9 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -52,30 +54,36 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  *
- * test test2ladedagftygcdfygcfng
- * test mscott
- *
- * test arush
  */
 
 @TeleOp(name="Tele Op 2017", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
 // @Disabled
 public class Tele_Op_2017 extends OpMode
 {
-    private Drive go = new Drive();
+
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
 
+    // Drive hardware
     private DcMotor frontLeft = null;
     private DcMotor frontRight = null;
     private DcMotor rearLeft = null;
     private DcMotor rearRight = null;
 
+    // Jewel Knocker hardware
+    /*
+    private Servo knockerServo = null;
+    private ColorSensor colorSensor = null;
+    */
+
     HardwareMap robotMap = hardwareMap;
     private Drive go = null;
-   // private Drive go = new Drive(hardwareMap);
-
-    private Pole wep = new Pole();
+    private Pole wep = null;
+    private Claw claw = null;
+    private Lift lift = null;
+    /*
+    private JewelKnocker jewelKnocker = null;
+    */
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -93,36 +101,24 @@ public class Tele_Op_2017 extends OpMode
         rearLeft  = hardwareMap.dcMotor.get("rear_left");
         rearRight  = hardwareMap.dcMotor.get("rear_right");
 
+        /*
+        knockerServo = hardwareMap.servo.get("knocker_servo");
+        colorSensor = hardwareMap.colorSensor.get("color");
+        */
+
         go = new Drive(frontLeft, frontRight, rearLeft, rearRight);
-/*
-        // Set direction so positive is always forward with respect to
-        // the robot. Right side motors need to be set to reverse, because
-        // they spin counter-clockwise to move the robot forward.
-        frontRight.setDirection( DcMotor.Direction.REVERSE );
-        rearRight.setDirection( DcMotor.Direction.REVERSE );
-        frontRight.setDirection( DcMotor.Direction.FORWARD );
-        rearRight.setDirection( DcMotor.Direction.FORWARD );
+        /*
+        jewelKnocker = new JewelKnocker( knockerServo, colorSensor );
+        */
 
-        // Set all motors to zero power. Don't want robot moving till
-        // we're ready.
-        frontLeft.setPower( 0 );
-        frontRight.setPower( 0 );
-        rearLeft.setPower( 0 );
-        rearRight.setPower( 0 );
+        // Set up Claw
+        claw = new Claw( hardwareMap );
 
-        // Set all motors to run with encoders.
+        // Set up Pole
+        wep = new Pole( hardwareMap );
 
-        frontLeft.setMode( DcMotor.RunMode.RUN_WITHOUT_ENCODER );
-        frontRight.setMode( DcMotor.RunMode.RUN_WITHOUT_ENCODER );
-        rearLeft.setMode( DcMotor.RunMode.RUN_WITHOUT_ENCODER );
-        rearRight.setMode( DcMotor.RunMode.RUN_WITHOUT_ENCODER );
-*/
-        // rightMotor = hardwareMap.dcMotor.get("right_drive");
+        lift = new Lift( hardwareMap );
 
-        // eg: Set the drive motor directions:
-        // Reverse the motor that runs backwards when connected directly to the battery
-        // leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        //  rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
         telemetry.addData("Status", "Initialized");
     }
 
@@ -148,6 +144,9 @@ public class Tele_Op_2017 extends OpMode
     public void loop() {
         telemetry.addData("Status", "Running: " + runtime.toString());
 
+        double leftClawPosition = claw.GetLeftPosition();
+        double rightClawPosition = claw.GetRightPosition();
+
         // Show joystick information as some other illustrative data
         telemetry.addLine("left joystick | ")
                 .addData("x", gamepad1.left_stick_x)
@@ -163,97 +162,96 @@ public class Tele_Op_2017 extends OpMode
         telemetry.addLine("right joystick2 | ")
                 .addData("x", gamepad2.right_stick_x)
                 .addData("y", gamepad2.right_stick_y);
+       /*
+        telemetry.addLine("Knocker Positon | ")
+                .addData( "Pos", jewelKnocker.KnockerPositionGet() );
+        telemetry.addLine("Color Values | ")
+                .addData("Red", jewelKnocker.RedValue())
+                .addData("Blue", jewelKnocker.BlueValue());
+        */
+        telemetry.addLine("Claw Positions | ")
+                .addData( "Right", rightClawPosition )
+                .addData( "Left",leftClawPosition );
 
-        telemetry.addLine("Front Motors | ")
-                .addData("l", frontLeft.getPower())
-                .addData("r", frontRight.getPower());
-        telemetry.addLine("Rear Motors | ")
-                .addData("l", frontLeft.getPower())
-                .addData("r", frontRight.getPower());
 
-
-
-        // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
-        // leftMotor.setPower(-gamepad1.left_stick_y);
-        // rightMotor.setPower(-gamepad1.right_stick_y);
-        // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-
-/*
         // Use gamepad Y & A raise and lower the arm
-        if (gamepad1.a)
-           wep.lift();
-        else
-            wep.liftstop();
+        wep.lift( gamepad2.right_stick_x );
 
-            if (gamepad1.y)
-           wep.lower();
+
+        lift.Raise(gamepad2.left_stick_y);
 
         // Use gamepad X & B to extend and retract the arm
-        if (gamepad1.x)
-           wep.extend();
-        else if (gamepad1.b)
-           wep.retract();
-           */
+        if (gamepad2.dpad_up) {
+            wep.extend();
+        }
+        else if (gamepad2.dpad_down) {
+            wep.retract();
+        }
+        else {
+            wep.stay();
+        }
 
+
+        // Move robot based on joystick inputs from gamepad 1 / driver 1
         go.MoveSimple( gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x );
 
+        // ******* Test code for JewelKnocker ***********
         /*
-        if (gamepad1.left_stick_y > 0.0)
+        // Gamepad1.x used to increase jewel knocker position
+        if ( gamepad1.x )
         {
-            // go.forward(gamepad1.left_stick_y);
-            go.forward( );
-        }
-        else if (gamepad1.left_stick_y < 0.0)
-        {
-            // go.backward(gamepad1.left_stick_y);
-            go.backward( );
-        } else{
-            go.forward(0.0);
-            // go.backward(0);
+            double position = jewelKnocker.KnockerPositionGet();
+            if ( position <= 0.9 ) {
+                jewelKnocker.KnockerPositionSet(position + 0.1);
+            }
         }
 
-        if (gamepad1.right_stick_x < 0.0) {
-            // go.left(gamepad1.right_stick_x);
-            go.diagonal45( );
-        }
-        else if (gamepad1.right_stick_x > 0.0)
+        // Gamepad1.y to decrease jewel knocker position
+        if ( gamepad1.y )
         {
-            // go.right(gamepad1.right_stick_x);
-            go.diagonal135( );
-        } else {
-            go.left(0.0);
-            // go.right(0);
+            double position = jewelKnocker.KnockerPositionGet();
+            if ( position >= 0.1 ) {
+                jewelKnocker.KnockerPositionSet(position - 0.1);
+            }
         }
         */
 
-
-/*
-        if (gamepad1.left_stick_y > 0)
+        // ************* Test code for drive auto methods **************
+        /*
+        if ( gamepad1.a )
         {
-            go.forward(1);
-        }
-        else if (gamepad1.left_stick_y < 0)
-        {
-            go.backward(1);
-        } else {
-            go.backward(0);
-            go.forward(0);
+            go.AutonForward( 30.0 );
         }
 
-        if (gamepad1.left_stick_x > 0)
+        if ( gamepad1.b )
         {
-            go.left(1);
+            go.AutonReverse( 30.0 );
         }
-        else if (gamepad1.left_stick_x < 0)
+
+        if ( gamepad1.x )
         {
-            go.right(1);
+            go.AutonRotateClockwise( 90.0 );
         }
-        else
+
+        if ( gamepad1.y )
         {
-            go.left(0);
-            go.right(0);
+            go.AutonRotateCounterclockwise( 90.0 );
         }
-*/
+        */
+
+        // ************* Test code for Claw methods **************
+
+        if ( gamepad1.x )
+        {
+            claw.claw_Inward();
+        }
+
+        if ( gamepad1.y )
+        {
+            claw.claw_Outward();
+        }
+
+
         telemetry.update();
     }
 

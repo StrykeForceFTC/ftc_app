@@ -71,9 +71,8 @@ public class Tele_Op_Simple_Drive extends OpMode
 
     HardwareMap robotMap = hardwareMap;
     private Drive go = null;
-   // private Drive go = new Drive(hardwareMap);
 
-    private Pole wep = new Pole();
+    private Pole wep = null;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -92,6 +91,7 @@ public class Tele_Op_Simple_Drive extends OpMode
         rearRight  = hardwareMap.dcMotor.get("rear_right");
 
         go = new Drive(frontLeft, frontRight, rearLeft, rearRight);
+        wep = new Pole(hardwareMap);
         telemetry.addData("Status", "Initialized");
     }
 
