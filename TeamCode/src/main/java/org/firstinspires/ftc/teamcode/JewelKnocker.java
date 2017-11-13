@@ -17,7 +17,7 @@ public class JewelKnocker
     private ColorSensor colorSensor = null;
 
     // Constants for detecting color
-    final private static int RED_LOWER_LIMIT = 5;
+    final private static int RED_LOWER_LIMIT = 50;
 
     // Position values for servo
     final private static double KNOCKER_DOWN_POSITION = 0.6;
