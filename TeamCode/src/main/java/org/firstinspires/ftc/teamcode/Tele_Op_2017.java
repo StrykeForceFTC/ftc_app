@@ -238,7 +238,8 @@ public class Tele_Op_2017 extends OpMode
             go.AutonRotateCounterclockwise( 90.0 );
         }
         */
-
+       if (gamepad2.right_bumper{ openClaw();}
+       if (gamepad2.left_bumper) {closeClaw();}
         // ************* Test code for Claw methods **************
 
         if ( gamepad1.x )
