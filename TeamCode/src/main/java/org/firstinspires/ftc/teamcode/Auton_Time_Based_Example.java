@@ -29,7 +29,7 @@ public class Auton_Time_Based_Example extends OpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    private ElapsedTime delayTimer = new ElapsedTime();
+    private ElapsedTime delayTimer = new ElapsedTime( ElapsedTime.Resolution.SECONDS );
 
     private DcMotor frontLeft = null;
     private DcMotor frontRight = null;
