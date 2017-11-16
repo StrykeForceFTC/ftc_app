@@ -214,7 +214,7 @@ public class Tele_Op_Test extends OpMode
 
 
         // ************* Test code for lift **************
-        lift.Raise( gamepad2.left_stick_y );
+        // lift.Raise( gamepad2.left_stick_y );
 
 
         //testcode for relic
@@ -233,30 +233,54 @@ public class Tele_Op_Test extends OpMode
 
         if ( gamepad1.a )
         {
-            go.AutonForward( 30.0 );
+            go.MoveSimple(0.0, 0.1, 0.0);
+            Delay_s( 2.0 );
+            go.MoveSimple(0.0, 0.0, 0.0);
         }
 
         if ( gamepad1.b )
         {
-            go.AutonReverse( 30.0 );
+            go.MoveSimple(0.0, -0.1, 0.0);
+            Delay_s( 2.0 );
+            go.MoveSimple(0.0, 0.0, 0.0);
         }
 
-        if ( gamepad1.x )
+        if ( gamepad2.x )
         {
-            go.AutonRotateClockwise( 90.0 );
+            go.MoveSimple(0.0, 0.1, 0.1);
+            Delay_s( 2.0 );
+            go.MoveSimple(0.0, 0.0, 0.0);
         }
 
-        if ( gamepad1.y )
+        if ( gamepad2.y )
         {
-            go.AutonRotateCounterclockwise( 90.0 );
+            go.MoveSimple(0.0, 0.0, -0.1);
+            Delay_s( 2.0 );
+            go.MoveSimple(0.0, 0.0, 0.0);
         }
 
         telemetry.addLine("Encoders ")
                 .addData("FL ", frontLeft.getCurrentPosition() )
                 .addData("FR ", frontRight.getCurrentPosition() );
-
+        telemetry.addLine("Lift")
+                .addData("enc ", lift.GetPosition());
 
         telemetry.update();
+    }
+
+
+    // Delay time method
+    private void Delay_s( double seconds )
+    {
+        ElapsedTime delayTimer = new ElapsedTime( ElapsedTime.Resolution.SECONDS );
+
+        delayTimer.reset();
+        int timeWaster = 0;
+        while ( delayTimer.time() < seconds )
+        {
+            // Just wasting some time
+            timeWaster++;
+        }
     }
 
     /*

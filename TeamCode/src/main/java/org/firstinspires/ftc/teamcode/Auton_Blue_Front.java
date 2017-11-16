@@ -2,25 +2,17 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.RobotLog;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.matrices.MatrixF;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 import java.util.ArrayList;
@@ -29,11 +21,11 @@ import java.util.List;
 /**
  * Created by jscott on 11/10/17.
  *
- * Example auton program based on the front position for the blue team.
+ *  auton program based on the front position for the red team.
  *
  */
-@Autonomous(name = "Auton Test Example", group = "Iterative Opmode")
-public class Auton_Test_Example extends OpMode {
+@Autonomous(name = "Auton Blue Front", group = "Iterative Opmode")
+public class Auton_Blue_Front extends OpMode {
 
     public static final String TAG = "Vuforia Navigation Sample";
 
@@ -75,17 +67,17 @@ public class Auton_Test_Example extends OpMode {
     private VuforiaLocalizer vuforia;
 
     // Enumeration for auton steps
-    private enum AUTON_STEPS { START, KNOCK_OFF_JEWEL, PICK_UP_GLYPH,
+    private enum AUTON_STEPS { START, KNOCK_OFF_JEWEL,
                                MOVE_IN_FRONT_OF_BOX, ROTATE_TO_FACE_BOX, MOVE_FORWARD_TO_BOX,
-                               DROP_GYLPH, BACK_UP, STOP }
+                               BACK_UP, STOP }
 
     private AUTON_STEPS step = AUTON_STEPS.START;
 
     // Constants for controlling / tuning auton
     private static final double DISTANCE_FORWARD_4_GLYPH = 8.89;      // This is in cm
-    private static final double DISTANCE_FOR_LEFT_COLUMN = 72.07;     //
+    private static final double DISTANCE_FOR_LEFT_COLUMN = 110.81;     //
     private static final double DISTANCE_FOR_CENTER_COLUMN = 91.44;   //
-    private static final double DISTANCE_FOR_RIGHT_COLUMN = 110.81;   //
+    private static final double DISTANCE_FOR_RIGHT_COLUMN = 72.07;   //
     private static final double DEGREES_2_ROTATE = 90.0;              // Must rotate CCW
     private static final double DISTANCE_FORWARD_2_DROP = 20.32;      //
     private static final double DISTANCE_BACK_FINAL = 5.0;            //
@@ -221,11 +213,11 @@ public class Auton_Test_Example extends OpMode {
 
             case KNOCK_OFF_JEWEL:
                 // Open claw to get ready to pick up glyph
-                // claw.claw_Outward();
+                //claw.claw_Outward();
 
                 // Lower jewel knocker and delay to give time to move
                 jewelKnocker.LowerKnocker();
-                Delay_s( 1.0 );
+                Delay_s( 4.0 );
 
                 // read color sensor
                 JewelKnocker.COLORS color = jewelKnocker.GetColor();
@@ -234,77 +226,59 @@ public class Auton_Test_Example extends OpMode {
                 // we are blue. The color sensor points forward.
                 if ( color == JewelKnocker.COLORS.RED )
                 {
-                    // Jewel to front is red, so move forward to knock off
-                    // go.AutonForward( DISTANCE_FOR_JEWEL );
-                    // yDistanceFromStart = DISTANCE_FOR_JEWEL;
-                    go.MoveSimple( 0.0, -0.5, 0.0 );
-                    Delay_s( 2.0 );
+                    // Jewel to front is red, so move backward to knock off
+                    //go.AutonReverse( DISTANCE_FOR_JEWEL );
+                    //yDistanceFromStart = DISTANCE_FOR_JEWEL;
+                    go.MoveSimple( 0.0, -0.1, 0.0 );
+                    Delay_s( 1.0 );
                     go.MoveSimple( 0.0, 0.0, 0.0 );
                 }
                 else
                 {
                     // Need to move backwards to knock off the red jewel; note that this
                     // means distance is negative.
-//                    go.AutonReverse( DISTANCE_FOR_JEWEL );
-//                    yDistanceFromStart = 0.0 - DISTANCE_FOR_JEWEL;
-                    go.MoveSimple( 0.0, 0.5, 0.0 );
-                    Delay_s( 2.0 );
+                    //go.AutonForward( DISTANCE_FOR_JEWEL );
+                    //yDistanceFromStart = 0.0 - DISTANCE_FOR_JEWEL;
+                    go.MoveSimple( 0.0, 0.1, 0.0 );
+                    Delay_s( 1.0 );
                     go.MoveSimple( 0.0, 0.0, 0.0 );
                 }
 
                 // Raise the knocker and give it time to move
                 jewelKnocker.RaiseKnocker();
-                Delay_s( 1.0 );
+                Delay_s( 4.0 );
 
                 // set yDistanceFromStart to distance moved (+ for forward, - for reverse)
-                step = AUTON_STEPS.PICK_UP_GLYPH;
-                break;
-
-            case PICK_UP_GLYPH:
-                // To pick up the glyph, open the claw, move forward a bit,
-                // and close the claw and raise the lift a little. Claw should
-                // already be open, but issue open command again, just in case.
-                claw.claw_Outward();
-
-                // Y distance from start is set to how far forward to move to pick up
-                // glyph minus any distance we moved forward to knock off jewel. If we
-                // moved backwards to knock off the jewel, then the original Y distance is
-                // negative and will be added on.
-                if ( yDistanceFromStart < DISTANCE_FORWARD_4_GLYPH )
-                {
-                    yDistanceFromStart = DISTANCE_FORWARD_4_GLYPH - yDistanceFromStart;
-                    go.AutonForward(yDistanceFromStart);
-                }
-                claw.claw_Inward();
-
-                // short delay to let claw close
-                Delay_s( 0.5 );
-
-                lift.AutonRaise();
                 step = AUTON_STEPS.MOVE_IN_FRONT_OF_BOX;
                 break;
 
-/*  ************** Comment out most of steps until can debug first couple ***********************
+
+// /*  ************** Comment out most of steps until can debug first couple ***********************
             case MOVE_IN_FRONT_OF_BOX:
             {
+/*
                 switch (vuMark)
                 {
                     case LEFT:
-                        go.AutonForward( DISTANCE_FOR_LEFT_COLUMN - yDistanceFromStart );
+                        go.AutonReverse( DISTANCE_FOR_LEFT_COLUMN - yDistanceFromStart );
                         break;
 
                     case RIGHT:
-                        go.AutonForward( DISTANCE_FOR_RIGHT_COLUMN - yDistanceFromStart );
+                        go.AutonReverse( DISTANCE_FOR_RIGHT_COLUMN - yDistanceFromStart );
                         break;
 
                     default:  // Default is for unknown or center
                     {
-                        go.AutonForward( DISTANCE_FOR_CENTER_COLUMN - yDistanceFromStart );
+                        go.AutonReverse( DISTANCE_FOR_CENTER_COLUMN - yDistanceFromStart );
                     }
                     break;
                 }
+*/
+                go.MoveSimple( 0.0, -0.1, 0.0 );
+                Delay_s( 5.0 );
+                go.MoveSimple(0,0,0);
 
-                step = AUTON_STEPS.ROTATE_TO_FACE_BOX;
+                step = AUTON_STEPS.STOP;
             }
                 break;
 
@@ -315,21 +289,16 @@ public class Auton_Test_Example extends OpMode {
 
             case MOVE_FORWARD_TO_BOX:
                 go.AutonForward( DISTANCE_FORWARD_2_DROP );
-                step = AUTON_STEPS.DROP_GYLPH;
-                break;
-
-            case DROP_GYLPH:
-                claw.claw_Outward();
-                Delay_s( 0.5 );
-                lift.AutonLower();
                 step = AUTON_STEPS.BACK_UP;
                 break;
+
+
 
             case BACK_UP:
                 go.AutonReverse( DISTANCE_BACK_FINAL );
                 step = AUTON_STEPS.STOP;
                 break;
-             */
+             // */
 
             case STOP:
                 // In stop, just turn all motors off for safety
