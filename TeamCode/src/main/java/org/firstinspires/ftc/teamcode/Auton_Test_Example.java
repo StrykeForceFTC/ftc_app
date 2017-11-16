@@ -221,7 +221,7 @@ public class Auton_Test_Example extends OpMode {
 
             case KNOCK_OFF_JEWEL:
                 // Open claw to get ready to pick up glyph
-                claw.claw_Outward();
+                // claw.claw_Outward();
 
                 // Lower jewel knocker and delay to give time to move
                 jewelKnocker.LowerKnocker();
@@ -235,15 +235,21 @@ public class Auton_Test_Example extends OpMode {
                 if ( color == JewelKnocker.COLORS.RED )
                 {
                     // Jewel to front is red, so move forward to knock off
-                    go.AutonForward( DISTANCE_FOR_JEWEL );
-                    yDistanceFromStart = DISTANCE_FOR_JEWEL;
+                    // go.AutonForward( DISTANCE_FOR_JEWEL );
+                    // yDistanceFromStart = DISTANCE_FOR_JEWEL;
+                    go.MoveSimple( 0.0, -0.5, 0.0 );
+                    Delay_s( 2.0 );
+                    go.MoveSimple( 0.0, 0.0, 0.0 );
                 }
                 else
                 {
                     // Need to move backwards to knock off the red jewel; note that this
                     // means distance is negative.
-                    go.AutonReverse( DISTANCE_FOR_JEWEL );
-                    yDistanceFromStart = 0.0 - DISTANCE_FOR_JEWEL;
+//                    go.AutonReverse( DISTANCE_FOR_JEWEL );
+//                    yDistanceFromStart = 0.0 - DISTANCE_FOR_JEWEL;
+                    go.MoveSimple( 0.0, 0.5, 0.0 );
+                    Delay_s( 2.0 );
+                    go.MoveSimple( 0.0, 0.0, 0.0 );
                 }
 
                 // Raise the knocker and give it time to move
