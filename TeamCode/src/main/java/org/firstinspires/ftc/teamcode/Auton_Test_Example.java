@@ -39,7 +39,6 @@ public class Auton_Test_Example extends OpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    private ElapsedTime delayTimer = new ElapsedTime();
 
     private DcMotor frontLeft = null;
     private DcMotor frontRight = null;
@@ -51,6 +50,7 @@ public class Auton_Test_Example extends OpMode {
     private Pole wep = null;
     private Claw claw = null;
     private Lift lift = null;
+    private JewelKnocker jewelKnocker = null;
 
     // Jewel Knocker hardware
     private Servo knockerServo = null;
@@ -82,13 +82,14 @@ public class Auton_Test_Example extends OpMode {
     private AUTON_STEPS step = AUTON_STEPS.START;
 
     // Constants for controlling / tuning auton
-    private static final double DISTANCE_FORWARD_4_GLYPH = 10.0;      // This is in cm
-    private static final double DISTANCE_FOR_LEFT_COLUMN = 30.0;      // TODO: VALUE NEEDS TO BE CHOSEN
-    private static final double DISTANCE_FOR_CENTER_COLUMN = 35.0;      // TODO: VALUE NEEDS TO BE CHOSEN
-    private static final double DISTANCE_FOR_RIGHT_COLUMN = 40.0;      // TODO: VALUE NEEDS TO BE CHOSEN
-    private static final double DEGREES_2_ROTATE = 90.0;
-    private static final double DISTANCE_FORWARD_2_DROP = 12.5;        // TODO: VALUE NEEDS TO BE CHOSEN
-    private static final double DISTANCE_BACK_FINAL = 5.0;            // TODO: VALUE NEEDS TO BE CHOSEN
+    private static final double DISTANCE_FORWARD_4_GLYPH = 8.89;      // This is in cm
+    private static final double DISTANCE_FOR_LEFT_COLUMN = 72.07;     //
+    private static final double DISTANCE_FOR_CENTER_COLUMN = 91.44;   //
+    private static final double DISTANCE_FOR_RIGHT_COLUMN = 110.81;   //
+    private static final double DEGREES_2_ROTATE = 90.0;              // Must rotate CCW
+    private static final double DISTANCE_FORWARD_2_DROP = 20.32;      //
+    private static final double DISTANCE_BACK_FINAL = 5.0;            //
+    private static final double DISTANCE_FOR_JEWEL = 9.21;            // Distance to move to knock off a jewel
 
     // Used to compensate for movement to knock off jewel
     private double yDistanceFromStart = 0.0;
@@ -120,11 +121,9 @@ public class Auton_Test_Example extends OpMode {
         // Set up lift
         lift = new Lift( hardwareMap );
 
-        /*
         knockerServo = hardwareMap.servo.get( "knocker_servo" );
         colorSensor = hardwareMap.colorSensor.get( "color" );
         jewelKnocker = new JewelKnocker( knockerServo, colorSensor );
-        */
 
         /**
          * Start up Vuforia, telling it the id of the view that we wish to use as the parent for
@@ -217,18 +216,45 @@ public class Auton_Test_Example extends OpMode {
         switch ( step )
         {
             case START:
-                step = AUTON_STEPS.PICK_UP_GLYPH;
+                step = AUTON_STEPS.KNOCK_OFF_JEWEL;
                 break;
 
             case KNOCK_OFF_JEWEL:
                 // Open claw to get ready to pick up glyph
-                claw.claw_Outward();
+                // claw.claw_Outward();
 
-                // Lower jewel knocker
-                Delay_s( 0.2 );
+                // Lower jewel knocker and delay to give time to move
+                jewelKnocker.LowerKnocker();
+                Delay_s( 1.0 );
 
                 // read color sensor
-                // move forward or reverse based on color sensor
+                JewelKnocker.COLORS color = jewelKnocker.GetColor();
+
+                // Move forward or reverse based on color sensor, knock off red, because
+                // we are blue. The color sensor points forward.
+                if ( color == JewelKnocker.COLORS.RED )
+                {
+                    // Jewel to front is red, so move forward to knock off
+                    // go.AutonForward( DISTANCE_FOR_JEWEL );
+                    // yDistanceFromStart = DISTANCE_FOR_JEWEL;
+                    go.MoveSimple( 0.0, -0.5, 0.0 );
+                    Delay_s( 2.0 );
+                    go.MoveSimple( 0.0, 0.0, 0.0 );
+                }
+                else
+                {
+                    // Need to move backwards to knock off the red jewel; note that this
+                    // means distance is negative.
+//                    go.AutonReverse( DISTANCE_FOR_JEWEL );
+//                    yDistanceFromStart = 0.0 - DISTANCE_FOR_JEWEL;
+                    go.MoveSimple( 0.0, 0.5, 0.0 );
+                    Delay_s( 2.0 );
+                    go.MoveSimple( 0.0, 0.0, 0.0 );
+                }
+
+                // Raise the knocker and give it time to move
+                jewelKnocker.RaiseKnocker();
+                Delay_s( 1.0 );
 
                 // set yDistanceFromStart to distance moved (+ for forward, - for reverse)
                 step = AUTON_STEPS.PICK_UP_GLYPH;
@@ -236,25 +262,29 @@ public class Auton_Test_Example extends OpMode {
 
             case PICK_UP_GLYPH:
                 // To pick up the glyph, open the claw, move forward a bit,
-                // and close the claw and raise the lift a little
+                // and close the claw and raise the lift a little. Claw should
+                // already be open, but issue open command again, just in case.
                 claw.claw_Outward();
 
                 // Y distance from start is set to how far forward to move to pick up
                 // glyph minus any distance we moved forward to knock off jewel. If we
                 // moved backwards to knock off the jewel, then the original Y distance is
                 // negative and will be added on.
-                yDistanceFromStart = DISTANCE_FORWARD_4_GLYPH - yDistanceFromStart;
-                go.AutonForward( yDistanceFromStart );
+                if ( yDistanceFromStart < DISTANCE_FORWARD_4_GLYPH )
+                {
+                    yDistanceFromStart = DISTANCE_FORWARD_4_GLYPH - yDistanceFromStart;
+                    go.AutonForward(yDistanceFromStart);
+                }
                 claw.claw_Inward();
 
                 // short delay to let claw close
-                Delay_s( 0.1 );
+                Delay_s( 0.5 );
 
                 lift.AutonRaise();
                 step = AUTON_STEPS.MOVE_IN_FRONT_OF_BOX;
                 break;
 
-/*
+/*  ************** Comment out most of steps until can debug first couple ***********************
             case MOVE_IN_FRONT_OF_BOX:
             {
                 switch (vuMark)
@@ -290,6 +320,7 @@ public class Auton_Test_Example extends OpMode {
 
             case DROP_GYLPH:
                 claw.claw_Outward();
+                Delay_s( 0.5 );
                 lift.AutonLower();
                 step = AUTON_STEPS.BACK_UP;
                 break;
@@ -298,7 +329,7 @@ public class Auton_Test_Example extends OpMode {
                 go.AutonReverse( DISTANCE_BACK_FINAL );
                 step = AUTON_STEPS.STOP;
                 break;
-*/
+             */
 
             case STOP:
                 // In stop, just turn all motors off for safety
@@ -307,6 +338,9 @@ public class Auton_Test_Example extends OpMode {
                 claw.claw_Outward();
                 wep.stay();
                 wep.lift( 0.0 );
+
+                // Force to stop mode
+                requestOpModeStop();
 
                 break;
 
@@ -322,7 +356,13 @@ public class Auton_Test_Example extends OpMode {
      * Code to run ONCE after the driver hits STOP
      */
     @Override
-    public void stop() {
+    public void stop()
+    {
+        go.MoveSimple( 0.0, 0.0, 0.0 );
+        lift.Raise( 0.0 );
+        claw.claw_Outward();
+        wep.stay();
+        wep.lift( 0.0 );
     }
 
     /**
@@ -336,6 +376,8 @@ public class Auton_Test_Example extends OpMode {
     // Delay time method
     private void Delay_s( double seconds )
     {
+        ElapsedTime delayTimer = new ElapsedTime( ElapsedTime.Resolution.SECONDS );
+
         delayTimer.reset();
         int timeWaster = 0;
         while ( delayTimer.time() < seconds )

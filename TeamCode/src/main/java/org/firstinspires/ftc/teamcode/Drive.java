@@ -40,7 +40,9 @@ public class Drive
     final private static double ROBOT_DIAM_CM = Math.sqrt( 2 * ( ROBOT_LENGTH_IN * ROBOT_LENGTH_IN ) ) * IN_2_CM;
     final private static double ROBOT_CIRCUM_CM = ROBOT_DIAM_CM * Math.PI;
     final private static double CM_PER_DEGREE = ROBOT_CIRCUM_CM / 360.0;
-    final private static double MAX_SECONDS_PER_CM = 1;
+    final private static double MAX_SECONDS_PER_CM = 0.5;
+
+    private enum DIRECTION { FORWARD, REVERSE, RIGHT, LEFT, CLOCKWISE, COUNTERCLOCKWISE }
 
     public Drive(DcMotor FL, DcMotor FR, DcMotor RL, DcMotor RR )
     {
@@ -117,38 +119,12 @@ public class Drive
     public void AutonForward( double distance_cm )
     {
         /*
-         This algorithm calculates the total number encoder ticks we need to move for
-         the given distance, and then keeps running the wheels in forward and continually
-         sums in the ticks moved to get total ticks moved. Once the objective is met, it sets
-         wheel power back to 0. When the encoder rolls over (from ~1120 back to near 0), we account
-         for this in an if statement that looks for rollover
+         This method just uses MoveDistanceWithRamp to move forward the
+         distance requested.
          */
-        int encoderLast = frontLeft.getCurrentPosition();
-        int totalTicks = (int) ( distance_cm * TICKS_PER_CM );
-        int ticksMoved = 0;
+        MoveDistanceWithRamp( distance_cm, DIRECTION.FORWARD );
 
-        double timeLimit = MAX_SECONDS_PER_CM * distance_cm;
-        limitTimer.reset();
-        MoveSimple( 0.0, 0.5, 0.0 );
-        while ( ( ticksMoved <= totalTicks ) && ( limitTimer.time() < timeLimit ) )
-        {
-            int encoderNow = frontLeft.getCurrentPosition();
-            if ( encoderNow > encoderLast )
-            {
-                ticksMoved += encoderNow - encoderLast;
-            }
-            else
-            {
-                // encoder must have rolled over, so calculate how far moved before and after
-                // rolling over
-                ticksMoved += encoderNow + ( TICKS_PER_REV - encoderLast );
-            }
-
-            // Update last position for next loop
-            encoderLast = encoderNow;
-        }
-
-        // Stop moving
+        // Make sure we stop moving
         MoveSimple( 0.0, 0.0, 0.0 );
     }
 
@@ -159,38 +135,12 @@ public class Drive
     public void AutonReverse( double distance_cm )
     {
         /*
-         This algorithm calculates the total number encoder ticks we need to move for
-         the given distance, and then keeps running the wheels in reverse and continually
-         sums in the ticks moved to get total ticks moved. Once the objective is met, it sets
-         wheel power back to 0. When the encoder under flows (from 0 to near 1120), we account
-         for this in an if statement that looks for underflow
+         This method just uses MoveDistanceWithRamp to move forward the
+         distance requested.
          */
-        int encoderLast = frontLeft.getCurrentPosition();
-        int totalTicks = (int) ( distance_cm * TICKS_PER_CM );
-        int ticksMoved = 0;
+        MoveDistanceWithRamp( distance_cm, DIRECTION.REVERSE);
 
-        double timeLimit = MAX_SECONDS_PER_CM * distance_cm;
-        limitTimer.reset();
-        MoveSimple( 0.0, -0.5, 0.0 );
-        while ( ( ticksMoved <= totalTicks ) && ( limitTimer.time() < timeLimit ) )
-        {
-            int encoderNow = frontLeft.getCurrentPosition();
-            if ( encoderNow <= encoderLast )
-            {
-                ticksMoved += encoderLast - encoderNow;
-            }
-            else
-            {
-                // encoder must have rolled over, so calculate how far moved before and after
-                // rolling over
-                ticksMoved += encoderLast + ( TICKS_PER_REV - encoderNow );
-            }
-
-            // Update last position for next loop
-            encoderLast = encoderNow;
-        }
-
-        // Stop moving
+        // Make sure we stop moving
         MoveSimple( 0.0, 0.0, 0.0 );
     }
 
@@ -202,38 +152,15 @@ public class Drive
     public void AutonRotateClockwise( double degrees )
     {
         /*
-         This algorithm calculates the number encoder ticks we need to rotate a wheel to
-         rotate the requested angle. Then the robot is continually run in the correct rotation
-         until the ticks value is met. Once the objective is met, it sets
-         wheel power back to 0. When the encoder rolls over (from ~1120 back to near 0), we account
-         for this in an if statement that looks for rollover
+         This method calculates how far to turn in cm to get the desired
+         angle of rotation and then uses MoveDistanceWithRamp to
+         actually move the robot the required amount.
          */
-        int encoderLast = frontLeft.getCurrentPosition();
-        int totalTicks = (int) ( degrees * CM_PER_DEGREE * TICKS_PER_CM );
-        int ticksMoved = 0;
+        double distanceToRotate_cm = degrees * CM_PER_DEGREE;
 
-        double timeLimit = MAX_SECONDS_PER_CM * CM_PER_DEGREE * degrees;
-        limitTimer.reset();
-        MoveSimple( 0.0, 0.0, 0.5 );
-        while ( ( ticksMoved <= totalTicks ) && ( limitTimer.time() < timeLimit ) )
-        {
-            int encoderNow = frontLeft.getCurrentPosition();
-            if ( encoderNow >= encoderLast )
-            {
-                ticksMoved += encoderNow - encoderLast;
-            }
-            else
-            {
-                // encoder must have rolled over, so calculate how far moved before and after
-                // rolling over
-                ticksMoved += encoderNow + ( TICKS_PER_REV - encoderLast );
-            }
+        MoveDistanceWithRamp( distanceToRotate_cm, DIRECTION.CLOCKWISE );
 
-            // Update last position for next loop
-            encoderLast = encoderNow;
-        }
-
-        // Stop moving
+        // Make sure robot is not moving
         MoveSimple( 0.0, 0.0, 0.0 );
     }
 
@@ -245,38 +172,16 @@ public class Drive
     public void AutonRotateCounterclockwise( double degrees )
     {
         /*
-         This algorithm calculates the number encoder ticks we need to rotate a wheel to
-         rotate the requested angle. Then the robot is continually run in the correct rotation
-         until the ticks value is met. Once the objective is met, it sets
-         wheel power back to 0. When the encoder rolls over (from ~1120 back to near 0), we account
-         for this in an if statement that looks for rollover
+/*
+         This method calculates how far to turn in cm to get the desired
+         angle of rotation and then uses MoveDistanceWithRamp to
+         actually move the robot the required amount.
          */
-        int encoderLast = frontRight.getCurrentPosition();
-        int totalTicks = (int) ( degrees * CM_PER_DEGREE * TICKS_PER_CM );
-        int ticksMoved = 0;
+        double distanceToRotate_cm = degrees * CM_PER_DEGREE;
 
-        double timeLimit = MAX_SECONDS_PER_CM * CM_PER_DEGREE * degrees;
-        limitTimer.reset();
-        MoveSimple( 0.0, 0.0, -0.5 );
-        while ( ( ticksMoved <= totalTicks ) && ( limitTimer.time() < timeLimit ) )
-        {
-            int encoderNow = frontRight.getCurrentPosition();
-            if ( encoderNow >= encoderLast )
-            {
-                ticksMoved += encoderNow - encoderLast;
-            }
-            else
-            {
-                // encoder must have rolled over, so calculate how far moved before and after
-                // rolling over
-                ticksMoved += encoderNow + ( TICKS_PER_REV - encoderLast );
-            }
+        MoveDistanceWithRamp( distanceToRotate_cm, DIRECTION.COUNTERCLOCKWISE );
 
-            // Update last position for next loop
-            encoderLast = encoderNow;
-        }
-
-        // Stop moving
+        // Make sure robot is not moving
         MoveSimple( 0.0, 0.0, 0.0 );
     }
 
@@ -286,41 +191,14 @@ public class Drive
      */
     public void AutonRight( double distance_cm )
     {
-        /*
-         This algorithm calculates the total number encoder ticks we need to move for
-         the given distance, and then keeps running the wheels to the right and continually
-         sums in the ticks moved to get total ticks moved. Once the objective is met, it sets
-         wheel power back to 0. When the encoder rolls over (from ~1120 back to near 0), we account
-         for this in an if statement that looks for rollover
+ /*
+         This method just uses MoveDistanceWithRamp to move right the
+         distance requested.
          */
-        int encoderLast = frontLeft.getCurrentPosition();
-        int totalTicks = (int) ( distance_cm * TICKS_PER_CM );
-        int ticksMoved = 0;
+        MoveDistanceWithRamp( distance_cm, DIRECTION.RIGHT );
 
-        double timeLimit = MAX_SECONDS_PER_CM * distance_cm;
-        limitTimer.reset();
-        MoveSimple( 0.5, 0.0, 0.0 );
-        while ( ( ticksMoved <= totalTicks ) && ( limitTimer.time() < timeLimit ) )
-        {
-            int encoderNow = frontLeft.getCurrentPosition();
-            if ( encoderNow > encoderLast )
-            {
-                ticksMoved += encoderNow - encoderLast;
-            }
-            else
-            {
-                // encoder must have rolled over, so calculate how far moved before and after
-                // rolling over
-                ticksMoved += encoderNow + ( TICKS_PER_REV - encoderLast );
-            }
-
-            // Update last position for next loop
-            encoderLast = encoderNow;
-        }
-
-        // Stop moving
-        MoveSimple( 0.0, 0.0, 0.0 );
-    }
+        // Make sure we stop moving
+        MoveSimple( 0.0, 0.0, 0.0 );    }
 
     /*
      * Method to move the robot left a specified distance. For use in auton modes.
@@ -328,12 +206,26 @@ public class Drive
      */
     public void AutonLeft( double distance_cm )
     {
+ /*
+         This method just uses MoveDistanceWithRamp to move left the
+         distance requested.
+         */
+        MoveDistanceWithRamp( distance_cm, DIRECTION.LEFT );
+
+        // Make sure we stop moving
+        MoveSimple( 0.0, 0.0, 0.0 );    }
+
+    /*
+     * Method to move the robot a specified distance in a specified direction.
+     * Parameters are distance to move in centimeters and direction
+     */
+    private void MoveDistanceWithRamp( double distance_cm, DIRECTION whichWay )
+    {
         /*
          This algorithm calculates the total number encoder ticks we need to move for
-         the given distance, and then keeps running the wheels left and continually
-         sums in the ticks moved to get total ticks moved. Once the objective is met, it sets
-         wheel power back to 0. When the encoder under flows (from 0 to near 1120), we account
-         for this in an if statement that looks for underflow
+         the given distance, and then runs the wheels until that distance is met.
+         The direction to move is provided by the caller and the power is ramped from
+         0 to 0.5 and then held there while still running using RampUpPower.
          */
         int encoderLast = frontLeft.getCurrentPosition();
         int totalTicks = (int) ( distance_cm * TICKS_PER_CM );
@@ -341,20 +233,18 @@ public class Drive
 
         double timeLimit = MAX_SECONDS_PER_CM * distance_cm;
         limitTimer.reset();
-        MoveSimple( -0.5, 0.0, 0.0 );
+        double powerNow = 0.0;
         while ( ( ticksMoved <= totalTicks ) && ( limitTimer.time() < timeLimit ) )
         {
+            // apply power to wheels
+            powerNow = RampUpPower( powerNow, 0.5, whichWay );
+
+            // Delay 50ms to control ramp rate
+            Delay_ms( 50.0 );
+
+            // calc how much we have moved
             int encoderNow = frontLeft.getCurrentPosition();
-            if ( encoderNow <= encoderLast )
-            {
-                ticksMoved += encoderLast - encoderNow;
-            }
-            else
-            {
-                // encoder must have rolled over, so calculate how far moved before and after
-                // rolling over
-                ticksMoved += encoderLast + ( TICKS_PER_REV - encoderNow );
-            }
+            ticksMoved = SumTicksMoved( encoderNow, encoderLast, ticksMoved, whichWay );
 
             // Update last position for next loop
             encoderLast = encoderNow;
@@ -364,5 +254,72 @@ public class Drive
         MoveSimple( 0.0, 0.0, 0.0 );
     }
 
+    // Method to determine how far we have gone based on encoder change and direction we
+    // are traveling.
+    private int SumTicksMoved( int encoderNow, int encoderLast, int movedSoFar, DIRECTION whichWay )
+    {
+        if ( ( whichWay == DIRECTION.FORWARD ) || ( whichWay == DIRECTION.RIGHT ) || ( whichWay == DIRECTION.CLOCKWISE ) )
+        {
+            movedSoFar += encoderLast - encoderNow;
+        }
+        else
+        {
+            movedSoFar += encoderNow - encoderLast;
+        }
+
+        return movedSoFar;
+    }
+
+
+    // Method to ramp up power in a given direction and then hold it
+    private double RampUpPower( double powerNow, double targetPower, DIRECTION whichWay )
+    {
+        powerNow += targetPower * 0.1;
+        if ( powerNow >= targetPower )
+        {
+            powerNow = targetPower;
+        }
+
+        switch (whichWay)
+        {
+            case FORWARD:
+                MoveSimple( 0.0, targetPower, 0.0 );
+                break;
+
+            case REVERSE:
+                MoveSimple( 0.0, ( -1.0 * targetPower ), 0.0 );
+                break;
+
+            case RIGHT:
+                MoveSimple( targetPower, 0.0, 0.0 );
+                break;
+
+            case LEFT:
+                MoveSimple( ( -1.0 * targetPower ), 0.0, 0.0 );
+                break;
+
+            case CLOCKWISE:
+                MoveSimple( 0.0, 0.0, targetPower );
+                break;
+
+            case COUNTERCLOCKWISE:
+                MoveSimple( 0.0, 0.0, ( -1.0 * targetPower ) );
+                break;
+        }
+
+        return powerNow;
+    }
+
+    // Method for creating short delays
+    private void Delay_ms( double delay )
+    {
+        ElapsedTime delayTimer = new ElapsedTime( ElapsedTime.Resolution.MILLISECONDS );
+
+        delayTimer.reset();
+        while ( delayTimer.time() < delay )
+        {
+            // do nothing
+        }
+    }
 
 }
