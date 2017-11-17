@@ -188,7 +188,7 @@ public class Auton_Blue_Front extends OpMode {
         }
 
         // Open the claw to get ready to pick up glyph
-        claw.claw_Outward();
+        // claw.claw_Outward();
 
         runtime.reset();
     }
@@ -288,10 +288,6 @@ public class Auton_Blue_Front extends OpMode {
             case STOP:
                 // In stop, just turn all motors off for safety
                 go.MoveSimple( 0.0, 0.0, 0.0 );
-                lift.Raise( 0.0 );
-                claw.claw_Outward();
-                wep.stay();
-                wep.lift( 0.0 );
 
                 // Force to stop mode
                 requestOpModeStop();
