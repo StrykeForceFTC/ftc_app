@@ -23,6 +23,8 @@ public class JewelKnocker
     // Position values for servo
     final private static double KNOCKER_DOWN_POSITION = 0.625;
     final private static double KNOCKER_UP_POSITION = 0.25;
+    final private static double KNOCKER_DOWN_POSITION_8553 = 0.57;
+    final private static double KNOCKER_UP_POSITION_8553 = 0.0;
 
     public JewelKnocker( Servo servo, ColorSensor color )
     {
@@ -69,13 +71,23 @@ public class JewelKnocker
         knockerServo.setPosition( KNOCKER_DOWN_POSITION );
     }
 
+    public void LowerKnocker8553( )
+    {
+        knockerServo.setPosition( KNOCKER_DOWN_POSITION_8553 );
+    }
+
     // Method to lower the jewel knocker
     public void RaiseKnocker( )
     {
         knockerServo.setPosition( KNOCKER_UP_POSITION );
     }
 
-    // Method used to read red value to help with debug
+    public void RaiseKnocker8553( )
+    {
+        knockerServo.setPosition( KNOCKER_UP_POSITION_8553 );
+    }
+
+     // Method used to read red value to help with debug
     public int RedValue( )
     {
         return colorSensor.red( );

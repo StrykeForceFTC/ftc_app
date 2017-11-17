@@ -148,15 +148,15 @@ public class Tele_Op_Test extends OpMode
 
         telemetry.addLine("Knocker ")
                 .addData( "Position", knockerServo.getPosition() );
-*/
+
         telemetry.addLine("Color Values | ")
                 .addData("Red", jewelKnocker.RedValue())
                 .addData("Blue", jewelKnocker.BlueValue());
-/*
+*/
         telemetry.addLine("Claw Positions | ")
                 .addData( "Right", rightClawPosition )
                 .addData( "Left", leftClawPosition );
-        telemetry.addLine("WEP ")
+/*        telemetry.addLine("WEP ")
                 .addData("Position", wep.GetPosition() );
         telemetry.addLine("Lift" )
                 .addData( "Position ", lift.GetPosition() );
@@ -203,13 +203,21 @@ public class Tele_Op_Test extends OpMode
         // Gamepad1.x used to increase jewel knocker position
         if ( gamepad1.x )
         {
-            jewelKnocker.LowerKnocker();
+            claw.StepClosed();
+            while ( gamepad1.x )
+            {
+
+            }
         }
 
         // Gamepad1.y to decrease jewel knocker position
         if ( gamepad1.y )
         {
-            jewelKnocker.RaiseKnocker();
+            claw.StepOpen();
+            while ( gamepad1.x )
+            {
+
+            }
         }
 
 
@@ -231,40 +239,12 @@ public class Tele_Op_Test extends OpMode
 */
         // ************* Test code for drive auto methods **************
 
-        if ( gamepad1.a )
-        {
-            go.MoveSimple(0.0, 0.1, 0.0);
-            Delay_s( 2.0 );
-            go.MoveSimple(0.0, 0.0, 0.0);
-        }
-
-        if ( gamepad1.b )
-        {
-            go.MoveSimple(0.0, -0.1, 0.0);
-            Delay_s( 2.0 );
-            go.MoveSimple(0.0, 0.0, 0.0);
-        }
-
-        if ( gamepad2.x )
-        {
-            go.MoveSimple(0.0, 0.1, 0.1);
-            Delay_s( 2.0 );
-            go.MoveSimple(0.0, 0.0, 0.0);
-        }
-
-        if ( gamepad2.y )
-        {
-            go.MoveSimple(0.0, 0.0, -0.1);
-            Delay_s( 2.0 );
-            go.MoveSimple(0.0, 0.0, 0.0);
-        }
-
-        telemetry.addLine("Encoders ")
+/*        telemetry.addLine("Encoders ")
                 .addData("FL ", frontLeft.getCurrentPosition() )
                 .addData("FR ", frontRight.getCurrentPosition() );
         telemetry.addLine("Lift")
                 .addData("enc ", lift.GetPosition());
-
+*/
         telemetry.update();
     }
 

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -33,6 +34,7 @@ import java.util.List;
  *
  */
 @Autonomous(name = "Auton Test Example", group = "Iterative Opmode")
+@Disabled
 public class Auton_Test_Example extends OpMode {
 
     public static final String TAG = "Vuforia Navigation Sample";

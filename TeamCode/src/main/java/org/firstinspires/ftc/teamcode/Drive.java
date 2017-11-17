@@ -69,10 +69,10 @@ public class Drive
 
         // Set all motors to run with encoders.
 
-        frontLeft.setMode( DcMotor.RunMode.RUN_USING_ENCODER );
-        frontRight.setMode( DcMotor.RunMode.RUN_USING_ENCODER );
-        rearLeft.setMode( DcMotor.RunMode.RUN_USING_ENCODER );
-        rearRight.setMode( DcMotor.RunMode.RUN_USING_ENCODER );
+        frontLeft.setMode( DcMotor.RunMode.RUN_WITHOUT_ENCODER );
+        frontRight.setMode( DcMotor.RunMode.RUN_WITHOUT_ENCODER );
+        rearLeft.setMode( DcMotor.RunMode.RUN_WITHOUT_ENCODER );
+        rearRight.setMode( DcMotor.RunMode.RUN_WITHOUT_ENCODER );
 
         // Set motors to not brake
         frontLeft.setZeroPowerBehavior( DcMotor.ZeroPowerBehavior.FLOAT );
