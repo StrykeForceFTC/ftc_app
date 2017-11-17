@@ -2,25 +2,17 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.RobotLog;
-import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.matrices.MatrixF;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 import java.util.ArrayList;
@@ -29,11 +21,11 @@ import java.util.List;
 /**
  * Created by jscott on 11/10/17.
  *
- * Example auton program based on the front position for the blue team.
+ * Example auton program using time for movement based on red back position.
  *
  */
-@Autonomous(name = "Auton Test Example", group = "Iterative Opmode")
-public class Auton_Test_Example extends OpMode {
+@Autonomous(name = "Auton Time Blue Rear", group = "Iterative Opmode")
+public class Auton_Time_Blue_Rear extends OpMode {
 
     public static final String TAG = "Vuforia Navigation Sample";
 
@@ -51,15 +43,13 @@ public class Auton_Test_Example extends OpMode {
     private Pole wep = null;
     private Claw claw = null;
     private Lift lift = null;
-
-    // Jewel Knocker hardware
-    private Servo knockerServo = null;
-    private ColorSensor colorSensor = null;
-
+    private JewelKnocker jewelKnocker = null;
+    private ColorSensor color = null;
+    private Servo servo = null;
     // determine new target
-    private int newLeftTarget;
-    private int newRightTarget;
-    private int targetX, targetY, targetSpin;
+    int newLeftTarget;
+    int newRightTarget;
+    int targetX, targetY, targetSpin;
 
     VuforiaTrackables relicTrackables;
     VuforiaTrackable relicTemplate;
@@ -75,23 +65,13 @@ public class Auton_Test_Example extends OpMode {
     private VuforiaLocalizer vuforia;
 
     // Enumeration for auton steps
-    private enum AUTON_STEPS { START, KNOCK_OFF_JEWEL, PICK_UP_GLYPH,
-                               MOVE_IN_FRONT_OF_BOX, ROTATE_TO_FACE_BOX, MOVE_FORWARD_TO_BOX,
-                               DROP_GYLPH, BACK_UP, STOP }
+    private enum AUTON_STEPS { START, KNOCK_OFF_JEWEL, MOVE_TO_CRYPTO_BOX, STOP }
 
     private AUTON_STEPS step = AUTON_STEPS.START;
 
     // Constants for controlling / tuning auton
-    private static final double DISTANCE_FORWARD_4_GLYPH = 10.0;      // This is in cm
-    private static final double DISTANCE_FOR_LEFT_COLUMN = 30.0;      // TODO: VALUE NEEDS TO BE CHOSEN
-    private static final double DISTANCE_FOR_CENTER_COLUMN = 35.0;      // TODO: VALUE NEEDS TO BE CHOSEN
-    private static final double DISTANCE_FOR_RIGHT_COLUMN = 40.0;      // TODO: VALUE NEEDS TO BE CHOSEN
-    private static final double DEGREES_2_ROTATE = 90.0;
-    private static final double DISTANCE_FORWARD_2_DROP = 12.5;        // TODO: VALUE NEEDS TO BE CHOSEN
-    private static final double DISTANCE_BACK_FINAL = 5.0;            // TODO: VALUE NEEDS TO BE CHOSEN
-
-    // Used to compensate for movement to knock off jewel
-    private double yDistanceFromStart = 0.0;
+    private static double TIME_2_KNOCK_JEWEL = 3.0;         // TODO: VALUE NEEDS TO BE CHOSEN
+    private static double TIME_2_MOVE_2_CRYPTO = 10.0;      // TODO: VALUE NEEDS TO BE CHOSEN
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -119,13 +99,9 @@ public class Auton_Test_Example extends OpMode {
 
         // Set up lift
         lift = new Lift( hardwareMap );
-
-        /*
-        knockerServo = hardwareMap.servo.get( "knocker_servo" );
-        colorSensor = hardwareMap.colorSensor.get( "color" );
-        jewelKnocker = new JewelKnocker( knockerServo, colorSensor );
-        */
-
+        color = hardwareMap.colorSensor.get("color");
+        servo = hardwareMap.servo.get("knocker_servo");
+        jewelKnocker = new JewelKnocker(servo, color);
         /**
          * Start up Vuforia, telling it the id of the view that we wish to use as the parent for
          * the camera monitor feedback; if no camera monitor feedback is desired, use the parameterless
@@ -195,7 +171,19 @@ public class Auton_Test_Example extends OpMode {
         {
             vuMark = RelicRecoveryVuMark.from(relicTemplate);
         }
-
+        jewelKnocker.LowerKnocker();
+        Delay_s(3.5);
+        if(jewelKnocker.GetColor().equals(JewelKnocker.COLORS.RED))
+        {
+         go.MoveSimple(0,0.25,0);
+            Delay_s(1.0);
+         go.MoveSimple(0,0,0);
+        }
+        else{
+            go.MoveSimple(0,-0.25, 0);
+            Delay_s(1.0);
+            go.MoveSimple(0,0,0);
+        }
         // Open the claw to get ready to pick up glyph
         claw.claw_Outward();
 
@@ -214,100 +202,39 @@ public class Auton_Test_Example extends OpMode {
             vuMark = RelicRecoveryVuMark.from(relicTemplate);
         }
 
-        switch ( step )
+        switch (step)
         {
             case START:
-                step = AUTON_STEPS.PICK_UP_GLYPH;
+                step = AUTON_STEPS.KNOCK_OFF_JEWEL;
                 break;
 
             case KNOCK_OFF_JEWEL:
-                // Open claw to get ready to pick up glyph
-                claw.claw_Outward();
-
                 // Lower jewel knocker
-                Delay_s( 0.2 );
-
                 // read color sensor
                 // move forward or reverse based on color sensor
 
-                // set yDistanceFromStart to distance moved (+ for forward, - for reverse)
-                step = AUTON_STEPS.PICK_UP_GLYPH;
+                step = AUTON_STEPS.MOVE_TO_CRYPTO_BOX;
                 break;
 
-            case PICK_UP_GLYPH:
-                // To pick up the glyph, open the claw, move forward a bit,
-                // and close the claw and raise the lift a little
-                claw.claw_Outward();
-
-                // Y distance from start is set to how far forward to move to pick up
-                // glyph minus any distance we moved forward to knock off jewel. If we
-                // moved backwards to knock off the jewel, then the original Y distance is
-                // negative and will be added on.
-                yDistanceFromStart = DISTANCE_FORWARD_4_GLYPH - yDistanceFromStart;
-                go.AutonForward( yDistanceFromStart );
-                claw.claw_Inward();
-
-                // short delay to let claw close
-                Delay_s( 0.1 );
-
-                lift.AutonRaise();
-                step = AUTON_STEPS.MOVE_IN_FRONT_OF_BOX;
-                break;
-
-/*
-            case MOVE_IN_FRONT_OF_BOX:
+            case MOVE_TO_CRYPTO_BOX:
             {
-                switch (vuMark)
-                {
-                    case LEFT:
-                        go.AutonForward( DISTANCE_FOR_LEFT_COLUMN - yDistanceFromStart );
-                        break;
+                // Move backwards for red side
+                //go.MoveSimple( 0.0, -1.0, 0.0 );
+                //Delay_s( TIME_2_MOVE_2_CRYPTO );
 
-                    case RIGHT:
-                        go.AutonForward( DISTANCE_FOR_RIGHT_COLUMN - yDistanceFromStart );
-                        break;
+                // Stop moving
+                //go.MoveSimple( 0.0, 0.0, 0.0 );
 
-                    default:  // Default is for unknown or center
-                    {
-                        go.AutonForward( DISTANCE_FOR_CENTER_COLUMN - yDistanceFromStart );
-                    }
-                    break;
-                }
-
-                step = AUTON_STEPS.ROTATE_TO_FACE_BOX;
+                step = AUTON_STEPS.STOP;
             }
                 break;
-
-            case ROTATE_TO_FACE_BOX:
-                go.AutonRotateCounterclockwise( DEGREES_2_ROTATE );
-                step = AUTON_STEPS.MOVE_FORWARD_TO_BOX;
-                break;
-
-            case MOVE_FORWARD_TO_BOX:
-                go.AutonForward( DISTANCE_FORWARD_2_DROP );
-                step = AUTON_STEPS.DROP_GYLPH;
-                break;
-
-            case DROP_GYLPH:
-                claw.claw_Outward();
-                lift.AutonLower();
-                step = AUTON_STEPS.BACK_UP;
-                break;
-
-            case BACK_UP:
-                go.AutonReverse( DISTANCE_BACK_FINAL );
-                step = AUTON_STEPS.STOP;
-                break;
-*/
 
             case STOP:
                 // In stop, just turn all motors off for safety
                 go.MoveSimple( 0.0, 0.0, 0.0 );
-                lift.Raise( 0.0 );
                 claw.claw_Outward();
                 wep.stay();
-                wep.lift( 0.0 );
-
+                wep.lift(0.0);
                 break;
 
             default:  // Should never get here, so just go to stop
@@ -337,13 +264,14 @@ public class Auton_Test_Example extends OpMode {
     private void Delay_s( double seconds )
     {
         delayTimer.reset();
-        int timeWaster = 0;
         while ( delayTimer.time() < seconds )
         {
-            // Just wasting some time
-            timeWaster++;
+            telemetry.addLine( "Encoder " )
+                    .addData( "Value", frontLeft.getCurrentPosition() );
+            telemetry.update();
         }
     }
+
 
 }
 

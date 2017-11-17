@@ -34,6 +34,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -64,15 +65,14 @@ public class Tele_Op_Test extends OpMode
 
     // Jewel Knocker hardware
     private Servo knockerServo = null;
-
-    // Color sensor is not available, yet
-    // private ColorSensor colorSensor = null;
+    private ColorSensor colorSensor = null;
 
     HardwareMap robotMap = hardwareMap;
     private Drive go = null;
     private Pole wep = null;
     private Claw claw = null;
     private Lift lift = null;
+    private JewelKnocker jewelKnocker = null;
 
     /*
     private JewelKnocker jewelKnocker = null;
@@ -93,15 +93,11 @@ public class Tele_Op_Test extends OpMode
         rearLeft  = hardwareMap.dcMotor.get("rear_left");
         rearRight  = hardwareMap.dcMotor.get("rear_right");
 
-        knockerServo = hardwareMap.servo.get("knocker_servo");
-        /*
-        colorSensor = hardwareMap.colorSensor.get("color");
-        */
-
         go = new Drive(frontLeft, frontRight, rearLeft, rearRight);
-        /*
+
+        knockerServo = hardwareMap.servo.get("knocker_servo");
+        colorSensor = hardwareMap.colorSensor.get("color");
         jewelKnocker = new JewelKnocker( knockerServo, colorSensor );
-        */
 
         // Set up Claw
         claw = new Claw( hardwareMap );
@@ -128,6 +124,7 @@ public class Tele_Op_Test extends OpMode
     @Override
     public void start() {
         runtime.reset();
+        jewelKnocker.RaiseKnocker();
     }
 
     /*
@@ -152,11 +149,9 @@ public class Tele_Op_Test extends OpMode
         telemetry.addLine("Knocker ")
                 .addData( "Position", knockerServo.getPosition() );
 */
-        /*
         telemetry.addLine("Color Values | ")
                 .addData("Red", jewelKnocker.RedValue())
                 .addData("Blue", jewelKnocker.BlueValue());
-        */
 /*
         telemetry.addLine("Claw Positions | ")
                 .addData( "Right", rightClawPosition )
@@ -206,22 +201,21 @@ public class Tele_Op_Test extends OpMode
 
         // ******* Test code for JewelKnocker ***********
         // Gamepad1.x used to increase jewel knocker position
-/*
         if ( gamepad1.x )
         {
-            knockerServo.setPosition(0.6);
+            jewelKnocker.LowerKnocker();
         }
 
         // Gamepad1.y to decrease jewel knocker position
         if ( gamepad1.y )
         {
-            knockerServo.setPosition(0.1);
+            jewelKnocker.RaiseKnocker();
         }
 
 
         // ************* Test code for lift **************
         lift.Raise( gamepad2.left_stick_y );
-*/
+
 
         //testcode for relic
 /*
