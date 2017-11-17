@@ -148,15 +148,15 @@ public class Tele_Op_Test extends OpMode
 
         telemetry.addLine("Knocker ")
                 .addData( "Position", knockerServo.getPosition() );
-*/
+
         telemetry.addLine("Color Values | ")
                 .addData("Red", jewelKnocker.RedValue())
                 .addData("Blue", jewelKnocker.BlueValue());
-/*
+*/
         telemetry.addLine("Claw Positions | ")
                 .addData( "Right", rightClawPosition )
                 .addData( "Left", leftClawPosition );
-        telemetry.addLine("WEP ")
+/*        telemetry.addLine("WEP ")
                 .addData("Position", wep.GetPosition() );
         telemetry.addLine("Lift" )
                 .addData( "Position ", lift.GetPosition() );
@@ -203,18 +203,26 @@ public class Tele_Op_Test extends OpMode
         // Gamepad1.x used to increase jewel knocker position
         if ( gamepad1.x )
         {
-            jewelKnocker.LowerKnocker();
+            claw.StepClosed();
+            while ( gamepad1.x )
+            {
+
+            }
         }
 
         // Gamepad1.y to decrease jewel knocker position
         if ( gamepad1.y )
         {
-            jewelKnocker.RaiseKnocker();
+            claw.StepOpen();
+            while ( gamepad1.x )
+            {
+
+            }
         }
 
 
         // ************* Test code for lift **************
-        lift.Raise( gamepad2.left_stick_y );
+        // lift.Raise( gamepad2.left_stick_y );
 
 
         //testcode for relic
@@ -231,32 +239,28 @@ public class Tele_Op_Test extends OpMode
 */
         // ************* Test code for drive auto methods **************
 
-        if ( gamepad1.a )
-        {
-            go.AutonForward( 30.0 );
-        }
-
-        if ( gamepad1.b )
-        {
-            go.AutonReverse( 30.0 );
-        }
-
-        if ( gamepad1.x )
-        {
-            go.AutonRotateClockwise( 90.0 );
-        }
-
-        if ( gamepad1.y )
-        {
-            go.AutonRotateCounterclockwise( 90.0 );
-        }
-
-        telemetry.addLine("Encoders ")
+/*        telemetry.addLine("Encoders ")
                 .addData("FL ", frontLeft.getCurrentPosition() )
                 .addData("FR ", frontRight.getCurrentPosition() );
-
-
+        telemetry.addLine("Lift")
+                .addData("enc ", lift.GetPosition());
+*/
         telemetry.update();
+    }
+
+
+    // Delay time method
+    private void Delay_s( double seconds )
+    {
+        ElapsedTime delayTimer = new ElapsedTime( ElapsedTime.Resolution.SECONDS );
+
+        delayTimer.reset();
+        int timeWaster = 0;
+        while ( delayTimer.time() < seconds )
+        {
+            // Just wasting some time
+            timeWaster++;
+        }
     }
 
     /*

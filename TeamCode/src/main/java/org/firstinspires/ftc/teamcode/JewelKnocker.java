@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * Created by jscott on 11/04/17.
@@ -17,11 +18,13 @@ public class JewelKnocker
     private ColorSensor colorSensor = null;
 
     // Constants for detecting color
-    final private static int RED_LOWER_LIMIT = 50;
+    final private static int RED_LOWER_LIMIT = 55;
 
     // Position values for servo
-    final private static double KNOCKER_DOWN_POSITION = 0.6;
-    final private static double KNOCKER_UP_POSITION = 0.1;
+    final private static double KNOCKER_DOWN_POSITION = 0.625;
+    final private static double KNOCKER_UP_POSITION = 0.25;
+    final private static double KNOCKER_DOWN_POSITION_8553 = 0.57;
+    final private static double KNOCKER_UP_POSITION_8553 = 0.0;
 
     public JewelKnocker( Servo servo, ColorSensor color )
     {
@@ -38,7 +41,20 @@ public class JewelKnocker
     // Method used to determine whether color of jewel is blue or red
     public COLORS GetColor( )
     {
-        if ( colorSensor.red( ) > RED_LOWER_LIMIT )
+        int timesItWasRed = 0;
+
+        for (int tries = 0; tries < 5; tries++)
+        {
+            if ( colorSensor.red( ) >= RED_LOWER_LIMIT )
+            {
+                timesItWasRed++;
+            }
+
+            // Put short delay between checks
+            Delay_ms( 20.0 );
+        }
+
+        if ( timesItWasRed >= 3 )
         {
             return COLORS.RED;
         }
@@ -55,13 +71,23 @@ public class JewelKnocker
         knockerServo.setPosition( KNOCKER_DOWN_POSITION );
     }
 
+    public void LowerKnocker8553( )
+    {
+        knockerServo.setPosition( KNOCKER_DOWN_POSITION_8553 );
+    }
+
     // Method to lower the jewel knocker
     public void RaiseKnocker( )
     {
         knockerServo.setPosition( KNOCKER_UP_POSITION );
     }
 
-    // Method used to read red value to help with debug
+    public void RaiseKnocker8553( )
+    {
+        knockerServo.setPosition( KNOCKER_UP_POSITION_8553 );
+    }
+
+     // Method used to read red value to help with debug
     public int RedValue( )
     {
         return colorSensor.red( );
@@ -85,6 +111,17 @@ public class JewelKnocker
         if ( ( position >= 0.0 ) && ( position <= 1.0 ) )
         {
             knockerServo.setPosition( position );
+        }
+    }
+
+    private void Delay_ms( double delay )
+    {
+        ElapsedTime delayTimer = new ElapsedTime( ElapsedTime.Resolution.MILLISECONDS );
+        delayTimer.reset();
+        int timeWaster = 0;
+        while ( delayTimer.time() < delay )
+        {
+            timeWaster++;
         }
     }
 

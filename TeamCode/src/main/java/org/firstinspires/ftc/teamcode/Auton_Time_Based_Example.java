@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -23,13 +24,14 @@ import java.util.List;
  *
  */
 @Autonomous(name = "Auton Time Based Example", group = "Iterative Opmode")
+@Disabled
 public class Auton_Time_Based_Example extends OpMode {
 
     public static final String TAG = "Vuforia Navigation Sample";
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    private ElapsedTime delayTimer = new ElapsedTime();
+    private ElapsedTime delayTimer = new ElapsedTime( ElapsedTime.Resolution.SECONDS );
 
     private DcMotor frontLeft = null;
     private DcMotor frontRight = null;
