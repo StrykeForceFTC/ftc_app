@@ -229,8 +229,8 @@ public class Auton_Red_Front extends OpMode {
                     // Jewel to front is red, so move backward to knock off
                     //go.AutonReverse( DISTANCE_FOR_JEWEL );
                     //yDistanceFromStart = DISTANCE_FOR_JEWEL;
-                    go.MoveSimple( 0.0, 0.2, 0.0 );
-                    Delay_s( 0.275 );
+                    go.MoveSimple( 0.0, 0.23, 0.0 );
+                    Delay_s( 0.3 );
                     go.MoveSimple( 0.0, 0.0, 0.0 );
                 }
                 else
@@ -239,14 +239,14 @@ public class Auton_Red_Front extends OpMode {
                     // means distance is negative.
                     //go.AutonForward( DISTANCE_FOR_JEWEL );
                     //yDistanceFromStart = 0.0 - DISTANCE_FOR_JEWEL;
-                    go.MoveSimple( 0.0, -0.2, 0.0 );
-                    Delay_s( 0.275 );
+                    go.MoveSimple( 0.0, -0.23, 0.0 );
+                    Delay_s( 0.3 );
                     go.MoveSimple( 0.0, 0.0, 0.0 );
                 }
 
                 // Raise the knocker and give it time to move
                 jewelKnocker.RaiseKnocker();
-                Delay_s( 1.0 );
+                Delay_s( 1.5 );
 
                 // set yDistanceFromStart to distance moved (+ for forward, - for reverse)
                 step = AUTON_STEPS.MOVE_IN_FRONT_OF_BOX;
@@ -272,8 +272,8 @@ public class Auton_Red_Front extends OpMode {
                     break;
                 }
 */
-                go.MoveSimple( 0.0, 0.5, 0.0 );
-                Delay_s( 2 );
+                go.MoveSimple( 0.0, 0.4, 0.0 );
+                Delay_s( 1.5 );
                 go.MoveSimple(0,0,0);
 
                 step = AUTON_STEPS.STOP;
