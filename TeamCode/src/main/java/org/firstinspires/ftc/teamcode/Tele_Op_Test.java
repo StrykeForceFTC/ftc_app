@@ -203,13 +203,13 @@ public class Tele_Op_Test extends OpMode
         // Gamepad1.x used to increase jewel knocker position
         if ( gamepad1.x )
         {
-            jewelKnocker.LowerKnocker();
+            jewelKnocker.KnockerPositionSet( 0.0 );
         }
 
         // Gamepad1.y to decrease jewel knocker position
         if ( gamepad1.y )
         {
-            jewelKnocker.RaiseKnocker();
+            jewelKnocker.KnockerPositionSet( 0.57 );
         }
 
 
