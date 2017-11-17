@@ -188,7 +188,7 @@ public class Auton_Blue_Front extends OpMode {
         }
 
         // Open the claw to get ready to pick up glyph
-        claw.claw_Outward();
+        // claw.claw_Outward();
 
         runtime.reset();
     }
@@ -217,7 +217,7 @@ public class Auton_Blue_Front extends OpMode {
 
                 // Lower jewel knocker and delay to give time to move
                 jewelKnocker.LowerKnocker();
-                Delay_s( 4.0 );
+                Delay_s( 1.0 );
 
                 // read color sensor
                 JewelKnocker.COLORS color = jewelKnocker.GetColor();
@@ -229,8 +229,8 @@ public class Auton_Blue_Front extends OpMode {
                     // Jewel to front is red, so move backward to knock off
                     //go.AutonReverse( DISTANCE_FOR_JEWEL );
                     //yDistanceFromStart = DISTANCE_FOR_JEWEL;
-                    go.MoveSimple( 0.0, -0.1, 0.0 );
-                    Delay_s( 1.0 );
+                    go.MoveSimple( 0.0, -0.2, 0.0 );
+                    Delay_s( 0.275 );
                     go.MoveSimple( 0.0, 0.0, 0.0 );
                 }
                 else
@@ -239,25 +239,23 @@ public class Auton_Blue_Front extends OpMode {
                     // means distance is negative.
                     //go.AutonForward( DISTANCE_FOR_JEWEL );
                     //yDistanceFromStart = 0.0 - DISTANCE_FOR_JEWEL;
-                    go.MoveSimple( 0.0, 0.1, 0.0 );
-                    Delay_s( 1.0 );
+                    go.MoveSimple( 0.0, 0.2, 0.0 );
+                    Delay_s( 0.275 );
                     go.MoveSimple( 0.0, 0.0, 0.0 );
                 }
 
                 // Raise the knocker and give it time to move
                 jewelKnocker.RaiseKnocker();
-                Delay_s( 4.0 );
+                Delay_s( 1.0 );
 
                 // set yDistanceFromStart to distance moved (+ for forward, - for reverse)
                 step = AUTON_STEPS.MOVE_IN_FRONT_OF_BOX;
                 break;
 
-
-// /*  ************** Comment out most of steps until can debug first couple ***********************
             case MOVE_IN_FRONT_OF_BOX:
             {
-/*
-                switch (vuMark)
+
+/*                switch (vuMark)
                 {
                     case LEFT:
                         go.AutonReverse( DISTANCE_FOR_LEFT_COLUMN - yDistanceFromStart );
@@ -274,39 +272,22 @@ public class Auton_Blue_Front extends OpMode {
                     break;
                 }
 */
-                go.MoveSimple( 0.0, -0.1, 0.0 );
-                Delay_s( 5.0 );
+                go.MoveSimple( 0.0, -0.5, 0.0 );
+                Delay_s( 2 );
                 go.MoveSimple(0,0,0);
 
                 step = AUTON_STEPS.STOP;
             }
-                break;
-
-            case ROTATE_TO_FACE_BOX:
-                go.AutonRotateCounterclockwise( DEGREES_2_ROTATE );
-                step = AUTON_STEPS.MOVE_FORWARD_TO_BOX;
-                break;
-
-            case MOVE_FORWARD_TO_BOX:
-                go.AutonForward( DISTANCE_FORWARD_2_DROP );
-                step = AUTON_STEPS.BACK_UP;
-                break;
-
-
+            break;
 
             case BACK_UP:
-                go.AutonReverse( DISTANCE_BACK_FINAL );
+                // go.AutonReverse( DISTANCE_BACK_FINAL );
                 step = AUTON_STEPS.STOP;
                 break;
-             // */
 
             case STOP:
                 // In stop, just turn all motors off for safety
                 go.MoveSimple( 0.0, 0.0, 0.0 );
-                lift.Raise( 0.0 );
-                claw.claw_Outward();
-                wep.stay();
-                wep.lift( 0.0 );
 
                 // Force to stop mode
                 requestOpModeStop();

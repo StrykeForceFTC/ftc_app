@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -25,6 +26,7 @@ import java.util.List;
  *
  */
 @Autonomous(name = "Auton Time Blue Rear", group = "Iterative Opmode")
+@Disabled
 public class Auton_Time_Blue_Rear extends OpMode {
 
     public static final String TAG = "Vuforia Navigation Sample";

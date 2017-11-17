@@ -30,6 +30,7 @@ import java.util.List;
  * Created by astaats on 10/5/17.
  */
 @TeleOp(name="Auton 2017", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
+@Disabled // hide op mode
 public class Auton_2017 extends OpMode {
 
         public static final String TAG = "Vuforia Navigation Sample";
