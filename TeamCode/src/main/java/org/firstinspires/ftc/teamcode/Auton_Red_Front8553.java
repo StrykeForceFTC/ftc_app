@@ -24,8 +24,8 @@ import java.util.List;
  *  auton program based on the front position for the red team.
  *
  */
-@Autonomous(name = "Auton Red Front", group = "Iterative Opmode")
-public class Auton_Red_Front extends OpMode {
+@Autonomous(name = "Auton Red Front 8553", group = "Iterative Opmode")
+public class Auton_Red_Front8553 extends OpMode {
 
     public static final String TAG = "Vuforia Navigation Sample";
 
@@ -216,7 +216,7 @@ public class Auton_Red_Front extends OpMode {
                 //claw.claw_Outward();
 
                 // Lower jewel knocker and delay to give time to move
-                jewelKnocker.LowerKnocker();
+                jewelKnocker.LowerKnocker8553();
                 Delay_s( 1.0 );
 
                 // read color sensor
@@ -245,7 +245,7 @@ public class Auton_Red_Front extends OpMode {
                 }
 
                 // Raise the knocker and give it time to move
-                jewelKnocker.RaiseKnocker();
+                jewelKnocker.RaiseKnocker8553();
                 Delay_s( 1.0 );
 
                 // set yDistanceFromStart to distance moved (+ for forward, - for reverse)
