@@ -41,6 +41,18 @@ public class Claw {
                 rightClawMotor.setPosition( -1 );
         }
 
+        public void StepClosed( )
+        {
+                leftClawMotor.setPosition( leftClawMotor.getPosition() + 0.05 );
+                rightClawMotor.setPosition( rightClawMotor.getPosition() + 0.05 );
+        }
+
+        public void StepOpen( )
+        {
+                leftClawMotor.setPosition( leftClawMotor.getPosition() - 0.05 );
+                rightClawMotor.setPosition( rightClawMotor.getPosition() - 0.05 );
+        }
+
         public double GetLeftPosition( ) {
             return leftClawMotor.getPosition();
         }
