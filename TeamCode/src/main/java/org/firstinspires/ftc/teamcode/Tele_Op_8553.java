@@ -32,14 +32,13 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -56,9 +55,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
  *
  */
 
-@TeleOp(name="Tele Op 2017", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
+@TeleOp(name="Tele Op 8553 ", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
 // @Disabled
-public class Tele_Op_2017 extends OpMode
+public class Tele_Op_8553 extends OpMode
 {
 
     /* Declare OpMode members. */
@@ -134,7 +133,7 @@ public class Tele_Op_2017 extends OpMode
      */
     @Override
     public void start() {
-        jewelKnocker.RaiseKnocker();
+        jewelKnocker.RaiseKnocker8553();
         runtime.reset();
     }
 
