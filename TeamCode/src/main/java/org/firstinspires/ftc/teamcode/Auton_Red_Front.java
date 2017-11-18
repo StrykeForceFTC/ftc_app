@@ -273,15 +273,18 @@ public class Auton_Red_Front extends OpMode {
                 }
 */
                 go.MoveSimple( 0.0, 0.4, 0.0 );
-                Delay_s( 1.5 );
+                Delay_s( 1.7 );
                 go.MoveSimple(0,0,0);
 
-                step = AUTON_STEPS.STOP;
+                step = AUTON_STEPS.BACK_UP;
             }
             break;
 
             case BACK_UP:
                 // go.AutonReverse( DISTANCE_BACK_FINAL );
+                go.MoveSimple( 0.0, -0.35, 0.0 );
+                Delay_s( 0.15);
+                go.MoveSimple(0,0,0);
                 step = AUTON_STEPS.STOP;
                 break;
 
