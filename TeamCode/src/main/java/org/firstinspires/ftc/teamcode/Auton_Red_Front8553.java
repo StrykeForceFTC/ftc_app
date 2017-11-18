@@ -273,7 +273,7 @@ public class Auton_Red_Front8553 extends OpMode {
                 }
 */
                 go.MoveSimple( 0.0, 0.5, 0.0 );
-                Delay_s( 2 );
+                Delay_s( 1.25);
                 go.MoveSimple(0,0,0);
 
                 step = AUTON_STEPS.STOP;
