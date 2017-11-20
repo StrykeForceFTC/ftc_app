@@ -29,16 +29,16 @@ public class Claw {
         public void claw_Inward(){
 
 
-                leftClawMotor.setPosition( 1 );
-                rightClawMotor.setPosition( 1 );
+                leftClawMotor.setPosition( .2 );
+                rightClawMotor.setPosition( .2 );
         }
 
         //Claw outward motion
         public void claw_Outward(){
 
 
-                leftClawMotor.setPosition( -1 );
-                rightClawMotor.setPosition( -1 );
+                leftClawMotor.setPosition( .75 );
+                rightClawMotor.setPosition( .75 );
         }
 
         public void StepClosed( )

@@ -214,7 +214,7 @@ public class Tele_Op_Test extends OpMode
         if ( gamepad1.y )
         {
             claw.StepOpen();
-            while ( gamepad1.x )
+            while ( gamepad1.y )
             {
 
             }
