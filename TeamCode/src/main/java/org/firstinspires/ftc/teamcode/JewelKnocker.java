@@ -42,19 +42,33 @@ public class JewelKnocker
     public COLORS GetColor( )
     {
         int timesItWasRed = 0;
+        int timesItWasBlue = 0;
+        int tries = 0;
 
-        for (int tries = 0; tries < 5; tries++)
+        while (tries < 7 )
         {
-            if ( colorSensor.red( ) >= RED_LOWER_LIMIT )
+            if ( colorSensor.red( ) > colorSensor.blue() )
             {
                 timesItWasRed++;
+                tries++;
+            }
+
+            else  if ( colorSensor.red() < colorSensor.blue() ){
+
+                timesItWasBlue++;
+                tries++;
+
+            }
+            else{
+
             }
 
             // Put short delay between checks
             Delay_ms( 20.0 );
+
         }
 
-        if ( timesItWasRed >= 3 )
+        if ( timesItWasRed >= 4 )
         {
             return COLORS.RED;
         }
@@ -62,7 +76,7 @@ public class JewelKnocker
         {
             return COLORS.BLUE;
         }
-
+ 
     }
 
     // Method to lower the jewel knocker
