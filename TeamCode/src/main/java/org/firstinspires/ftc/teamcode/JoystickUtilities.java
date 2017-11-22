@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * Utility methods for shaping and filtering joystick inputs.
@@ -81,4 +82,34 @@ public final class JoystickUtilities
 
         return filtered;
     }
+
+    // Delay for a certain amount of time in seconds
+    public static void Delay_s( double seconds )
+    {
+        ElapsedTime delayTimer = new ElapsedTime( ElapsedTime.Resolution.SECONDS );
+
+        delayTimer.reset();
+        int timeWaster = 0;
+        while ( delayTimer.time() < seconds )
+        {
+            // Just wasting some time
+            timeWaster++;
+        }
+    }
+
+    // Delay for a certain amount of time in milliseconds
+    public static void Delay_ms( double milliseconds )
+    {
+        ElapsedTime delayTimer = new ElapsedTime( ElapsedTime.Resolution.MILLISECONDS );
+
+        delayTimer.reset();
+        int timeWaster = 0;
+        while ( delayTimer.time() < milliseconds )
+        {
+            // Just wasting some time
+            timeWaster++;
+        }
+    }
+
+
 }
