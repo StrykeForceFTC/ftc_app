@@ -43,7 +43,13 @@ public final class JoystickUtilities
             weighting = 0.5;
         }
 
-        double joystickSqrt = Math.sqrt( joystick );
+        double joystickSqrt = Math.sqrt( Math.abs( joystick ) );
+
+        if ( joystick < 0.0 )
+        {
+            joystickSqrt = -joystickSqrt;
+        }
+
         double shapedJoystick = ( joystickSqrt * weighting ) + ( ( 1.0 - weighting ) * joystick );
 
         return shapedJoystick;
