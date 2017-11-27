@@ -18,6 +18,10 @@ public class Pole {
     // lifts\lowers the pole
     private DcMotor high;
     //extends the pole
+    private double farpower = 0.0;
+
+    private static final double incr_filter = 0.4;
+    private static final double decr_filter = 0.7;
 
     public Pole( HardwareMap ahwMap )
     {
@@ -38,21 +42,39 @@ public class Pole {
 //ssssswss
     public void extend( )
     {
-        far.setPower(0.5);
+        farpower = JoystickUtilities.LowPassFilter( farpower, 0.5, incr_filter, decr_filter );
+        far.setPower(farpower);
     }
 
     //retracts the pole
     public void retract()
     {
-        far.setPower(-0.5);
+        farpower = JoystickUtilities.LowPassFilter(farpower, -0.5, incr_filter, decr_filter);
+        far.setPower(farpower);
     }
 
     // Leaves the pole in place
     public void stay()
     {
-        far.setPower(0.0);
+        farpower = JoystickUtilities.LowPassFilter(farpower, 0.0, incr_filter, decr_filter);
+        if(Math.abs(farpower)<0.3)
+        {
+            farpower = 0;
+        }
+        far.setPower(0);
     }
 
+    public void retractFast()
+    {
+        farpower = JoystickUtilities.LowPassFilter(farpower, -0.75, incr_filter, decr_filter);
+        far.setPower(farpower);
+    }
+
+    public void extendFast( )
+    {
+        farpower = JoystickUtilities.LowPassFilter( farpower, 0.75, incr_filter, decr_filter );
+        far.setPower(farpower);
+    }
     //lifts s the pole
     public void lift( double upDown )
     {
