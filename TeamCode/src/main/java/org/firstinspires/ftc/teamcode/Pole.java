@@ -56,7 +56,7 @@ public class Pole {
     //lifts s the pole
     public void lift( double upDown )
     {
-        high.setPower(0.5*upDown);
+        high.setPower(0.35*upDown);
     }
 
     //lowers the pole

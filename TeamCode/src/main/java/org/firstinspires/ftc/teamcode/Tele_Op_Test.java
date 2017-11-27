@@ -148,11 +148,11 @@ public class Tele_Op_Test extends OpMode
         telemetry.addLine("left joystick | ")
                 .addData("x", gamepad1.left_stick_x)
                 .addData("y", gamepad1.left_stick_y);
-/*
+
         telemetry.addLine("right joystick | ")
                 .addData("x", gamepad1.right_stick_x)
                 .addData("y", gamepad1.right_stick_y);
-
+/*
         telemetry.addLine("Knocker ")
                 .addData( "Position", knockerServo.getPosition() );
 

@@ -84,7 +84,14 @@ public class Tele_Op_2017 extends OpMode
 
     private JewelKnocker jewelKnocker = null;
 
+    private double robotLeftRight = 0.0;
+    private double robotForwardBack = 0.0;
+    private double robotRotate = 0.0;
 
+    // Constants for joystick shaping
+    private static final double ROBOT_LEFT_RIGHT_WEIGHTING = 0.5;
+    private static final double ROBOT_FWD_BACK_WEIGHTING = 0.5;
+    private static final double ROBOT_ROTATE_WEIGHTING = 0.5;
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -194,7 +201,10 @@ public class Tele_Op_2017 extends OpMode
 
 
         // Move robot based on joystick inputs from gamepad 1 / driver 1
-        go.MoveSimple( gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x );
+        robotForwardBack = JoystickUtilities.ShapeCubePlusInputWeighted( gamepad1.left_stick_y, ROBOT_FWD_BACK_WEIGHTING );
+        robotLeftRight = JoystickUtilities.ShapeCubePlusInputWeighted( gamepad1.left_stick_x, ROBOT_LEFT_RIGHT_WEIGHTING );
+        robotRotate = JoystickUtilities.ShapeCubePlusInputWeighted( gamepad1.right_stick_x, ROBOT_ROTATE_WEIGHTING );
+        go.MoveSimple( robotLeftRight, robotForwardBack, robotRotate );
 
         // ******* Test code for JewelKnocker ***********
         /*
