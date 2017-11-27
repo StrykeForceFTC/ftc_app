@@ -32,6 +32,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -58,7 +59,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @TeleOp(name="Tele Op Simple Drive", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
-// @Disabled
+@Disabled
 public class Tele_Op_Simple_Drive extends OpMode
 {
     /* Declare OpMode members. */
@@ -71,9 +72,8 @@ public class Tele_Op_Simple_Drive extends OpMode
 
     HardwareMap robotMap = hardwareMap;
     private Drive go = null;
-   // private Drive go = new Drive(hardwareMap);
 
-    private Pole wep = new Pole();
+    private Pole wep = null;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -92,6 +92,7 @@ public class Tele_Op_Simple_Drive extends OpMode
         rearRight  = hardwareMap.dcMotor.get("rear_right");
 
         go = new Drive(frontLeft, frontRight, rearLeft, rearRight);
+        wep = new Pole(hardwareMap);
         telemetry.addData("Status", "Initialized");
     }
 
@@ -142,7 +143,7 @@ public class Tele_Op_Simple_Drive extends OpMode
 
 
 
-        go.MoveSimple( gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x );
+        go.MoveSimple( gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x  );
 
         telemetry.update();
     }

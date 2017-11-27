@@ -35,8 +35,11 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -51,43 +54,72 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  *
- * test test2ladedagftygcdfygcfng
- * test mscott
- *
- * test arush
  */
 
 @TeleOp(name="Tele Op 2017", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
 // @Disabled
 public class Tele_Op_2017 extends OpMode
 {
-    private Drive go = new Drive(;
+
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftMotor = null;
-    private DcMotor rightMotor = null;
-    private Pole wep = new Pole();
-    private Claw princeclaw = new Claw();
-    private Arm LTT = new Arm();
+
+    // Drive hardware
+    private DcMotor frontLeft = null;
+    private DcMotor frontRight = null;
+    private DcMotor rearLeft = null;
+    private DcMotor rearRight = null;
+
+    // Jewel Knocker hardware
+
+    private Servo knockerServo = null;
+    private ColorSensor colorSensor = null;
+
+
+    HardwareMap robotMap = hardwareMap;
+    private Drive go = null;
+    private Pole wep = null;
+    private Claw claw = null;
+    private Lift lift = null;
+
+    private JewelKnocker jewelKnocker = null;
+
+
     /*
      * Code to run ONCE when the driver hits INIT
      */
     @Override
     public void init() {
-        telemetry.addData("Status", "Initialized");
+        telemetry.addData("Status", "Initializing");
 
         /* eg: Initialize the hardware variables. Note that the strings used here as parameters
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
-        // leftMotor  = hardwareMap.dcMotor.get("left_drive");
-        // rightMotor = hardwareMap.dcMotor.get("right_drive");
+        frontLeft  = hardwareMap.dcMotor.get("front_left");
+        frontRight  = hardwareMap.dcMotor.get("front_right");
+        rearLeft  = hardwareMap.dcMotor.get("rear_left");
+        rearRight  = hardwareMap.dcMotor.get("rear_right");
 
-        // eg: Set the drive motor directions:
-        // Reverse the motor that runs backwards when connected directly to the battery
-        // leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        //  rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        // telemetry.addData("Status", "Initialized");
+
+        knockerServo = hardwareMap.servo.get("knocker_servo");
+        colorSensor = hardwareMap.colorSensor.get("color");
+
+
+        go = new Drive(frontLeft, frontRight, rearLeft, rearRight);
+
+        jewelKnocker = new JewelKnocker( knockerServo, colorSensor );
+
+
+        // Set up Claw
+        claw = new Claw( hardwareMap );
+
+        // Set up Pole
+        wep = new Pole( hardwareMap );
+
+        lift = new Lift( hardwareMap );
+
+        telemetry.addData("Status", "Initialized");
     }
 
     /*
@@ -102,6 +134,7 @@ public class Tele_Op_2017 extends OpMode
      */
     @Override
     public void start() {
+        jewelKnocker.RaiseKnocker();
         runtime.reset();
     }
 
@@ -109,38 +142,119 @@ public class Tele_Op_2017 extends OpMode
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
     @Override
-    public void loop()
-    {
+    public void loop() {
         telemetry.addData("Status", "Running: " + runtime.toString());
 
-        // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
+        double leftClawPosition = claw.GetLeftPosition();
+        double rightClawPosition = claw.GetRightPosition();
 
-        // leftMotor.setPower(-gamepad1.left_stick_y);
-        // rightMotor.setPower(-gamepad1.right_stick_y);
-        if (gamepad2.x == true)
-        {
-            princeclaw.open();
-        }
-        if (gamepad2.b == true)
-        {
-            princeclaw.close();
-        }
-        if (gamepad2.dpad_up == true)
-        {
-            LTT.extend();
-        }
-        if (gamepad2.dpad_down == true)
-        {
-            LTT.retract();
-        }
-        if (gamepad2.y == true)
-        {
+        // Show joystick information as some other illustrative data
+        telemetry.addLine("left joystick | ")
+                .addData("x", gamepad1.left_stick_x)
+                .addData("y", gamepad1.left_stick_y);
+        telemetry.addLine("right joystick | ")
+                .addData("x", gamepad1.right_stick_x)
+                .addData("y", gamepad1.right_stick_y);
+
+        // Show joystick information as some other illustrative data
+        telemetry.addLine("left joystick2 | ")
+                .addData("x", gamepad2.left_stick_x)
+                .addData("y", gamepad2.left_stick_y);
+        telemetry.addLine("right joystick2 | ")
+                .addData("x", gamepad2.right_stick_x)
+                .addData("y", gamepad2.right_stick_y);
+       /*
+        telemetry.addLine("Knocker Positon | ")
+                .addData( "Pos", jewelKnocker.KnockerPositionGet() );
+        telemetry.addLine("Color Values | ")
+                .addData("Red", jewelKnocker.RedValue())
+                .addData("Blue", jewelKnocker.BlueValue());
+        */
+        telemetry.addLine("Claw Positions | ")
+                .addData( "Right", rightClawPosition )
+                .addData( "Left",leftClawPosition );
+
+
+        // Use gamepad Y & A raise and lower the arm
+        wep.lift( gamepad2.right_stick_x );
+
+
+        lift.Raise(gamepad2.left_stick_y);
+
+        // Use gamepad X & B to extend and retract the arm
+        if (gamepad2.dpad_up) {
             wep.extend();
-          }
-        if (gamepad2.a == true)
-        {
-            wep.extend();
         }
+        else if (gamepad2.dpad_down) {
+            wep.retract();
+        }
+        else {
+            wep.stay();
+        }
+
+
+        // Move robot based on joystick inputs from gamepad 1 / driver 1
+        go.MoveSimple( gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x );
+
+        // ******* Test code for JewelKnocker ***********
+        /*
+        // Gamepad1.x used to increase jewel knocker position
+        if ( gamepad1.x )
+        {
+            double position = jewelKnocker.KnockerPositionGet();
+            if ( position <= 0.9 ) {
+                jewelKnocker.KnockerPositionSet(position + 0.1);
+            }
+        }
+
+        // Gamepad1.y to decrease jewel knocker position
+        if ( gamepad1.y )
+        {
+            double position = jewelKnocker.KnockerPositionGet();
+            if ( position >= 0.1 ) {
+                jewelKnocker.KnockerPositionSet(position - 0.1);
+            }
+        }
+        */
+
+        // ************* Test code for drive auto methods **************
+        /*
+        if ( gamepad1.a )
+        {
+            go.AutonForward( 30.0 );
+        }
+
+        if ( gamepad1.b )
+        {
+            go.AutonReverse( 30.0 );
+        }
+
+        if ( gamepad1.x )
+        {
+            go.AutonRotateClockwise( 90.0 );
+        }
+
+        if ( gamepad1.y )
+        {
+            go.AutonRotateCounterclockwise( 90.0 );
+        }
+        */
+       if (gamepad2.right_bumper) { wep.openClaw(); }
+       if (gamepad2.left_bumper) { wep.closeClaw(); }
+        // ************* Test code for Claw methods **************
+
+        if ( gamepad1.x )
+        {
+            claw.claw_Inward();
+        }
+
+        if ( gamepad1.y )
+        {
+            claw.claw_Outward();
+        }
+
+
+        telemetry.update();
     }
 
     /*
@@ -151,19 +265,3 @@ public class Tele_Op_2017 extends OpMode
     }
 
 }
-
-// Claw = princeclaw
-
-// Arm = Long Thingy-Thing (LTT)
-
-// Hello out there........ how is it out there?... i hope i get out of here... someday... soon,
-// so soon!
-
-
-// so soon... i will be free... to take over again!!!
-
-
-// THE LAST HOME a horror story by Sylvia Wood.
-/* when Lowanna saw the "home for trobeld children" she knew that this was where she would stay
-for the rest of her life
- */
