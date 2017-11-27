@@ -83,6 +83,15 @@ public class Tele_Op_8553 extends OpMode
 
     private JewelKnocker jewelKnocker = null;
 
+    //Variables for drive
+    double drive_x;
+    double drive_y;
+    double drive_turn;
+
+    //Constants for joystick shaping
+    private static final double ROBOT_LEFT_RIGHT_WEIGHTING = 0.5;
+    private static final double ROBOT_FWD_BACK_WEIGHTING = 0.5;
+    private static final double ROBOT_ROTATE_WEIGHTING = 0.5;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -190,10 +199,16 @@ public class Tele_Op_8553 extends OpMode
         else {
             wep.stay();
         }
+        // Move robot based on joystick inputs from gamepad 1 / driver 1        drive_x = (Math.pow(gamepad1.left_stick_x, 3.0)*ROBOT_LEFT_RIGHT_WEIGHTING)+(gamepad1.left_stick_x*(1-ROBOT_LEFT_RIGHT_WEIGHTING));
+        drive_y = (Math.pow(gamepad1.left_stick_y, 3.0)*ROBOT_FWD_BACK_WEIGHTING)+(gamepad1.left_stick_y*(1-ROBOT_FWD_BACK_WEIGHTING));
+        drive_turn = (Math.pow(gamepad1.right_stick_x, 3.0)*ROBOT_ROTATE_WEIGHTING)+(gamepad1.right_stick_x*(1-ROBOT_ROTATE_WEIGHTING));
+        go.MoveSimple( drive_x, drive_y, drive_turn );
 
 
-        // Move robot based on joystick inputs from gamepad 1 / driver 1
+        /*Drive code without weighting
         go.MoveSimple( gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x );
+        */
+
 
         // ******* Test code for JewelKnocker ***********
         /*
