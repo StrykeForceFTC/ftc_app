@@ -57,7 +57,7 @@ public class Pole {
     public void stay()
     {
         farpower = JoystickUtilities.LowPassFilter(farpower, 0.0, incr_filter, decr_filter);
-        if(Math.abs(farpower)<0.3)
+        if(Math.abs(farpower)<0.03)
         {
             farpower = 0;
         }
@@ -75,10 +75,11 @@ public class Pole {
         farpower = JoystickUtilities.LowPassFilter( farpower, 0.75, incr_filter, decr_filter );
         far.setPower(farpower);
     }
+
     //lifts s the pole
     public void lift( double upDown )
     {
-        high.setPower(0.5*upDown);
+        high.setPower(0.35*upDown);
     }
 
     //lowers the pole
