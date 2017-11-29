@@ -24,7 +24,7 @@ public class Drive
 
     // Constants for calculating number of ticks per cm to allow calculation of how many ticks
     // to go a given distance.
-    final private static double WHEEL_DIAM_IN = 4;
+    final private static double WHEEL_DIAM_IN = 4.0;
     final private static double IN_2_CM = 2.54;
 
     // wheel circumference is PI times diameter, but diameter needs to be converted to cm from inches
@@ -36,13 +36,16 @@ public class Drive
     // set at the corners of a 14" square, so this is used to calculate the circumference of
     // the circle that the robot wheels rotatate about. This is used to determine a number of
     // ticks per degree.
-    final private static double ROBOT_LENGTH_IN = 14.0;
+    final private static double ROBOT_LENGTH_IN = 17.0;
     final private static double ROBOT_DIAM_CM = Math.sqrt( 2 * ( ROBOT_LENGTH_IN * ROBOT_LENGTH_IN ) ) * IN_2_CM;
     final private static double ROBOT_CIRCUM_CM = ROBOT_DIAM_CM * Math.PI;
     final private static double CM_PER_DEGREE = ROBOT_CIRCUM_CM / 360.0;
     final private static double MAX_SECONDS_PER_CM = 0.5;
-
-
+    final private static double AUTON_SHORT_DISTANCE = 15.0 * TICKS_PER_CM;
+    final private static double TARGET_POWER_LONG = 0.5;
+    final private static double TARGET_POWER_SHORT = 0.1;
+    final private static double INCREASING_FK = 0.25;                  // Increasing power filter constant
+    final private static double DECREASING_FK = 0.4;                   // Decreasing power filter constant
 
     private enum DIRECTION { FORWARD, REVERSE, RIGHT, LEFT, CLOCKWISE, COUNTERCLOCKWISE }
 
@@ -229,7 +232,7 @@ public class Drive
          The direction to move is provided by the caller and the power is ramped from
          0 to 0.5 and then held there while still running using RampUpPower.
          */
-        int encoderLast = frontLeft.getCurrentPosition();
+        int encoderStart = frontLeft.getCurrentPosition();
         int totalTicks = (int) ( distance_cm * TICKS_PER_CM );
         int ticksMoved = 0;
 
@@ -238,18 +241,23 @@ public class Drive
         double powerNow = 0.0;
         while ( ( ticksMoved <= totalTicks ) && ( limitTimer.time() < timeLimit ) )
         {
-            // apply power to wheels
-            powerNow = RampUpPower( powerNow, 0.5, whichWay );
+            // apply power to wheels, select power based on distance left
+            double powerTarget = TARGET_POWER_LONG;
+            if ( ( totalTicks - ticksMoved ) <= AUTON_SHORT_DISTANCE )
+            {
+                powerTarget = TARGET_POWER_SHORT;
+            }
+            powerNow = RampUpPower( powerNow, powerTarget, whichWay );
 
-            // Delay 50ms to control ramp rate
-            Delay_ms( 50.0 );
+            // Delay 20ms to control ramp rate
+            Delay_ms( 20.0 );
 
             // calc how much we have moved
             int encoderNow = frontLeft.getCurrentPosition();
-            ticksMoved = SumTicksMoved( encoderNow, encoderLast, ticksMoved, whichWay );
+            ticksMoved = SumTicksMoved( encoderNow, encoderStart, ticksMoved, whichWay );
 
             // Update last position for next loop
-            encoderLast = encoderNow;
+            ticksMoved = Math.abs(encoderStart - encoderNow);
         }
 
         // Stop moving
@@ -276,20 +284,16 @@ public class Drive
     // Method to ramp up power in a given direction and then hold it
     private double RampUpPower( double powerNow, double targetPower, DIRECTION whichWay )
     {
-        powerNow += targetPower * 0.1;
-        if ( powerNow >= targetPower )
-        {
-            powerNow = targetPower;
-        }
+        powerNow = JoystickUtilities.LowPassFilter( powerNow, targetPower, INCREASING_FK, DECREASING_FK );
 
         switch (whichWay)
         {
             case FORWARD:
-                MoveSimple( 0.0, targetPower, 0.0 );
+                MoveSimple( 0.0, -targetPower, 0.0 );
                 break;
 
             case REVERSE:
-                MoveSimple( 0.0, ( -1.0 * targetPower ), 0.0 );
+                MoveSimple( 0.0, targetPower , 0.0 );
                 break;
 
             case RIGHT:
@@ -301,11 +305,11 @@ public class Drive
                 break;
 
             case CLOCKWISE:
-                MoveSimple( 0.0, 0.0, targetPower );
+                MoveSimple( 0.0, 0.0, -targetPower );
                 break;
 
             case COUNTERCLOCKWISE:
-                MoveSimple( 0.0, 0.0, ( -1.0 * targetPower ) );
+                MoveSimple( 0.0, 0.0,   targetPower  );
                 break;
         }
 
