@@ -10,8 +10,25 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 //Declaration of Servos
 public class Claw {
+
         private Servo leftClawMotor = null;
         private Servo rightClawMotor = null;
+
+        // Values for servos when claw is closed, 7228 robot
+        private static final double LEFT_CLAW_IN_POSITION_7228 = 0.15;
+        private static final double RIGHT_CLAW_IN_POSITION_7228 = 0.15;
+
+        // Values for servos when claw is open, 7228 robot
+        private static final double LEFT_CLAW_OUT_POSITION_7228 = 0.75;
+        private static final double RIGHT_CLAW_OUT_POSITION_7228 = 0.75;
+
+        // Values for servos when claw is closed, 8553 robot
+        private static final double LEFT_CLAW_IN_POSITION_8553 = 0.15;
+        private static final double RIGHT_CLAW_IN_POSITION_8553 = 0.15;
+
+        // Values for servos when claw is open, 8553 robot
+        private static final double LEFT_CLAW_OUT_POSITION_8553 = 0.75;
+        private static final double RIGHT_CLAW_OUT_POSITION_8553 = 0.75;
 
         public Claw( HardwareMap ahwMap )
         {
@@ -25,20 +42,32 @@ public class Claw {
         }
 
         //
-        //Claw inward motion
-        public void claw_Inward(){
+        // Claw inward motion for 7228 robot
+        public void claw_Inward()
+        {
+                leftClawMotor.setPosition( LEFT_CLAW_IN_POSITION_7228 );
+                rightClawMotor.setPosition( RIGHT_CLAW_IN_POSITION_7228 );
+        }
 
-
-                leftClawMotor.setPosition( 1 );
-                rightClawMotor.setPosition( 1 );
+        // Claw inward motion for 8553 robot
+        public void claw_Inward8553()
+        {
+                leftClawMotor.setPosition( LEFT_CLAW_IN_POSITION_8553 );
+                rightClawMotor.setPosition( RIGHT_CLAW_IN_POSITION_8553 );
         }
 
         //Claw outward motion
-        public void claw_Outward(){
+        public void claw_Outward()
+        {
+                leftClawMotor.setPosition( LEFT_CLAW_OUT_POSITION_7228 );
+                rightClawMotor.setPosition( RIGHT_CLAW_OUT_POSITION_7228 );
+        }
 
-
-                leftClawMotor.setPosition( -1 );
-                rightClawMotor.setPosition( -1 );
+        //Claw outward motion for 8553 robot
+        public void claw_Outward8553()
+        {
+                leftClawMotor.setPosition( LEFT_CLAW_OUT_POSITION_8553 );
+                rightClawMotor.setPosition( RIGHT_CLAW_OUT_POSITION_8553 );
         }
 
         public void StepClosed( )
@@ -50,6 +79,26 @@ public class Claw {
         public void StepOpen( )
         {
                 leftClawMotor.setPosition( leftClawMotor.getPosition() - 0.05 );
+                rightClawMotor.setPosition( rightClawMotor.getPosition() - 0.05 );
+        }
+
+        public void StepLeftUp( )
+        {
+                leftClawMotor.setPosition( leftClawMotor.getPosition() + 0.05 );
+        }
+
+        public void StepRightUp( )
+        {
+                rightClawMotor.setPosition( rightClawMotor.getPosition() + 0.05 );
+        }
+
+        public void StepLeftDown( )
+        {
+                leftClawMotor.setPosition( leftClawMotor.getPosition() - 0.05 );
+        }
+
+        public void StepRightDown( )
+        {
                 rightClawMotor.setPosition( rightClawMotor.getPosition() - 0.05 );
         }
 
