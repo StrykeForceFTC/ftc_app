@@ -1,11 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 /**
  * Created by gstaats on 18/09/17.
@@ -20,7 +17,7 @@ public class Drive
     HardwareMap hwMap = null;
 
     // Limit timer
-    ElapsedTime limitTimer = new ElapsedTime();
+    private ElapsedTime limitTimer = new ElapsedTime();
 
     // Constants for calculating number of ticks per cm to allow calculation of how many ticks
     // to go a given distance.
@@ -37,15 +34,15 @@ public class Drive
     // the circle that the robot wheels rotatate about. This is used to determine a number of
     // ticks per degree.
     final private static double ROBOT_LENGTH_IN = 17.0;
-    final private static double ROBOT_DIAM_CM = Math.sqrt( 2 * ( ROBOT_LENGTH_IN * ROBOT_LENGTH_IN ) ) * IN_2_CM;
+    final private static double ROBOT_DIAM_CM = Math.sqrt( 2.0 * ( ROBOT_LENGTH_IN * ROBOT_LENGTH_IN ) ) * IN_2_CM;
     final private static double ROBOT_CIRCUM_CM = ROBOT_DIAM_CM * Math.PI;
     final private static double CM_PER_DEGREE = ROBOT_CIRCUM_CM / 360.0;
     final private static double MAX_SECONDS_PER_CM = 0.5;
-    final private static double AUTON_SHORT_DISTANCE = 15.0 * TICKS_PER_CM;
+    final private static double AUTON_SHORT_DISTANCE_CM = 10.0;
     final private static double TARGET_POWER_LONG = 0.5;
     final private static double TARGET_POWER_SHORT = 0.1;
-    final private static double INCREASING_FK = 0.25;                  // Increasing power filter constant
-    final private static double DECREASING_FK = 0.4;                   // Decreasing power filter constant
+    final private static double INCREASING_FK = 0.2;                  // Increasing power filter constant
+    final private static double DECREASING_FK = 0.5;                   // Decreasing power filter constant
 
     private enum DIRECTION { FORWARD, REVERSE, RIGHT, LEFT, CLOCKWISE, COUNTERCLOCKWISE }
 
@@ -93,15 +90,15 @@ public class Drive
     public void MoveSimple( double xLeftRight, double yFwdRev, double rotate )
     {
         // variables for calculating wheel powers
-        double frontLeftPower = ( -xLeftRight ) + (   yFwdRev ) + (  rotate );
-        double frontRightPower = (  xLeftRight ) + (  yFwdRev ) + (-rotate);
+        double frontLeftPower = ( -xLeftRight ) + ( yFwdRev ) + ( rotate );
+        double frontRightPower = ( xLeftRight ) + ( yFwdRev ) + (-rotate);
         double rearLeftPower = xLeftRight + yFwdRev + rotate;
-        double rearRightPower = (-xLeftRight) + ( yFwdRev) + (-rotate);
+        double rearRightPower = (-xLeftRight) + ( yFwdRev ) + (-rotate);
 
         // Powers can be > 1 using above equations, so scale if they are
         double biggestFront = Math.max( Math.abs( frontLeftPower ), Math.abs( frontRightPower ) );
         double biggestRear = Math.max( Math.abs( rearLeftPower ), Math.abs( rearRightPower ) );
-        double biggest = Math.max( biggestFront, biggestFront );
+        double biggest = Math.max( biggestFront, biggestRear );
 
         if ( biggest > 1.0 )
         {
@@ -243,7 +240,7 @@ public class Drive
         {
             // apply power to wheels, select power based on distance left
             double powerTarget = TARGET_POWER_LONG;
-            if ( ( totalTicks - ticksMoved ) <= AUTON_SHORT_DISTANCE )
+            if ( ( totalTicks - ticksMoved ) <= ( AUTON_SHORT_DISTANCE_CM * TICKS_PER_CM ) )
             {
                 powerTarget = TARGET_POWER_SHORT;
             }
@@ -254,10 +251,7 @@ public class Drive
 
             // calc how much we have moved
             int encoderNow = frontLeft.getCurrentPosition();
-            ticksMoved = SumTicksMoved( encoderNow, encoderStart, ticksMoved, whichWay );
-
-            // Update last position for next loop
-            ticksMoved = Math.abs(encoderStart - encoderNow);
+            ticksMoved = Math.abs( encoderNow - encoderStart );
         }
 
         // Stop moving
