@@ -34,8 +34,7 @@ public class Claw {
         }
 
         //Claw outward motion
-        public void claw_Outward()
-        {
+        public void claw_Outward(){
 
 
                 leftClawMotor.setPosition( -1 );

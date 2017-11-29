@@ -148,6 +148,7 @@ public class Tele_Op_Test extends OpMode
         telemetry.addLine("left joystick | ")
                 .addData("x", gamepad1.left_stick_x)
                 .addData("y", gamepad1.left_stick_y);
+/*
         telemetry.addLine("right joystick | ")
                 .addData("x", gamepad1.right_stick_x)
                 .addData("y", gamepad1.right_stick_y);
@@ -158,7 +159,7 @@ public class Tele_Op_Test extends OpMode
         telemetry.addLine("Color Values | ")
                 .addData("Red", jewelKnocker.RedValue())
                 .addData("Blue", jewelKnocker.BlueValue());
-
+*/
         telemetry.addLine("Claw Positions | ")
                 .addData( "Right", rightClawPosition )
                 .addData( "Left", leftClawPosition );
