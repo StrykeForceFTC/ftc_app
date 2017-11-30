@@ -15,21 +15,20 @@ public class Claw {
         private Servo rightClawMotor = null;
 
         // Values for servos when claw is closed, 7228 robot
-        private static final double LEFT_CLAW_IN_POSITION_7228 = 0.15;
-        private static final double RIGHT_CLAW_IN_POSITION_7228 = 0.15;
+        private static final double LEFT_CLAW_IN_POSITION_7228 = 0.9;
+        private static final double RIGHT_CLAW_IN_POSITION_7228 = 0.85;
 
         // Values for servos when claw is open, 7228 robot
-        private static final double LEFT_CLAW_OUT_POSITION_7228 = 0.75;
-        private static final double RIGHT_CLAW_OUT_POSITION_7228 = 0.75;
+        private static final double LEFT_CLAW_OUT_POSITION_7228 = 0.55;
+        private static final double RIGHT_CLAW_OUT_POSITION_7228 = 0.55;
 
         // Values for servos when claw is closed, 8553 robot
-        private static final double LEFT_CLAW_IN_POSITION_8553 = 0.65;
-        private static final double RIGHT_CLAW_IN_POSITION_8553 = 0.7;
+        private static final double LEFT_CLAW_IN_POSITION_8553 = 0.7;
+        private static final double RIGHT_CLAW_IN_POSITION_8553 = 0.75;
 
         // Values for servos when claw is open, 8553 robot
         private static final double LEFT_CLAW_OUT_POSITION_8553 = 0.45;
         private static final double RIGHT_CLAW_OUT_POSITION_8553 = 0.45;
-
         public Claw( HardwareMap ahwMap )
         {
                 //Hardware Map
