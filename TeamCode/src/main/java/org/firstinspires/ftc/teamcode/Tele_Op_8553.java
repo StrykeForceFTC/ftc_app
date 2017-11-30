@@ -267,12 +267,12 @@ public class Tele_Op_8553 extends OpMode
 
         if ( gamepad1.x )
         {
-            claw.claw_Inward();
+            claw.claw_Inward8553();
         }
 
         if ( gamepad1.y )
         {
-            claw.claw_Outward();
+            claw.claw_Outward8553();
         }
 
 
