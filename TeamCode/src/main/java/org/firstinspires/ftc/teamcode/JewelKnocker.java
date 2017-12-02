@@ -22,9 +22,9 @@ public class JewelKnocker
 
     // Position values for servo
     final private static double KNOCKER_DOWN_POSITION = 0.625;
-    final private static double KNOCKER_UP_POSITION = 0.25;
+    final private static double KNOCKER_UP_POSITION = 0.3;
     final private static double KNOCKER_DOWN_POSITION_8553 = 0.6;
-    final private static double KNOCKER_UP_POSITION_8553 = 0.0;
+    final private static double KNOCKER_UP_POSITION_8553 = 0.1;
 
     public JewelKnocker( Servo servo, ColorSensor color )
     {
