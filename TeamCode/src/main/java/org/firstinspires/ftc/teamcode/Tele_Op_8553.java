@@ -83,6 +83,21 @@ public class Tele_Op_8553 extends OpMode
 
     private JewelKnocker jewelKnocker = null;
 
+    //Variables for drive
+    double drive_x = 0;
+    double drive_y = 0;
+    double drive_turn = 0;
+
+    //Variables for wep.lift
+    double poleRotate = 0;
+
+    //Constants for joystick shaping, gamepad2
+    private static final double ROBOT_POLE_ROTATE_WEIGHTING = 0.5;
+
+    //Constants for joystick shaping, gamepad1
+    private static final double ROBOT_LEFT_RIGHT_WEIGHTING = 0.5;
+    private static final double ROBOT_FWD_BACK_WEIGHTING = 0.5;
+    private static final double ROBOT_ROTATE_WEIGHTING = 0.5;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -173,9 +188,10 @@ public class Tele_Op_8553 extends OpMode
                 .addData( "Right", rightClawPosition )
                 .addData( "Left",leftClawPosition );
 
-
+        poleRotate = (Math.pow(gamepad2.right_stick_x, 3.0)*ROBOT_POLE_ROTATE_WEIGHTING)+(gamepad2.right_stick_y*(1-ROBOT_POLE_ROTATE_WEIGHTING));
+        wep.lift(poleRotate);
         // Use gamepad Y & A raise and lower the arm
-        wep.lift( gamepad2.right_stick_x );
+        //wep.lift( gamepad2.right_stick_x );
 
 
         lift.Raise(gamepad2.left_stick_y);
@@ -190,10 +206,17 @@ public class Tele_Op_8553 extends OpMode
         else {
             wep.stay();
         }
-
-
         // Move robot based on joystick inputs from gamepad 1 / driver 1
+        drive_x = (Math.pow(gamepad1.left_stick_x, 3.0)*ROBOT_LEFT_RIGHT_WEIGHTING)+(gamepad1.left_stick_x*(1-ROBOT_LEFT_RIGHT_WEIGHTING));
+        drive_y = (Math.pow(gamepad1.left_stick_y, 3.0)*ROBOT_FWD_BACK_WEIGHTING)+(gamepad1.left_stick_y*(1-ROBOT_FWD_BACK_WEIGHTING));
+        drive_turn = (Math.pow(gamepad1.right_stick_x, 3.0)*ROBOT_ROTATE_WEIGHTING)+(gamepad1.right_stick_x*(1-ROBOT_ROTATE_WEIGHTING));
+        go.MoveSimple( drive_x, drive_y, drive_turn );
+
+
+        /*Drive code without weighting
         go.MoveSimple( gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x );
+        */
+
 
         // ******* Test code for JewelKnocker ***********
         /*
@@ -244,12 +267,12 @@ public class Tele_Op_8553 extends OpMode
 
         if ( gamepad1.x )
         {
-            claw.claw_Inward();
+            claw.claw_Inward8553();
         }
 
         if ( gamepad1.y )
         {
-            claw.claw_Outward();
+            claw.claw_Outward8553();
         }
 
 
