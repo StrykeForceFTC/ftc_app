@@ -74,9 +74,16 @@ public class Tele_Op_Test extends OpMode
     private Lift lift = null;
     private JewelKnocker jewelKnocker = null;
 
-    /*
-    private JewelKnocker jewelKnocker = null;
-    */
+    // Joystick input values
+    private double robotLeftRight = 0.0;
+    private double robotForwardBack = 0.0;
+    private double robotRotate = 0.0;
+
+    // Constants for joystick shaping
+    private static final double ROBOT_LEFT_RIGHT_WEIGHTING = 0.5;
+    private static final double ROBOT_FWD_BACK_WEIGHTING = 0.5;
+    private static final double ROBOT_ROTATE_WEIGHTING = 0.5;
+
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -182,39 +189,49 @@ public class Tele_Op_Test extends OpMode
         }
 */
 
-        // ************* Test code for Claw methods **************
-
-/*
-        if ( gamepad2.x )
-        {
-            claw.claw_Inward();
-        }
-
-        if ( gamepad2.y )
-        {
-            claw.claw_Outward();
-        }
-*/
-
         // Move robot based on joystick inputs from gamepad 1 / driver 1
-        go.MoveSimple( gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x );
+        // shape joystick inputs
+        robotForwardBack = JoystickUtilities.ShapeCubePlusInputWeighted( gamepad1.left_stick_y, ROBOT_FWD_BACK_WEIGHTING );
+        robotLeftRight = JoystickUtilities.ShapeCubePlusInputWeighted( gamepad1.left_stick_x, ROBOT_LEFT_RIGHT_WEIGHTING );
+        robotRotate = JoystickUtilities.ShapeCubePlusInputWeighted( gamepad1.right_stick_x, ROBOT_ROTATE_WEIGHTING );
+        go.MoveSimple( robotLeftRight, robotForwardBack, robotRotate );
 
-        // ******* Test code for JewelKnocker ***********
-        // Gamepad1.x used to increase jewel knocker position
+        // ************* Test code for Claw methods **************
+        // Gamepad1.x used to increase left claw position
         if ( gamepad1.x )
         {
-            claw.StepClosed();
+            claw.StepLeftUp();
             while ( gamepad1.x )
             {
 
             }
         }
 
-        // Gamepad1.y to decrease jewel knocker position
+        // Gamepad1.y to decrease left claw position
         if ( gamepad1.y )
         {
-            claw.StepOpen();
-            while ( gamepad1.x )
+            claw.StepLeftDown();
+            while ( gamepad1.y )
+            {
+
+            }
+        }
+
+        // Gamepad1.a used to increase left claw position
+        if ( gamepad1.a )
+        {
+            claw.StepRightUp();
+            while ( gamepad1.a )
+            {
+
+            }
+        }
+
+        // Gamepad1.y to decrease left claw position
+        if ( gamepad1.b )
+        {
+            claw.StepRightDown();
+            while ( gamepad1.b )
             {
 
             }
