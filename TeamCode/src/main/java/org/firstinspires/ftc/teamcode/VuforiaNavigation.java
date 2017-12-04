@@ -86,7 +86,7 @@ import java.util.List;
  */
 
 @Autonomous(name="Concept: Vuforia Navigation", group ="Concept")
-// @Disabled
+@Disabled
 public class VuforiaNavigation extends LinearOpMode {
 
     public static final String TAG = "Vuforia Sample";
@@ -136,12 +136,9 @@ public class VuforiaNavigation extends LinearOpMode {
          * example "StonesAndChips", datasets can be found in in this project in the
          * documentation directory.
          */
-        VuforiaTrackables stonesAndChips = this.vuforia.loadTrackablesFromAsset("StonesAndChips");
+        VuforiaTrackables stonesAndChips = this.vuforia.loadTrackablesFromAsset("FTCDB_OT");
         VuforiaTrackable redTarget = stonesAndChips.get(0);
-        redTarget.setName("RedTarget");  // Stones
-
-        VuforiaTrackable blueTarget  = stonesAndChips.get(1);
-        blueTarget.setName("BlueTarget");  // Chips
+        redTarget.setName("red_ball");  // Stones
 
         /** For convenience, gather together all the trackable objects in one easily-iterable collection */
         List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
@@ -225,21 +222,6 @@ public class VuforiaNavigation extends LinearOpMode {
         redTarget.setLocation(redTargetLocationOnField);
         RobotLog.ii(TAG, "Red Target=%s", format(redTargetLocationOnField));
 
-       /*
-        * To place the Stones Target on the Blue Audience wall:
-        * - First we rotate it 90 around the field's X axis to flip it upright
-        * - Finally, we translate it along the Y axis towards the blue audience wall.
-        */
-        OpenGLMatrix blueTargetLocationOnField = OpenGLMatrix
-                /* Then we translate the target off to the Blue Audience wall.
-                Our translation here is a positive translation in Y.*/
-                .translation(0, mmFTCFieldWidth/2, 0)
-                .multiplied(Orientation.getRotationMatrix(
-                        /* First, in the fixed (field) coordinate system, we rotate 90deg in X */
-                        AxesReference.EXTRINSIC, AxesOrder.XZX,
-                        AngleUnit.DEGREES, 90, 0, 0));
-        blueTarget.setLocation(blueTargetLocationOnField);
-        RobotLog.ii(TAG, "Blue Target=%s", format(blueTargetLocationOnField));
 
         /**
          * Create a transformation matrix describing where the phone is on the robot. Here, we
@@ -266,7 +248,6 @@ public class VuforiaNavigation extends LinearOpMode {
          * we have not ourselves installed a listener of a different type.
          */
         ((VuforiaTrackableDefaultListener)redTarget.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
-        ((VuforiaTrackableDefaultListener)blueTarget.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
 
         /**
          * A brief tutorial: here's how all the math is going to work:
