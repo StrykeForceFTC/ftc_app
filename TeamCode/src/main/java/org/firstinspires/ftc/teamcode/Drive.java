@@ -14,7 +14,6 @@ public class Drive
     private DcMotor frontRight = null;
     private DcMotor rearLeft = null;
     private DcMotor rearRight = null;
-    HardwareMap hwMap = null;
 
     // Limit timer
     private ElapsedTime limitTimer = new ElapsedTime();
@@ -38,9 +37,11 @@ public class Drive
     final private static double ROBOT_CIRCUM_CM = ROBOT_DIAM_CM * Math.PI;
     final private static double CM_PER_DEGREE = ROBOT_CIRCUM_CM / 360.0;
     final private static double MAX_SECONDS_PER_CM = 0.5;
-    final private static double AUTON_SHORT_DISTANCE_CM = 10.0;
+    final private static double AUTON_MEDIUM_DISTANCE_CM = 10.0;
+    final private static double AUTON_SHORT_DISTANCE_CM = 4.0;
     final private static double TARGET_POWER_LONG = 0.5;
-    final private static double TARGET_POWER_SHORT = 0.1;
+    final private static double TARGET_POWER_MEDIUM = 0.15;
+    final private static double TARGET_POWER_SHORT = 0.05;
     final private static double INCREASING_FK = 0.2;                  // Increasing power filter constant
     final private static double DECREASING_FK = 0.5;                   // Decreasing power filter constant
 
@@ -236,18 +237,25 @@ public class Drive
         double timeLimit = MAX_SECONDS_PER_CM * distance_cm;
         limitTimer.reset();
         double powerNow = 0.0;
-        while ( ( ticksMoved <= totalTicks ) && ( limitTimer.time() < timeLimit ) )
+        while ( ( ticksMoved < totalTicks ) && ( limitTimer.time() < timeLimit ) )
         {
             // apply power to wheels, select power based on distance left
             double powerTarget = TARGET_POWER_LONG;
-            if ( ( totalTicks - ticksMoved ) <= ( AUTON_SHORT_DISTANCE_CM * TICKS_PER_CM ) )
+            int distanceLeft = totalTicks - ticksMoved;
+            if ( distanceLeft <= ( AUTON_SHORT_DISTANCE_CM * TICKS_PER_CM ) )
             {
                 powerTarget = TARGET_POWER_SHORT;
             }
+            else if ( distanceLeft <= ( AUTON_MEDIUM_DISTANCE_CM * TICKS_PER_CM ) )
+            {
+                powerTarget = TARGET_POWER_MEDIUM;
+            }
+            // Default else is taken care of by setting initial value to TARGET_POWER_LONG
+
             powerNow = RampUpPower( powerNow, powerTarget, whichWay );
 
             // Delay 20ms to control ramp rate
-            Delay_ms( 20.0 );
+            JoystickUtilities.Delay_ms( 20.0 );
 
             // calc how much we have moved
             int encoderNow = frontLeft.getCurrentPosition();
@@ -257,23 +265,6 @@ public class Drive
         // Stop moving
         MoveSimple( 0.0, 0.0, 0.0 );
     }
-
-    // Method to determine how far we have gone based on encoder change and direction we
-    // are traveling.
-    private int SumTicksMoved( int encoderNow, int encoderLast, int movedSoFar, DIRECTION whichWay )
-    {
-        if ( ( whichWay == DIRECTION.FORWARD ) || ( whichWay == DIRECTION.RIGHT ) || ( whichWay == DIRECTION.CLOCKWISE ) )
-        {
-            movedSoFar += encoderLast - encoderNow;
-        }
-        else
-        {
-            movedSoFar += encoderNow - encoderLast;
-        }
-
-        return movedSoFar;
-    }
-
 
     // Method to ramp up power in a given direction and then hold it
     private double RampUpPower( double powerNow, double targetPower, DIRECTION whichWay )
@@ -308,18 +299,6 @@ public class Drive
         }
 
         return powerNow;
-    }
-
-    // Method for creating short delays
-    private void Delay_ms( double delay )
-    {
-        ElapsedTime delayTimer = new ElapsedTime( ElapsedTime.Resolution.MILLISECONDS );
-
-        delayTimer.reset();
-        while ( delayTimer.time() < delay )
-        {
-            // do nothing
-        }
     }
 
 }

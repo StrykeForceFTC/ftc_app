@@ -159,11 +159,11 @@ public class Tele_Op_Test extends OpMode
         telemetry.addLine("Color Values | ")
                 .addData("Red", jewelKnocker.RedValue())
                 .addData("Blue", jewelKnocker.BlueValue());
-*/
+
         telemetry.addLine("Claw Positions | ")
                 .addData( "Right", rightClawPosition )
                 .addData( "Left", leftClawPosition );
-/*        telemetry.addLine("WEP ")
+        telemetry.addLine("WEP ")
                 .addData("Position", wep.GetPosition() );
         telemetry.addLine("Lift" )
                 .addData( "Position ", lift.GetPosition() );
@@ -196,41 +196,41 @@ public class Tele_Op_Test extends OpMode
         robotRotate = JoystickUtilities.ShapeCubePlusInputWeighted( gamepad1.right_stick_x, ROBOT_ROTATE_WEIGHTING );
         go.MoveSimple( robotLeftRight, robotForwardBack, robotRotate );
 
-        // ************* Test code for Claw methods **************
-        // Gamepad1.x used to increase left claw position
+        // ************* Test code for auton Drive methods **************
+        // Gamepad1.x moves forward 20cm
         if ( gamepad1.x )
         {
-            claw.StepLeftUp();
+            go.AutonForward( 20.0 );
             while ( gamepad1.x )
             {
 
             }
         }
 
-        // Gamepad1.y to decrease left claw position
+        // Gamepad1.y moves backwards 20cm
         if ( gamepad1.y )
         {
-            claw.StepLeftDown();
+            go.AutonReverse( 20.0 );
             while ( gamepad1.y )
             {
 
             }
         }
 
-        // Gamepad1.a used to increase left claw position
+        // Gamepad1.a moves forward 10cm
         if ( gamepad1.a )
         {
-            claw.StepRightUp();
+            go.AutonForward( 10.0 );
             while ( gamepad1.a )
             {
 
             }
         }
 
-        // Gamepad1.y to decrease left claw position
+        // Gamepad1.y moves backwards 10cm
         if ( gamepad1.b )
         {
-            claw.StepRightDown();
+            go.AutonReverse( 10.0 );
             while ( gamepad1.b )
             {
 
@@ -254,37 +254,25 @@ public class Tele_Op_Test extends OpMode
          wep.openClaw();
         }
 */
-        // ************* Test code for drive auto methods **************
 
-/*        telemetry.addLine("Encoders ")
+        telemetry.addLine("Encoders ")
                 .addData("FL ", frontLeft.getCurrentPosition() )
                 .addData("FR ", frontRight.getCurrentPosition() );
+/*
         telemetry.addLine("Lift")
                 .addData("enc ", lift.GetPosition());
 */
+
         telemetry.update();
     }
 
-
-    // Delay time method
-    private void Delay_s( double seconds )
-    {
-        ElapsedTime delayTimer = new ElapsedTime( ElapsedTime.Resolution.SECONDS );
-
-        delayTimer.reset();
-        int timeWaster = 0;
-        while ( delayTimer.time() < seconds )
-        {
-            // Just wasting some time
-            timeWaster++;
-        }
-    }
 
     /*
      * Code to run ONCE after the driver hits STOP
      */
     @Override
     public void stop() {
+        jewelKnocker.RaiseKnocker();
     }
 
 }
