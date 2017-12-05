@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import static org.firstinspires.ftc.teamcode.JoystickUtilities.Delay_ms;
+
 /**
  * Created by gstaats on 21/09/17.
  */
@@ -39,7 +41,8 @@ public class Pole {
         // Claw setup
         relicClaw.setDirection(Servo.Direction.FORWARD);
     }
-//ssssswss
+
+
     public void extend( )
     {
         farpower = JoystickUtilities.LowPassFilter( farpower, 0.5, incr_filter, decr_filter );
@@ -80,6 +83,14 @@ public class Pole {
     public void lift( double upDown )
     {
         high.setPower(0.35*upDown);
+    }
+
+    public void autonLift( )
+    {
+        // Lift relic pole out of the way
+        high.setPower( 0.35 );
+        Delay_ms( 250.0 );
+        high.setPower( 0.0 );
     }
 
     //lowers the pole
