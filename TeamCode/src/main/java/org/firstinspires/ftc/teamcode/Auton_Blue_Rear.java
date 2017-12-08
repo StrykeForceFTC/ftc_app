@@ -17,13 +17,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 /**
  * Created by jscott on 11/10/17.
  *
- * auton program based on the front position for the blue team that uses
- * encoders for longer distances and rotation. For 8553
+ * auton program based on the rear position for the blue team that uses
+ * encoders for longer distances and rotation. For 7228
  *
  */
-@Autonomous(name = "Blue Front 8553", group = "Linear Opmode")
+@Autonomous(name = "Blue Rear", group = "Linear Opmode")
 //@Disabled
-public class Auton_Blue_Front8553 extends LinearOpMode {
+public class Auton_Blue_Rear extends LinearOpMode {
 
     public static final String TAG = "Vuforia Navigation Sample";
 
@@ -58,16 +58,17 @@ public class Auton_Blue_Front8553 extends LinearOpMode {
 
     // Enumeration for auton steps
     private enum AUTON_STEPS { START, PICK_UP_GLYPH, KNOCK_OFF_JEWEL,
-        MOVE_IN_FRONT_OF_BOX, ROTATE_TO_FACE_BOX, MOVE_FORWARD_TO_BOX,
+        MOVE_T0WARDS_BOX, MOVE_TO_COLUMN, ADJUST_ANGLE, MOVE_FORWARD_TO_BOX,
         DROP_GYLPH, BACK_UP, STOP }
 
     private AUTON_STEPS step = AUTON_STEPS.START;
 
     // Constants for controlling / tuning auton
-    private static final double DISTANCE_FOR_LEFT_COLUMN = 72.07;     //
-    private static final double DISTANCE_FOR_CENTER_COLUMN = 91.44;   //
-    private static final double DISTANCE_FOR_RIGHT_COLUMN = 110.81;   //
-    private static final double DEGREES_2_ROTATE = 90.0;              // Must rotate CCW
+    private static final double DISTANCE_TOWARDS_BOX = 60.96;         // Distance from starting point to being in front of crypto box (also need to move sideways)
+    private static final double DISTANCE_FOR_LEFT_COLUMN = 11.11;     //
+    private static final double DISTANCE_FOR_CENTER_COLUMN = 30.48;   //
+    private static final double DISTANCE_FOR_RIGHT_COLUMN = 49.85;    //
+    private static final double DEGREES_2_ROTATE = 5.0;               // Small rotation to angle inwards to box
     private static final double DISTANCE_FORWARD_2_DROP = 20.32;      //
     private static final double DISTANCE_FOR_JEWEL = 9.21;            // Distance to move to knock off a jewel
 
@@ -172,7 +173,7 @@ public class Auton_Blue_Front8553 extends LinearOpMode {
 
         // Create rotate adjustment outside of while loop so it doesn't get
         // reset each pass of the loop
-        double rotateAdjustment = 0.0;
+        double rotateAngle = 0.0;
 
         // Loop until stop or forced to end
         while ( opModeIsActive() )
@@ -217,7 +218,7 @@ public class Auton_Blue_Front8553 extends LinearOpMode {
 
                 case PICK_UP_GLYPH:
                     // To pick up the glyph, close claw and raise lift a bit.
-                    claw.claw_Inward8553();
+                    claw.claw_Inward();
 
                     // short delay to let claw close
                     sleep( 250 );
@@ -228,7 +229,7 @@ public class Auton_Blue_Front8553 extends LinearOpMode {
 
                 case KNOCK_OFF_JEWEL:
                     // Lower jewel knocker and delay to give time to move
-                    jewelKnocker.LowerKnocker8553();
+                    jewelKnocker.LowerKnocker();
                     sleep( 500 );
 
                     // read color sensor
@@ -255,41 +256,51 @@ public class Auton_Blue_Front8553 extends LinearOpMode {
                     }
 
                     // Raise the knocker and give it time to move
-                    jewelKnocker.RaiseKnocker8553();
+                    jewelKnocker.RaiseKnocker();
                     sleep( 500 );
 
                     // Go to next step
-                    step = AUTON_STEPS.MOVE_IN_FRONT_OF_BOX;
+                    step = AUTON_STEPS.MOVE_T0WARDS_BOX;
                     break;
 
-                case MOVE_IN_FRONT_OF_BOX:
+                case MOVE_T0WARDS_BOX:
+
+                    // Move towards box and slight delay to make sure we have stopped
+                    errorTicks = go.AutonForward( DISTANCE_TOWARDS_BOX - yDistanceFromStart );
+                    sleep( 250 );
+
+                    // go to next step
+                    step = AUTON_STEPS.MOVE_TO_COLUMN;
+                    break;
+
+                case MOVE_TO_COLUMN:
                 {
                     switch (vuMark)
                     {
                         case LEFT:
-                            errorTicks = go.AutonForward( DISTANCE_FOR_LEFT_COLUMN - yDistanceFromStart );
-                            rotateAdjustment = 5.0;
+                            errorTicks = go.AutonRight( DISTANCE_FOR_LEFT_COLUMN );
+                            rotateAngle = DEGREES_2_ROTATE;
                             break;
 
                         case RIGHT:
-                            errorTicks = go.AutonForward( DISTANCE_FOR_RIGHT_COLUMN - yDistanceFromStart );
-                            rotateAdjustment = -5.0;
+                            errorTicks = go.AutonRight( DISTANCE_FOR_RIGHT_COLUMN );
+                            rotateAngle = -DEGREES_2_ROTATE;
                             break;
 
                         default:  // Default is for unknown or center
                         {
-                            errorTicks = go.AutonForward( DISTANCE_FOR_CENTER_COLUMN - yDistanceFromStart );
-                            rotateAdjustment = 0.0;
+                            errorTicks = go.AutonRight( DISTANCE_FOR_CENTER_COLUMN );
+                            rotateAngle = 0.0;
                         }
                         break;
                     }
 
-                    step = AUTON_STEPS.ROTATE_TO_FACE_BOX;
+                    step = AUTON_STEPS.ADJUST_ANGLE;
                 }
                     break;
 
-                case ROTATE_TO_FACE_BOX:
-                    errorTicks = go.AutonRotateCounterclockwise( DEGREES_2_ROTATE + rotateAdjustment );
+                case ADJUST_ANGLE:
+                    errorTicks = go.AutonRotateClockwise( rotateAngle );
                     step = AUTON_STEPS.MOVE_FORWARD_TO_BOX;
                     break;
 
@@ -299,7 +310,7 @@ public class Auton_Blue_Front8553 extends LinearOpMode {
                     break;
 
                 case DROP_GYLPH:
-                    claw.claw_Outward8553();
+                    claw.claw_Outward();
                     sleep( 250 );
                     lift.AutonLower();
                     step = AUTON_STEPS.BACK_UP;
@@ -316,10 +327,10 @@ public class Auton_Blue_Front8553 extends LinearOpMode {
                     // In stop, just turn all motors off for safety
                     go.MoveSimple( 0.0, 0.0, 0.0 );
                     lift.Raise( 0.0 );
-                    claw.claw_Outward8553();
+                    claw.claw_Outward();
                     wep.stay();
                     wep.lift( 0.0 );
-                    jewelKnocker.RaiseKnocker8553( );
+                    jewelKnocker.RaiseKnocker( );
 
                     // Force to stop mode
                     requestOpModeStop();

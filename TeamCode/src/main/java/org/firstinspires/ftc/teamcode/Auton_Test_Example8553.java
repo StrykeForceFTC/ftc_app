@@ -186,22 +186,22 @@ public class Auton_Test_Example8553 extends LinearOpMode {
 
             if ( gamepad1.x )
             {
-                errorTicks = go.AutonForward( 3.5*2.54 );
+                errorTicks = go.AutonRight( 4.375*2.54 );
             }
 
             if ( gamepad1.y )
             {
-                errorTicks = go.AutonReverse( 3.5*2.54 );
+                errorTicks = go.AutonLeft( 4.375*2.54 );
             }
 
             if ( gamepad1.a )
             {
-                errorTicks = go.AutonRight( 6.0*2.54 );
+                errorTicks = go.AutonRight( 12.0*2.54 );
             }
 
             if ( gamepad1.b )
             {
-                errorTicks = go.AutonLeft( 6.0*2.54 );
+                errorTicks = go.AutonLeft( 12.0*2.54 );
             }
 
             telemetry.addData( "Movement Error ", errorTicks );
