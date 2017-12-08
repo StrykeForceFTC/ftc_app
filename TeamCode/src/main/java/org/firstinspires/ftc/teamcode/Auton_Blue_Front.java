@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -9,21 +9,23 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by jscott on 11/10/17.
  *
- * auton program based on the front position for the blue team that uses
- * encoders for longer distances and rotation. For 7228
+ *  auton program based on the front position for the red team.
  *
  */
-@Autonomous(name = "Blue Front", group = "Linear Opmode")
-//@Disabled
-public class Auton_Blue_Front extends LinearOpMode {
+@Autonomous(name = "Auton Blue Front", group = "Iterative Opmode")
+public class Auton_Blue_Front extends OpMode {
 
     public static final String TAG = "Vuforia Navigation Sample";
 
@@ -46,9 +48,17 @@ public class Auton_Blue_Front extends LinearOpMode {
     private Servo knockerServo = null;
     private ColorSensor colorSensor = null;
 
+    // determine new target
+    private int newLeftTarget;
+    private int newRightTarget;
+    private int targetX, targetY, targetSpin;
+
     VuforiaTrackables relicTrackables;
     VuforiaTrackable relicTemplate;
     RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.UNKNOWN;
+
+    OpenGLMatrix lastLocation = null;
+    List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
 
     /**
      * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
@@ -57,32 +67,30 @@ public class Auton_Blue_Front extends LinearOpMode {
     private VuforiaLocalizer vuforia;
 
     // Enumeration for auton steps
-    private enum AUTON_STEPS { START, PICK_UP_GLYPH, KNOCK_OFF_JEWEL,
-        MOVE_IN_FRONT_OF_BOX, ROTATE_TO_FACE_BOX, MOVE_FORWARD_TO_BOX,
-        DROP_GYLPH, BACK_UP, STOP }
+    private enum AUTON_STEPS { START, KNOCK_OFF_JEWEL,
+                               MOVE_IN_FRONT_OF_BOX, ROTATE_TO_FACE_BOX, MOVE_FORWARD_TO_BOX,
+                               BACK_UP, STOP }
 
     private AUTON_STEPS step = AUTON_STEPS.START;
 
     // Constants for controlling / tuning auton
-    private static final double DISTANCE_FOR_LEFT_COLUMN = 72.07;     //
+    private static final double DISTANCE_FORWARD_4_GLYPH = 8.89;      // This is in cm
+    private static final double DISTANCE_FOR_LEFT_COLUMN = 110.81;     //
     private static final double DISTANCE_FOR_CENTER_COLUMN = 91.44;   //
-    private static final double DISTANCE_FOR_RIGHT_COLUMN = 110.81;   //
+    private static final double DISTANCE_FOR_RIGHT_COLUMN = 72.07;   //
     private static final double DEGREES_2_ROTATE = 90.0;              // Must rotate CCW
     private static final double DISTANCE_FORWARD_2_DROP = 20.32;      //
+    private static final double DISTANCE_BACK_FINAL = 5.0;            //
     private static final double DISTANCE_FOR_JEWEL = 9.21;            // Distance to move to knock off a jewel
 
     // Used to compensate for movement to knock off jewel
     private double yDistanceFromStart = 0.0;
 
     /*
-     * There is only runOpMode for linear op modes
+     * Code to run ONCE when the driver hits INIT
      */
     @Override
-    public void runOpMode()
-    {
-        /*
-        **  Initialization code
-         */
+    public void init() {
         telemetry.addData("Status", "Initializing");
 
         /* eg: Initialize the hardware variables. Note that the strings used here as parameters
@@ -109,7 +117,7 @@ public class Auton_Blue_Front extends LinearOpMode {
         colorSensor = hardwareMap.colorSensor.get( "color" );
         jewelKnocker = new JewelKnocker( knockerServo, colorSensor );
 
-        /*
+        /**
          * Start up Vuforia, telling it the id of the view that we wish to use as the parent for
          * the camera monitor feedback; if no camera monitor feedback is desired, use the parameterless
          * constructor instead. We also indicate which camera on the RC that we wish to use. For illustration
@@ -137,7 +145,7 @@ public class Auton_Blue_Front extends LinearOpMode {
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
 
-        /*
+        /**
          * Load the data sets that for the trackable objects we wish to track. These particular data
          * sets are stored in the 'assets' part of our application (you'll see them in the Android
          * Studio 'Project' view over there on the left of the screen). You can make your own datasets
@@ -152,196 +160,183 @@ public class Auton_Blue_Front extends LinearOpMode {
         relicTrackables.activate();
 
         telemetry.addData("Status", "Initialized");
-        telemetry.update();
+    }
 
-        // Open the claw to get ready to pick up glyph
-        claw.claw_Outward();
-
-        // Look for vumark 5x during init unless it is found
-        for ( int loop = 0; loop < 5; loop++ )
+    /*
+     * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
+     */
+    @Override
+    public void init_loop()
+    {
+        // Keep looking for vumark until found
+        if ( vuMark == RelicRecoveryVuMark.UNKNOWN )
         {
-            if (vuMark == RelicRecoveryVuMark.UNKNOWN)
-            {
-                vuMark = RelicRecoveryVuMark.from(relicTemplate);
-            }
+            vuMark = RelicRecoveryVuMark.from(relicTemplate);
+        }
+    }
+
+    /*
+     * Code to run ONCE when the driver hits PLAY
+     */
+    @Override
+    public void start()
+    {
+        // Keep looking for vumark until found
+        if ( vuMark == RelicRecoveryVuMark.UNKNOWN )
+        {
+            vuMark = RelicRecoveryVuMark.from(relicTemplate);
         }
 
-        // Wait hit till start button pressed
-        waitForStart();
+        // Open the claw to get ready to pick up glyph
+        // claw.claw_Outward();
+
         runtime.reset();
+    }
 
-        // Create rotate adjustment outside of while loop so it doesn't get
-        // reset each pass of the loop
-        double rotateAdjustment = 0.0;
-
-        // Loop until stop or forced to end
-        while ( opModeIsActive() )
+    /*
+     * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
+     */
+    @Override
+    public void loop()
+    {
+        // Keep looking for vumark until found (or we just don't care anymore)
+        if ( vuMark == RelicRecoveryVuMark.UNKNOWN )
         {
-            int errorTicks = 0;
+            vuMark = RelicRecoveryVuMark.from(relicTemplate);
+        }
 
-            // Keep looking for vumark until found (or we just don't care anymore)
-            if ( vuMark == RelicRecoveryVuMark.UNKNOWN )
-            {
-                vuMark = RelicRecoveryVuMark.from(relicTemplate);
-            }
-
-            /*
-            if ( gamepad1.x )
-            {
-                errorTicks = go.AutonForward( 3.5*2.54 );
-            }
-
-            if ( gamepad1.y )
-            {
-                errorTicks = go.AutonReverse( 3.5*2.54 );
-            }
-
-            if ( gamepad1.a )
-            {
-                errorTicks = go.AutonRight( 6.0*2.54 );
-            }
-
-            if ( gamepad1.b )
-            {
-                errorTicks = go.AutonLeft( 6.0*2.54 );
-            }
-            */
-
-            switch ( step )
-            {
-                case START:
-                    // Move pole out of way of lift
-                    wep.autonLift();
-                    step = AUTON_STEPS.PICK_UP_GLYPH;
-                    break;
-
-                case PICK_UP_GLYPH:
-                    // To pick up the glyph, close claw and raise lift a bit.
-                    claw.claw_Inward();
-
-                    // short delay to let claw close
-                    sleep( 250 );
-
-                    lift.AutonRaise();
-                    step = AUTON_STEPS.KNOCK_OFF_JEWEL;
-                    break;
-
-                case KNOCK_OFF_JEWEL:
-                    // Lower jewel knocker and delay to give time to move
-                    jewelKnocker.LowerKnocker();
-                    sleep( 500 );
-
-                    // read color sensor
-                    JewelKnocker.COLORS color = jewelKnocker.GetColor();
-
-                    // Move forward or reverse based on color sensor, knock off red, because
-                    // we are blue. The color sensor points forward.
-                    if ( color == JewelKnocker.COLORS.RED )
-                    {
-                        // Jewel to front is red, so move forward to knock off
-                        go.MoveSimple( 0.0, -0.23, 0.0 );
-                        sleep( 300 );
-                        go.MoveSimple( 0.0, 0.0, 0.0 );
-                        yDistanceFromStart = DISTANCE_FOR_JEWEL;
-                    }
-                    else
-                    {
-                        // Need to move backwards to knock off the red jewel; note that this
-                        // means distance is negative.
-                        go.MoveSimple( 0.0, 0.23, 0.0 );
-                        sleep( 300 );
-                        go.MoveSimple( 0.0, 0.0, 0.0 );
-                        yDistanceFromStart = -DISTANCE_FOR_JEWEL;
-                    }
-
-                    // Raise the knocker and give it time to move
-                    jewelKnocker.RaiseKnocker();
-                    sleep( 500 );
-
-                    // Go to next step
-                    step = AUTON_STEPS.MOVE_IN_FRONT_OF_BOX;
-                    break;
-
-                case MOVE_IN_FRONT_OF_BOX:
-                {
-                    switch (vuMark)
-                    {
-                        case LEFT:
-                            errorTicks = go.AutonForward( DISTANCE_FOR_LEFT_COLUMN - yDistanceFromStart );
-                            rotateAdjustment = 5.0;
-                            break;
-
-                        case RIGHT:
-                            errorTicks = go.AutonForward( DISTANCE_FOR_RIGHT_COLUMN - yDistanceFromStart );
-                            rotateAdjustment = -5.0;
-                            break;
-
-                        default:  // Default is for unknown or center
-                        {
-                            errorTicks = go.AutonForward( DISTANCE_FOR_CENTER_COLUMN - yDistanceFromStart );
-                            rotateAdjustment = 0.0;
-                        }
-                        break;
-                    }
-
-                    step = AUTON_STEPS.ROTATE_TO_FACE_BOX;
-                }
+        switch ( step )
+        {
+            case START:
+                step = AUTON_STEPS.KNOCK_OFF_JEWEL;
                 break;
 
-                case ROTATE_TO_FACE_BOX:
-                    errorTicks = go.AutonRotateCounterclockwise( DEGREES_2_ROTATE + rotateAdjustment );
-                    step = AUTON_STEPS.MOVE_FORWARD_TO_BOX;
-                    break;
+            case KNOCK_OFF_JEWEL:
+                // Open claw to get ready to pick up glyph
+                //claw.claw_Outward();
 
-                case MOVE_FORWARD_TO_BOX:
-                    errorTicks = go.AutonForward( DISTANCE_FORWARD_2_DROP );
-                    step = AUTON_STEPS.DROP_GYLPH;
-                    break;
+                // Lower jewel knocker and delay to give time to move
+                jewelKnocker.LowerKnocker();
+                Delay_s( 1.0 );
 
-                case DROP_GYLPH:
-                    claw.claw_Outward();
-                    sleep( 250 );
-                    lift.AutonLower();
-                    step = AUTON_STEPS.BACK_UP;
-                    break;
+                // read color sensor
+                JewelKnocker.COLORS color = jewelKnocker.GetColor();
 
-                case BACK_UP:
-                    go.MoveSimple( 0.0, 0.35, 0.0 );
-                    sleep( 150 );
-                    go.MoveSimple( 0, 0, 0 );
-                    step = AUTON_STEPS.STOP;
-                    break;
-
-                case STOP:
-                    // In stop, just turn all motors off for safety
+                // Move forward or reverse based on color sensor, knock off red, because
+                // we are blue. The color sensor points forward.
+                if ( color == JewelKnocker.COLORS.RED )
+                {
+                    // Jewel to front is red, so move backward to knock off
+                    //go.AutonReverse( DISTANCE_FOR_JEWEL );
+                    //yDistanceFromStart = DISTANCE_FOR_JEWEL;
+                    go.MoveSimple( 0.0, -0.23, 0.0 );
+                    Delay_s( 0.3 );
                     go.MoveSimple( 0.0, 0.0, 0.0 );
-                    lift.Raise( 0.0 );
-                    claw.claw_Outward();
-                    wep.stay();
-                    wep.lift( 0.0 );
-                    jewelKnocker.RaiseKnocker( );
+                }
+                else
+                {
+                    // Need to move backwards to knock off the red jewel; note that this
+                    // means distance is negative.
+                    //go.AutonForward( DISTANCE_FOR_JEWEL );
+                    //yDistanceFromStart = 0.0 - DISTANCE_FOR_JEWEL;
+                    go.MoveSimple( 0.0, 0.23, 0.0 );
+                    Delay_s( 0.3 );
+                    go.MoveSimple( 0.0, 0.0, 0.0 );
+                }
 
-                    // Force to stop mode
-                    requestOpModeStop();
+                // Raise the knocker and give it time to move
+                jewelKnocker.RaiseKnocker();
+                Delay_s( 1.0 );
 
+                // set yDistanceFromStart to distance moved (+ for forward, - for reverse)
+                step = AUTON_STEPS.MOVE_IN_FRONT_OF_BOX;
+                break;
+
+            case MOVE_IN_FRONT_OF_BOX:
+            {
+
+/*                switch (vuMark)
+                {
+                    case LEFT:
+                        go.AutonReverse( DISTANCE_FOR_LEFT_COLUMN - yDistanceFromStart );
+                        break;
+
+                    case RIGHT:
+                        go.AutonReverse( DISTANCE_FOR_RIGHT_COLUMN - yDistanceFromStart );
+                        break;
+
+                    default:  // Default is for unknown or center
+                    {
+                        go.AutonReverse( DISTANCE_FOR_CENTER_COLUMN - yDistanceFromStart );
+                    }
                     break;
+                }
+*/
+                go.MoveSimple( 0.0, -0.4, 0.0 );
+                Delay_s( 2.1 );
+                go.MoveSimple(0,0,0);
 
-                default:  // Should never get here, so just go to stop
-                    step = AUTON_STEPS.STOP;
-                    break;
+                step = AUTON_STEPS.BACK_UP;
             }
+            break;
 
+            case BACK_UP:
+                // go.AutonReverse( DISTANCE_BACK_FINAL );
+                go.MoveSimple( 0.0, 0.35, 0.0 );
+                Delay_s( 0.15);
+                go.MoveSimple(0,0,0);
+                step = AUTON_STEPS.STOP;
+                break;
 
-            telemetry.addData("VuMark", "%s visible", vuMark);
-            telemetry.addData( "Movement Error ", errorTicks );
+            case STOP:
+                // In stop, just turn all motors off for safety
+                go.MoveSimple( 0.0, 0.0, 0.0 );
 
-            telemetry.addLine("Encoders ")
-                    .addData("FL ", frontLeft.getCurrentPosition() )
-                    .addData("FR ", frontRight.getCurrentPosition() );
+                // Force to stop mode
+                requestOpModeStop();
 
-            telemetry.update();
+                break;
 
-            idle();
+            default:  // Should never get here, so just go to stop
+                step = AUTON_STEPS.STOP;
+                break;
+        }
+
+        telemetry.update();
+    }
+
+    /*
+     * Code to run ONCE after the driver hits STOP
+     */
+    @Override
+    public void stop()
+    {
+        go.MoveSimple( 0.0, 0.0, 0.0 );
+        lift.Raise( 0.0 );
+        claw.claw_Outward();
+        wep.stay();
+        wep.lift( 0.0 );
+    }
+
+    /**
+     * A simple utility that extracts positioning information from a transformation matrix
+     * and formats it in a form palatable to a human being.
+     */
+    String format(OpenGLMatrix transformationMatrix) {
+        return transformationMatrix.formatAsTransform();
+    }
+
+    // Delay time method
+    private void Delay_s( double seconds )
+    {
+        ElapsedTime delayTimer = new ElapsedTime( ElapsedTime.Resolution.SECONDS );
+
+        delayTimer.reset();
+        int timeWaster = 0;
+        while ( delayTimer.time() < seconds )
+        {
+            // Just wasting some time
+            timeWaster++;
         }
     }
 
