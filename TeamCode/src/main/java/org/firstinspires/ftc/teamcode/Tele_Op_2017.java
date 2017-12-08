@@ -189,13 +189,24 @@ public class Tele_Op_2017 extends OpMode
         lift.Raise(gamepad2.left_stick_y);
 
         // Use gamepad X & B to extend and retract the arm
-        if (gamepad2.dpad_up) {
+        if (gamepad2.dpad_up)
+        {
             wep.extend();
         }
-        else if (gamepad2.dpad_down) {
+        else if (gamepad2.dpad_down)
+        {
             wep.retract();
         }
-        else {
+        else if ( gamepad2.dpad_right )
+        {
+            wep.extendFast();
+        }
+        else if ( gamepad2.dpad_left )
+        {
+            wep.retractFast();
+        }
+        else
+        {
             wep.stay();
         }
 
