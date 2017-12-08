@@ -92,28 +92,20 @@ public final class JoystickUtilities
     // Delay for a certain amount of time in seconds
     public static void Delay_s( double seconds )
     {
-        ElapsedTime delayTimer = new ElapsedTime( ElapsedTime.Resolution.SECONDS );
-
-        delayTimer.reset();
-        int timeWaster = 0;
-        while ( delayTimer.time() < seconds )
-        {
-            // Just wasting some time
-            timeWaster++;
+        try {
+            Thread.sleep( (long) ( seconds * 1000.0 ) );
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
     }
 
     // Delay for a certain amount of time in milliseconds
     public static void Delay_ms( double milliseconds )
     {
-        ElapsedTime delayTimer = new ElapsedTime( ElapsedTime.Resolution.MILLISECONDS );
-
-        delayTimer.reset();
-        int timeWaster = 0;
-        while ( delayTimer.time() < milliseconds )
-        {
-            // Just wasting some time
-            timeWaster++;
+        try {
+            Thread.sleep( (long) ( milliseconds ) );
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
     }
 
