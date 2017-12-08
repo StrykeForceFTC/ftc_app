@@ -63,12 +63,13 @@ public class Auton_Blue_Front extends LinearOpMode {
 
     private AUTON_STEPS step = AUTON_STEPS.START;
 
-    // Constants for controlling / tuning auton
-    private static final double DISTANCE_FOR_LEFT_COLUMN = 72.07;     //
-    private static final double DISTANCE_FOR_CENTER_COLUMN = 91.44;   //
-    private static final double DISTANCE_FOR_RIGHT_COLUMN = 110.81;   //
+    // Constants for controlling / tuning auton, long distances reduced by 1"
+    // to make up for error we have seen. All values in cm or degrees
+    private static final double DISTANCE_FOR_LEFT_COLUMN = ( 72.07 - 2.54 );     //
+    private static final double DISTANCE_FOR_CENTER_COLUMN = ( 91.44 - 2.54 );   //
+    private static final double DISTANCE_FOR_RIGHT_COLUMN = ( 110.81 - 2.54 );   //
     private static final double DEGREES_2_ROTATE = 90.0;              // Must rotate CCW
-    private static final double DISTANCE_FORWARD_2_DROP = 20.32;      //
+    private static final double DISTANCE_FORWARD_2_DROP = 20.32;      // leave this distance long; it will run into wall
     private static final double DISTANCE_FOR_JEWEL = 9.21;            // Distance to move to knock off a jewel
 
     // Used to compensate for movement to knock off jewel
