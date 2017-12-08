@@ -188,7 +188,7 @@ public class Tele_Op_8553 extends OpMode
                 .addData( "Right", rightClawPosition )
                 .addData( "Left",leftClawPosition );
 
-        poleRotate = (Math.pow(gamepad2.right_stick_x, 3.0)*ROBOT_POLE_ROTATE_WEIGHTING)+(gamepad2.right_stick_y*(1-ROBOT_POLE_ROTATE_WEIGHTING));
+        poleRotate = JoystickUtilities.ShapeCubePlusInputWeighted( gamepad2.right_stick_x, ROBOT_POLE_ROTATE_WEIGHTING );
         wep.lift(poleRotate);
         // Use gamepad Y & A raise and lower the arm
         //wep.lift( gamepad2.right_stick_x );
@@ -197,19 +197,31 @@ public class Tele_Op_8553 extends OpMode
         lift.Raise(gamepad2.left_stick_y);
 
         // Use gamepad X & B to extend and retract the arm
-        if (gamepad2.dpad_up) {
+        if (gamepad2.dpad_up)
+        {
             wep.extend();
         }
-        else if (gamepad2.dpad_down) {
+        else if (gamepad2.dpad_down)
+        {
             wep.retract();
         }
-        else {
+        else if ( gamepad2.dpad_right )
+        {
+            wep.extendFast();
+        }
+        else if ( gamepad2.dpad_left )
+        {
+            wep.retractFast();
+        }
+        else
+        {
             wep.stay();
         }
+
         // Move robot based on joystick inputs from gamepad 1 / driver 1
-        drive_x = (Math.pow(gamepad1.left_stick_x, 3.0)*ROBOT_LEFT_RIGHT_WEIGHTING)+(gamepad1.left_stick_x*(1-ROBOT_LEFT_RIGHT_WEIGHTING));
-        drive_y = (Math.pow(gamepad1.left_stick_y, 3.0)*ROBOT_FWD_BACK_WEIGHTING)+(gamepad1.left_stick_y*(1-ROBOT_FWD_BACK_WEIGHTING));
-        drive_turn = (Math.pow(gamepad1.right_stick_x, 3.0)*ROBOT_ROTATE_WEIGHTING)+(gamepad1.right_stick_x*(1-ROBOT_ROTATE_WEIGHTING));
+        drive_x = JoystickUtilities.ShapeCubePlusInputWeighted( gamepad1.right_stick_x, ROBOT_FWD_BACK_WEIGHTING );
+        drive_y = JoystickUtilities.ShapeCubePlusInputWeighted( gamepad1.right_stick_y, ROBOT_LEFT_RIGHT_WEIGHTING );
+        drive_turn = JoystickUtilities.ShapeCubePlusInputWeighted( gamepad1.left_stick_x, ROBOT_ROTATE_WEIGHTING );
         go.MoveSimple( drive_x, drive_y, drive_turn );
 
 
