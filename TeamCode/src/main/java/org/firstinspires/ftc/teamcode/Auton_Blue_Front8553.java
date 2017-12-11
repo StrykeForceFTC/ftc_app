@@ -272,8 +272,8 @@ public class Auton_Blue_Front8553 extends OpMode {
                     break;
                 }
 */
-                go.MoveSimple( 0.0, -0.5, 0.0 );
-                Delay_s( 1.8);
+                go.MoveSimple( 0.08, -0.5, 0.0 );
+                Delay_s( 2.0 );
                 go.MoveSimple(0,0,0);
 
                 step = AUTON_STEPS.BACK_UP;

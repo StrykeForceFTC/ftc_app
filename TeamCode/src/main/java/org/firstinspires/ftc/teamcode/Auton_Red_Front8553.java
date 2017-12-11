@@ -240,7 +240,7 @@ public class Auton_Red_Front8553 extends OpMode {
                     //go.AutonForward( DISTANCE_FOR_JEWEL );
                     //yDistanceFromStart = 0.0 - DISTANCE_FOR_JEWEL;
                     go.MoveSimple( 0.0, -0.2, 0.0 );
-                    Delay_s( 0.275 );
+                    Delay_s( 0.325 );
                     go.MoveSimple( 0.0, 0.0, 0.0 );
                 }
 
@@ -272,8 +272,8 @@ public class Auton_Red_Front8553 extends OpMode {
                     break;
                 }
 */
-                go.MoveSimple( 0.0, 0.5, 0.0 );
-                Delay_s( 1.8 );
+                go.MoveSimple( 0.08, 0.5, 0.0 );
+                Delay_s( 2.0 );
                 go.MoveSimple(0,0,0);
 
                 step = AUTON_STEPS.BACK_UP;
