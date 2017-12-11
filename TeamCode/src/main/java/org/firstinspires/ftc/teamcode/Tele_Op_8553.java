@@ -219,9 +219,9 @@ public class Tele_Op_8553 extends OpMode
         }
 
         // Move robot based on joystick inputs from gamepad 1 / driver 1
-        drive_x = JoystickUtilities.ShapeCubePlusInputWeighted( gamepad1.right_stick_x, ROBOT_FWD_BACK_WEIGHTING );
-        drive_y = JoystickUtilities.ShapeCubePlusInputWeighted( gamepad1.right_stick_y, ROBOT_LEFT_RIGHT_WEIGHTING );
-        drive_turn = JoystickUtilities.ShapeCubePlusInputWeighted( gamepad1.left_stick_x, ROBOT_ROTATE_WEIGHTING );
+        drive_x = JoystickUtilities.ShapeCubePlusInputWeighted( gamepad1.left_stick_x, ROBOT_FWD_BACK_WEIGHTING );
+        drive_y = JoystickUtilities.ShapeCubePlusInputWeighted( gamepad1.left_stick_y, ROBOT_LEFT_RIGHT_WEIGHTING );
+        drive_turn = JoystickUtilities.ShapeCubePlusInputWeighted( gamepad1.right_stick_x, ROBOT_ROTATE_WEIGHTING );
         go.MoveSimple( drive_x, drive_y, drive_turn );
 
 
