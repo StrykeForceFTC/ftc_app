@@ -301,7 +301,16 @@ public class Auton_Blue_Rear extends LinearOpMode {
                     break;
 
                 case ADJUST_ANGLE:
-                    errorTicks = go.AutonRotateClockwise( rotateAngle );
+                    if (rotateAngle < 0.0)
+                    {
+                        errorTicks = go.AutonRotateCounterclockwise( Math.abs(rotateAngle) );
+                    }
+                    else
+                    {
+                        errorTicks = go.AutonRotateClockwise(rotateAngle);
+                    }
+
+
                     step = AUTON_STEPS.MOVE_FORWARD_TO_BOX;
                     break;
 
