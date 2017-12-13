@@ -21,7 +21,7 @@ public class JewelKnocker
     final private static int RED_LOWER_LIMIT = 55;
 
     // Position values for servo
-    final private static double KNOCKER_DOWN_POSITION = 0.625;
+    final private static double KNOCKER_DOWN_POSITION = 0.65;
     final private static double KNOCKER_UP_POSITION = 0.3;
     final private static double KNOCKER_DOWN_POSITION_8553 = 0.625;
     final private static double KNOCKER_UP_POSITION_8553 = 0.1;
