@@ -24,7 +24,7 @@ import java.util.List;
  *  auton program based on the front position for the red team.
  *
  */
-@Autonomous(name = "Auton Blue Front", group = "Iterative Opmode")
+@Autonomous(name = "Blue Front", group = "Iterative Opmode")
 public class Auton_Blue_Front extends OpMode {
 
     public static final String TAG = "Vuforia Navigation Sample";
@@ -272,8 +272,10 @@ public class Auton_Blue_Front extends OpMode {
                     break;
                 }
 */
-                go.MoveSimple( 0.08, -0.5, 0.0 );
-                Delay_s( 2.1 );
+                go.MoveSimple( 0.0, -0.5, 0.2 );
+                Delay_s( 1.0 );
+                go.MoveSimple( 0.0, -0.5, 0.3 );
+                Delay_s( 1.0 );
                 go.MoveSimple(0,0,0);
 
                 step = AUTON_STEPS.BACK_UP;

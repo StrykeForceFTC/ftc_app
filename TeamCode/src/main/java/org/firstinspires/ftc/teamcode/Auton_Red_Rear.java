@@ -24,8 +24,8 @@ import java.util.List;
  *  auton program based on the front position for the red team.
  *
  */
-@Autonomous(name = "Blue Front 8553", group = "Iterative Opmode")
-public class Auton_Blue_Front8553 extends OpMode {
+@Autonomous(name = "Red Rear", group = "Iterative Opmode")
+public class Auton_Red_Rear extends OpMode {
 
     public static final String TAG = "Vuforia Navigation Sample";
 
@@ -216,37 +216,37 @@ public class Auton_Blue_Front8553 extends OpMode {
                 //claw.claw_Outward();
 
                 // Lower jewel knocker and delay to give time to move
-                jewelKnocker.LowerKnocker8553();
+                jewelKnocker.LowerKnocker();
                 Delay_s( 1.0 );
 
                 // read color sensor
                 JewelKnocker.COLORS color = jewelKnocker.GetColor();
 
-                // Move forward or reverse based on color sensor, knock off red, because
-                // we are blue. The color sensor points forward.
+                // Move forward or reverse based on color sensor, knock off blue, because
+                // we are red. The color sensor points forward.
                 if ( color == JewelKnocker.COLORS.RED )
                 {
                     // Jewel to front is red, so move backward to knock off
                     //go.AutonReverse( DISTANCE_FOR_JEWEL );
                     //yDistanceFromStart = DISTANCE_FOR_JEWEL;
-                    go.MoveSimple( 0.0, -0.2, 0.0 );
-                    Delay_s( 0.275 );
+                    go.MoveSimple( 0.0, 0.23, 0.0 );
+                    Delay_s( 0.3 );
                     go.MoveSimple( 0.0, 0.0, 0.0 );
                 }
                 else
                 {
-                    // Need to move backwards to knock off the red jewel; note that this
+                    // Need to move forwards to knock off the blue jewel; note that this
                     // means distance is negative.
                     //go.AutonForward( DISTANCE_FOR_JEWEL );
                     //yDistanceFromStart = 0.0 - DISTANCE_FOR_JEWEL;
-                    go.MoveSimple( 0.0, 0.2, 0.0 );
-                    Delay_s( 0.275 );
+                    go.MoveSimple( 0.0, -0.23, 0.0 );
+                    Delay_s( 0.35 );
                     go.MoveSimple( 0.0, 0.0, 0.0 );
                 }
 
                 // Raise the knocker and give it time to move
-                jewelKnocker.RaiseKnocker8553();
-                Delay_s( 1.0 );
+                jewelKnocker.RaiseKnocker();
+                Delay_s( 1.5 );
 
                 // set yDistanceFromStart to distance moved (+ for forward, - for reverse)
                 step = AUTON_STEPS.MOVE_IN_FRONT_OF_BOX;
@@ -272,19 +272,19 @@ public class Auton_Blue_Front8553 extends OpMode {
                     break;
                 }
 */
-                go.MoveSimple( 0.0, -0.5, 0.15 );
+                go.MoveSimple( 0.0, 0.5, 0.15 );
                 Delay_s( 1.0 );
-                go.MoveSimple( 0.0, -0.5, 0.3 );
-                Delay_s( 1.0 );
+                go.MoveSimple( 0.0, 0.5, 0.3 );
+                Delay_s( 1.1 );
                 go.MoveSimple(0,0,0);
 
                 step = AUTON_STEPS.BACK_UP;
             }
-                break;
+            break;
 
             case BACK_UP:
                 // go.AutonReverse( DISTANCE_BACK_FINAL );
-                go.MoveSimple( 0.0, 0.35, 0.0 );
+                go.MoveSimple( 0.0, -0.35, 0.0 );
                 Delay_s( 0.15);
                 go.MoveSimple(0,0,0);
                 step = AUTON_STEPS.STOP;
