@@ -60,10 +60,10 @@ public class Drive
         // Set direction so positive is always forward with respect to
         // the robot. Right side motors need to be set to reverse, because
         // they spin counter-clockwise to move the robot forward.
-        frontRight.setDirection( DcMotor.Direction.FORWARD );
-        rearRight.setDirection( DcMotor.Direction.FORWARD );
-        frontLeft.setDirection( DcMotor.Direction.REVERSE );
-        rearLeft.setDirection( DcMotor.Direction.REVERSE );
+        frontRight.setDirection( DcMotor.Direction.REVERSE );
+        rearRight.setDirection( DcMotor.Direction.REVERSE );
+        frontLeft.setDirection( DcMotor.Direction.FORWARD );
+        rearLeft.setDirection( DcMotor.Direction.FORWARD );
 
         // Set all motors to zero power. Don't want robot moving till
         // we're ready.
