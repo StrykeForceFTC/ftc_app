@@ -212,7 +212,7 @@ public class Tele_Op_2017 extends OpMode
 
 
         // Move robot based on joystick inputs from gamepad 1 / driver 1
-        robotForwardBack = JoystickUtilities.ShapeCubePlusInputWeighted( gamepad1.left_stick_y, ROBOT_FWD_BACK_WEIGHTING );
+        robotForwardBack = JoystickUtilities.ShapeCubePlusInputWeighted( -gamepad1.left_stick_y, ROBOT_FWD_BACK_WEIGHTING );
         robotLeftRight = JoystickUtilities.ShapeCubePlusInputWeighted( gamepad1.left_stick_x, ROBOT_LEFT_RIGHT_WEIGHTING );
         robotRotate = JoystickUtilities.ShapeCubePlusInputWeighted( gamepad1.right_stick_x, ROBOT_ROTATE_WEIGHTING );
         go.MoveSimple( robotLeftRight, robotForwardBack, robotRotate );

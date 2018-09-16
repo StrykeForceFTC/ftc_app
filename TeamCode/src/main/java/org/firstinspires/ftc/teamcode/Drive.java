@@ -40,6 +40,7 @@ public class Drive
     final private static double ROBOT_DIAM_IN = Math.sqrt( 2.0 * ( ROBOT_LENGTH_IN * ROBOT_LENGTH_IN ) ) ;
     final private static double ROBOT_CIRCUM_IN = ROBOT_DIAM_IN * Math.PI;
     final private static double IN_PER_DEGREE = ROBOT_CIRCUM_IN / 360.0;
+    final private static double TIX_PER_DEGREE = IN_PER_DEGREE * TICKS_PER_IN;
     final private static double MAX_SECONDS = 4.5;
     final private static double AUTON_MEDIUM_DISTANCE_IN = 15.0;
     final private static double AUTON_SHORT_DISTANCE_IN = 8.0;
@@ -136,7 +137,9 @@ public class Drive
 
 
     /*
-     *
+     * Basic drive control method used by auton routines. Takes 3 input
+     * values (FwdRev, LeftRight, rotate) and sets the motor powers
+     * to give the desired motion.
      */
     public void MoveSimple( double xLeftRight, double yFwdRev, double rotate )
     {
@@ -190,6 +193,8 @@ public class Drive
     }
 
 
+
+
     private void SetEncoderTargets( DIRECTION direction, double distance_in )
     {
         double ticks_2_move = distance_in * TICKS_PER_IN;
@@ -232,12 +237,46 @@ public class Drive
             {
                 int position = motors[ axle ][ side ].getCurrentPosition();
                 motors[ axle ][ side ].setTargetPosition( position +
-                                                         (int)( move_matrix[ axle ][ side ] * ticks_2_move ) );
+                        (int)( move_matrix[ axle ][ side ] * ticks_2_move ) );
             }
         }
     }
 
+    private void SetEncoderTargetsRotate( ROTATION rotation, double distance_degrees )
+    {
+        double ticks_2_move = distance_degrees * TIX_PER_DEGREE;
 
+        double[][] move_matrix = null;
+
+        // Pick the correct direction matrix to multiply distance by
+        switch (rotation)
+        {
+            case COUNTERCLOCKWISE:
+            {
+                move_matrix = COUNTERCLOCKWISE_MATRIX;
+                break;
+            }
+
+
+            default:
+            {
+                move_matrix = COUNTERCLOCKWISE_MATRIX;
+                break;
+            }
+        }
+
+        // Loop through each wheel and calculate new position and set. Must read current position
+        // and
+        for ( int axle = 0; axle < NUM_AXLES; axle++ )
+        {
+            for ( int side = 0; side < NUM_SIDES; side++ )
+            {
+                int position = motors[ axle ][ side ].getCurrentPosition();
+                motors[ axle ][ side ].setTargetPosition( position +
+                        (int)( move_matrix[ axle ][ side ] * ticks_2_move ) );
+            }
+        }
+    }
     private void SetMotorPowersAuton( DIRECTION direction )
     {
         double[][] move_matrix = null;
@@ -245,7 +284,7 @@ public class Drive
 
         // Pick the correct direction matrix to multiply distance by and power to use
         switch ( direction )
-        {                       //TODO: this method needs a for loop or something to calculate ticks for motors
+        {
             case FORWARD:
             {
                 move_matrix = FORWARD_MATRIX;
@@ -284,11 +323,47 @@ public class Drive
             }
         }
     }
+    private void SetMotorPowersAutonRotate( ROTATION rotation )
+    {
+        double[][] move_matrix = null;
+        double power = 0.0;
+
+        // Pick the correct direction matrix to multiply distance by and power to use
+        switch ( rotation )
+        {
+            case COUNTERCLOCKWISE:
+            {
+                move_matrix = COUNTERCLOCKWISE_MATRIX;
+                power = AUTON_POWER;
+                break;
+            }
+
+
+
+            default:
+            {
+                move_matrix = CLOCKWISE_MATRIX;
+                power = AUTON_POWER;
+                break;
+            }
+        }
+
+        // Loop through each wheel and calculate power and set.
+        for ( int axle = 0; axle < NUM_AXLES; axle++ )
+        {
+            for ( int side = 0; side < NUM_SIDES; side++ )
+            {
+                motors[ axle ][ side ].setPower( power * move_matrix[ axle ][ side ] );
+            }
+        }
+    }
 
     /*
      * Method to move the robot a specified distance in the given direction. For use in auton modes.
      * Parameters are direction and distance to move in inches.
+
      */
+
     public void AutonMove( Drive.DIRECTION direction, double distance_in )
     {
         // Set encoder values
@@ -312,6 +387,36 @@ public class Drive
             //! If any motor finishes, we stop
             notAtTarget = motors[ FRONT_AXLE ][ LEFT ].isBusy() && motors[ FRONT_AXLE ][ RIGHT ].isBusy() &&
                           motors[ REAR_AXLE ][ LEFT ].isBusy() && motors[ REAR_AXLE ][ RIGHT ].isBusy();
+        }
+
+        // Done moving, so set power to 0 and mode back to use encoders
+        SetWheelPowers( ZERO_POWER );
+        SetMotorModes( DcMotor.RunMode.RUN_USING_ENCODER );
+    }
+
+    public void AutonMoveRotate( Drive.ROTATION rotation, double distance_degrees )
+    {
+        // Set encoder values
+        SetEncoderTargetsRotate( rotation, distance_degrees );
+
+        // Set mode to run to position
+        SetMotorModes( DcMotor.RunMode.RUN_TO_POSITION );
+
+        // Set power to make it move
+        // motor powers = desired speed * direction matrix
+        SetMotorPowersAutonRotate( rotation );
+
+        // Wait for completion
+        //! TODO: TO BE COMPLETED BY MAXWELL
+        boolean notAtTarget = true;
+        limitTimer.reset();
+
+        while ( notAtTarget && ( limitTimer.seconds() < MAX_SECONDS ) )
+        {
+
+            //! If any motor finishes, we stop
+            notAtTarget = motors[ FRONT_AXLE ][ LEFT ].isBusy() && motors[ FRONT_AXLE ][ RIGHT ].isBusy() &&
+                    motors[ REAR_AXLE ][ LEFT ].isBusy() && motors[ REAR_AXLE ][ RIGHT ].isBusy();
         }
 
         // Done moving, so set power to 0 and mode back to use encoders

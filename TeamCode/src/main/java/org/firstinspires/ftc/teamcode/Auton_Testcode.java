@@ -83,15 +83,12 @@ public class Auton_Testcode extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        // Create rotate adjustment outside of while loop so it doesn't get
-        // reset each pass of the loop
-        double rotateAdjustment = 0.0;
-
+        /*
         // Loop until stop or forced to end
         while ( opModeIsActive() )
         {
             int errorTicks = 0;
-         go.AutonMove(Drive.DIRECTION.FORWARD, 48);
+            go.AutonMove(Drive.DIRECTION.FORWARD, 48);
 
 
             telemetry.addData( "Movement Error ", errorTicks );
@@ -104,7 +101,15 @@ public class Auton_Testcode extends LinearOpMode {
 
             idle();
         }
+        */
+        go.AutonMove( Drive.DIRECTION.FORWARD, 12.0 );
+        telemetry.addLine("Encoders ")
+                .addData("FL ", frontLeft.getCurrentPosition() )
+                .addData("FR ", frontRight.getCurrentPosition() )
+                .addData("RL ", rearLeft.getCurrentPosition() )
+                .addData("RR ", rearRight.getCurrentPosition() );
     }
+
 
 }
 
