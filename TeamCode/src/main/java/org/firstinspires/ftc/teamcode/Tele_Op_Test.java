@@ -57,12 +57,6 @@ public class Tele_Op_Test extends OpMode
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
 
-    // Drive hardware
-    private DcMotor frontLeft = null;
-    private DcMotor frontRight = null;
-    private DcMotor rearLeft = null;
-    private DcMotor rearRight = null;
-    
     // Jewel Knocker hardware
     private Servo knockerServo = null;
     private ColorSensor colorSensor = null;
@@ -95,12 +89,7 @@ public class Tele_Op_Test extends OpMode
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
-        frontLeft  = hardwareMap.dcMotor.get("front_left");
-        frontRight  = hardwareMap.dcMotor.get("front_right");
-        rearLeft  = hardwareMap.dcMotor.get("rear_left");
-        rearRight  = hardwareMap.dcMotor.get("rear_right");
-
-        go = new Drive(frontLeft, frontRight, rearLeft, rearRight);
+        go = new Drive( hardwareMap );
 
         knockerServo = hardwareMap.servo.get("knocker_servo");
         colorSensor = hardwareMap.colorSensor.get("color");
@@ -199,14 +188,11 @@ public class Tele_Op_Test extends OpMode
             }
         }
 
-
-
-
         telemetry.addLine("Encoders ")
-                .addData("FL ", frontLeft.getCurrentPosition() )
-                .addData("FR ", frontRight.getCurrentPosition() )
-                .addData("RL", rearLeft.getCurrentPosition() )
-                .addData("RR", rearRight.getCurrentPosition() );
+                .addData("FL ", go.GetEncoderFrontLeft() )
+                .addData("FR ", go.GetEncoderFrontRight() )
+                .addData("RL ", go.GetEncoderRearLeft() )
+                .addData("RR ", go.GetEncoderRearRight() );
 
         telemetry.update();
     }

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -94,13 +95,13 @@ public class Drive
                                                            { -1.0,   1.0 } };
 
 
-    public Drive(DcMotor FL, DcMotor FR, DcMotor RL, DcMotor RR )
+    public Drive( HardwareMap ahwMap )
     {
         // Define and Initialize Motors
-        motors[ FRONT_AXLE ][ RIGHT ] = FR;
-        motors[ FRONT_AXLE ][ LEFT ]  = FL;
-        motors[ REAR_AXLE ][ RIGHT ]  = RR;
-        motors[ REAR_AXLE ][ LEFT ]  = RL;
+        motors[ FRONT_AXLE ][ RIGHT ] = ahwMap.dcMotor.get("front_right");
+        motors[ FRONT_AXLE ][ LEFT ]  = ahwMap.dcMotor.get("front_left");
+        motors[ REAR_AXLE ][ RIGHT ]  = ahwMap.dcMotor.get("rear_right");
+        motors[ REAR_AXLE ][ LEFT ]   = ahwMap.dcMotor.get("rear_left");
 
 
         // Set direction so positive is always forward with respect to
@@ -176,6 +177,46 @@ public class Drive
 
         SetWheelPowers( wheelPowers );
 
+    }
+
+    public double GetWheelPowerFrontLeft( )
+    {
+        return motors[ FRONT_AXLE ][ LEFT ].getPower();
+    }
+
+    public double GetWheelPowerFrontRight( )
+    {
+        return motors[ FRONT_AXLE ][ RIGHT ].getPower();
+    }
+
+    public double GetWheelPowerRearLeft( )
+    {
+        return motors[ REAR_AXLE ][ LEFT ].getPower();
+    }
+
+    public double GetWheelPowerRearRight( )
+    {
+        return motors[ REAR_AXLE ][ RIGHT ].getPower();
+    }
+
+    public int GetEncoderFrontLeft( )
+    {
+        return motors[ FRONT_AXLE ][ LEFT ].getCurrentPosition();
+    }
+
+    public int GetEncoderFrontRight( )
+    {
+        return motors[ FRONT_AXLE ][ RIGHT ].getCurrentPosition();
+    }
+
+    public int GetEncoderRearLeft( )
+    {
+        return motors[ REAR_AXLE ][ LEFT ].getCurrentPosition();
+    }
+
+    public int GetEncoderRearRight( )
+    {
+        return motors[ REAR_AXLE ][ RIGHT ].getCurrentPosition();
     }
 
     /*
@@ -277,6 +318,8 @@ public class Drive
             }
         }
     }
+
+
     private void SetMotorPowersAuton( DIRECTION direction )
     {
         double[][] move_matrix = null;

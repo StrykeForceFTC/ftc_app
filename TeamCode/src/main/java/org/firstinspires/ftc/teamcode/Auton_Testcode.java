@@ -27,11 +27,6 @@ public class Auton_Testcode extends LinearOpMode {
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
 
-    private DcMotor frontLeft = null;
-    private DcMotor frontRight = null;
-    private DcMotor rearLeft = null;
-    private DcMotor rearRight = null;
-
     HardwareMap robotMap = hardwareMap;
     private Drive go = null;
 
@@ -69,12 +64,7 @@ public class Auton_Testcode extends LinearOpMode {
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
-        frontLeft = hardwareMap.dcMotor.get("front_left");
-        frontRight = hardwareMap.dcMotor.get("front_right");
-        rearLeft = hardwareMap.dcMotor.get("rear_left");
-        rearRight = hardwareMap.dcMotor.get("rear_right");
-
-        go = new Drive(frontLeft, frontRight, rearLeft, rearRight);
+        go = new Drive( hardwareMap );
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -104,10 +94,10 @@ public class Auton_Testcode extends LinearOpMode {
         */
         go.AutonMove( Drive.DIRECTION.FORWARD, 12.0 );
         telemetry.addLine("Encoders ")
-                .addData("FL ", frontLeft.getCurrentPosition() )
-                .addData("FR ", frontRight.getCurrentPosition() )
-                .addData("RL ", rearLeft.getCurrentPosition() )
-                .addData("RR ", rearRight.getCurrentPosition() );
+                .addData("FL ", go.GetEncoderFrontLeft() )
+                .addData("FR ", go.GetEncoderFrontRight() )
+                .addData("RL ", go.GetEncoderRearLeft() )
+                .addData("RR ", go.GetEncoderRearRight() );
     }
 
 

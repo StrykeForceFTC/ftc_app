@@ -78,12 +78,7 @@ public class Auton_2017 extends OpMode {
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
-            frontLeft  = hardwareMap.dcMotor.get("front_left");
-            frontRight  = hardwareMap.dcMotor.get("front_right");
-            rearLeft  = hardwareMap.dcMotor.get("rear_left");
-            rearRight  = hardwareMap.dcMotor.get("rear_right");
-
-            go = new Drive(frontLeft, frontRight, rearLeft, rearRight);
+            go = new Drive( hardwareMap );
             /*
             robotArm = new Arm();
             robotClaw = new Claw();
@@ -336,11 +331,11 @@ public class Auton_2017 extends OpMode {
         telemetry.addData("Status", "Running: " + runtime.toString());
 
         telemetry.addLine("Front Motors | ")
-                .addData("l", frontLeft.getPower())
-                .addData("r", frontRight.getPower());
+                .addData("l", go.GetWheelPowerFrontLeft() )
+                .addData("r", go.GetWheelPowerFrontRight());
         telemetry.addLine("Rear Motors | ")
-                .addData("l", frontLeft.getPower())
-                .addData("r", frontRight.getPower());
+                .addData("l", go.GetWheelPowerRearLeft())
+                .addData("r", go.GetWheelPowerRearRight());
 
         // determine current position via vueforia
         for (VuforiaTrackable trackable : allTrackables) {
