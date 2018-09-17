@@ -87,20 +87,20 @@ public class Auton_Red_Front extends OpMode {
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
-        go = new Drive( hardwareMap );
+        go = new Drive(hardwareMap);
 
         // Set up Claw
-        claw = new Claw( hardwareMap );
+        claw = new Claw(hardwareMap);
 
         // Set up pole
-        wep = new Pole( hardwareMap );
+        wep = new Pole(hardwareMap);
 
         // Set up lift
-        lift = new Lift( hardwareMap );
+        lift = new Lift(hardwareMap);
 
-        knockerServo = hardwareMap.servo.get( "knocker_servo" );
-        colorSensor = hardwareMap.colorSensor.get( "color" );
-        jewelKnocker = new JewelKnocker( knockerServo, colorSensor );
+        knockerServo = hardwareMap.servo.get("knocker_servo");
+        colorSensor = hardwareMap.colorSensor.get("color");
+        jewelKnocker = new JewelKnocker(knockerServo, colorSensor);
 
         /**
          * Start up Vuforia, telling it the id of the view that we wish to use as the parent for
@@ -146,6 +146,7 @@ public class Auton_Red_Front extends OpMode {
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
+    }
 
     /*
      * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
