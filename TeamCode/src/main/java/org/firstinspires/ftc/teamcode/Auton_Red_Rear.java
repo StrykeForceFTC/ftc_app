@@ -32,11 +32,6 @@ public class Auton_Red_Rear extends OpMode {
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
 
-    private DcMotor frontLeft = null;
-    private DcMotor frontRight = null;
-    private DcMotor rearLeft = null;
-    private DcMotor rearRight = null;
-
     HardwareMap robotMap = hardwareMap;
     private Drive go = null;
     private Pole wep = null;
@@ -97,12 +92,7 @@ public class Auton_Red_Rear extends OpMode {
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
-        frontLeft = hardwareMap.dcMotor.get("front_left");
-        frontRight = hardwareMap.dcMotor.get("front_right");
-        rearLeft = hardwareMap.dcMotor.get("rear_left");
-        rearRight = hardwareMap.dcMotor.get("rear_right");
-
-        go = new Drive(frontLeft, frontRight, rearLeft, rearRight);
+        go = new Drive( hardwareMap );
 
         // Set up Claw
         claw = new Claw( hardwareMap );

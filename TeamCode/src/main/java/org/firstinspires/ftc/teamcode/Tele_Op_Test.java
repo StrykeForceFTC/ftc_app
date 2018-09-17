@@ -57,12 +57,6 @@ public class Tele_Op_Test extends OpMode
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
 
-    // Drive hardware
-    private DcMotor frontLeft = null;
-    private DcMotor frontRight = null;
-    private DcMotor rearLeft = null;
-    private DcMotor rearRight = null;
-
     // Jewel Knocker hardware
     private Servo knockerServo = null;
     private ColorSensor colorSensor = null;
@@ -95,12 +89,7 @@ public class Tele_Op_Test extends OpMode
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
-        frontLeft  = hardwareMap.dcMotor.get("front_left");
-        frontRight  = hardwareMap.dcMotor.get("front_right");
-        rearLeft  = hardwareMap.dcMotor.get("rear_left");
-        rearRight  = hardwareMap.dcMotor.get("rear_right");
-
-        go = new Drive(frontLeft, frontRight, rearLeft, rearRight);
+        go = new Drive( hardwareMap );
 
         knockerServo = hardwareMap.servo.get("knocker_servo");
         colorSensor = hardwareMap.colorSensor.get("color");
@@ -146,61 +135,23 @@ public class Tele_Op_Test extends OpMode
 
         // Show joystick information as some other illustrative data
         telemetry.addLine("left joystick | ")
-                .addData("x", gamepad1.left_stick_x)
+                .addData("x", gamepad1. left_stick_x)
                 .addData("y", gamepad1.left_stick_y);
-/*
-        telemetry.addLine("right joystick | ")
-                .addData("x", gamepad1.right_stick_x)
-                .addData("y", gamepad1.right_stick_y);
-
-        telemetry.addLine("Knocker ")
-                .addData( "Position", knockerServo.getPosition() );
-
-        telemetry.addLine("Color Values | ")
-                .addData("Red", jewelKnocker.RedValue())
-                .addData("Blue", jewelKnocker.BlueValue());
-
-        telemetry.addLine("Claw Positions | ")
-                .addData( "Right", rightClawPosition )
-                .addData( "Left", leftClawPosition );
-        telemetry.addLine("WEP ")
-                .addData("Position", wep.GetPosition() );
-        telemetry.addLine("Lift" )
-                .addData( "Position ", lift.GetPosition() );
-        telemetry.addLine("relic ")
-                .addData("Position ", wep.clawPosition());
-*/
-
-        // ************* Test code for pole **************
-        // Use gamepad Y & A raise and lower the arm
-/*
-        wep.lift( gamepad2.right_stick_y );
-
-        // Use gamepad2 D padd to extend and retract the arm
-        if (gamepad2.dpad_up) {
-            wep.extend();
-        }
-        else if (gamepad2.dpad_down) {
-            wep.retract();
-        }
-        else
-        {
-            wep.stay();
-        }
-*/
 
         // Move robot based on joystick inputs from gamepad 1 / driver 1
         // shape joystick inputs
-        robotForwardBack = JoystickUtilities.ShapeCubePlusInputWeighted( gamepad1.left_stick_y, ROBOT_FWD_BACK_WEIGHTING );
+        robotForwardBack = JoystickUtilities.ShapeCubePlusInputWeighted( -gamepad1.left_stick_y, ROBOT_FWD_BACK_WEIGHTING );
         robotLeftRight = JoystickUtilities.ShapeCubePlusInputWeighted( gamepad1.left_stick_x, ROBOT_LEFT_RIGHT_WEIGHTING );
         robotRotate = JoystickUtilities.ShapeCubePlusInputWeighted( gamepad1.right_stick_x, ROBOT_ROTATE_WEIGHTING );
         go.MoveSimple( robotLeftRight, robotForwardBack, robotRotate );
 
         // ************* Test code for auton Drive methods **************
+
         // Gamepad1.x moves forward 20cm
+
         if ( gamepad1.x )
         {
-            go.AutonForward( 20.0 );
+            go.AutonForward( 50.0 );
             while ( gamepad1.x )
             {
 
@@ -237,31 +188,11 @@ public class Tele_Op_Test extends OpMode
             }
         }
 
-
-        // ************* Test code for lift **************
-        // lift.Raise( gamepad2.left_stick_y );
-
-
-        //testcode for relic
-/*
-        if ( gamepad2.left_bumper)
-        {
-            wep.closeClaw();
-        }
-
-        if (gamepad2.right_bumper)
-        {
-         wep.openClaw();
-        }
-*/
-
         telemetry.addLine("Encoders ")
-                .addData("FL ", frontLeft.getCurrentPosition() )
-                .addData("FR ", frontRight.getCurrentPosition() );
-/*
-        telemetry.addLine("Lift")
-                .addData("enc ", lift.GetPosition());
-*/
+                .addData("FL ", go.GetEncoderFrontLeft() )
+                .addData("FR ", go.GetEncoderFrontRight() )
+                .addData("RL ", go.GetEncoderRearLeft() )
+                .addData("RR ", go.GetEncoderRearRight() );
 
         telemetry.update();
     }

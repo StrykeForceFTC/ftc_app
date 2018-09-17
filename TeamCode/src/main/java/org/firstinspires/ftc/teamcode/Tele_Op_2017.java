@@ -64,12 +64,6 @@ public class Tele_Op_2017 extends OpMode
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
 
-    // Drive hardware
-    private DcMotor frontLeft = null;
-    private DcMotor frontRight = null;
-    private DcMotor rearLeft = null;
-    private DcMotor rearRight = null;
-
     // Jewel Knocker hardware
 
     private Servo knockerServo = null;
@@ -103,17 +97,10 @@ public class Tele_Op_2017 extends OpMode
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
-        frontLeft  = hardwareMap.dcMotor.get("front_left");
-        frontRight  = hardwareMap.dcMotor.get("front_right");
-        rearLeft  = hardwareMap.dcMotor.get("rear_left");
-        rearRight  = hardwareMap.dcMotor.get("rear_right");
-
-
         knockerServo = hardwareMap.servo.get("knocker_servo");
         colorSensor = hardwareMap.colorSensor.get("color");
 
-
-        go = new Drive(frontLeft, frontRight, rearLeft, rearRight);
+        go = new Drive( hardwareMap );
 
         jewelKnocker = new JewelKnocker( knockerServo, colorSensor );
 
@@ -212,7 +199,7 @@ public class Tele_Op_2017 extends OpMode
 
 
         // Move robot based on joystick inputs from gamepad 1 / driver 1
-        robotForwardBack = JoystickUtilities.ShapeCubePlusInputWeighted( gamepad1.left_stick_y, ROBOT_FWD_BACK_WEIGHTING );
+        robotForwardBack = JoystickUtilities.ShapeCubePlusInputWeighted( -gamepad1.left_stick_y, ROBOT_FWD_BACK_WEIGHTING );
         robotLeftRight = JoystickUtilities.ShapeCubePlusInputWeighted( gamepad1.left_stick_x, ROBOT_LEFT_RIGHT_WEIGHTING );
         robotRotate = JoystickUtilities.ShapeCubePlusInputWeighted( gamepad1.right_stick_x, ROBOT_ROTATE_WEIGHTING );
         go.MoveSimple( robotLeftRight, robotForwardBack, robotRotate );

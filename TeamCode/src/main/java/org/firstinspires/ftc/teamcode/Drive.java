@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -9,81 +10,126 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class Drive
 {
-    private DcMotor frontLeft = null;
+    // Matrix of drive motors
+    //                                  LEFT   RIGHT
+    private DcMotor[ ][ ] motors = { {  null,  null },    // FRONT_AXLE
+                                     {  null,  null } };  // REAR_AXLE
+    /*private DcMotor frontLeft = null;
     private DcMotor frontRight = null;
     private DcMotor rearLeft = null;
-    private DcMotor rearRight = null;
+    private DcMotor rearRight = null;*/
 
     // Limit timer
     private ElapsedTime limitTimer;
     private ElapsedTime delayTimer;
 
-
     // Constants for calculating number of ticks per cm to allow calculation of how many ticks
     // to go a given distance.
-    final private static double WHEEL_DIAM_IN = 4.0;
+    final static double WHEEL_DIAM_IN = 4.0;
     final private static double IN_2_CM = 2.54;
 
     // wheel circumference is PI times diameter, but diameter needs to be converted to cm from inches
-    final private static double WHEEL_CIRCUM_CM = Math.PI * WHEEL_DIAM_IN * IN_2_CM;
+    final private static double WHEEL_CIRCUM_IN = Math.PI * WHEEL_DIAM_IN;
     final private static double TICKS_PER_REV = 1120.0;
-    final private static double TICKS_PER_CM = TICKS_PER_REV / WHEEL_CIRCUM_CM;
+    final private static double TICKS_PER_IN = TICKS_PER_REV / WHEEL_CIRCUM_IN;
 
     // Constants for rotating robot a certain number of degrees. The robot wheels are
     // set at the corners of a 14" square, so this is used to calculate the circumference of
     // the circle that the robot wheels rotatate about. This is used to determine a number of
     // ticks per degree.
     final private static double ROBOT_LENGTH_IN = 21.85;
-    final private static double ROBOT_DIAM_CM = Math.sqrt( 2.0 * ( ROBOT_LENGTH_IN * ROBOT_LENGTH_IN ) ) * IN_2_CM;
-    final private static double ROBOT_CIRCUM_CM = ROBOT_DIAM_CM * Math.PI;
-    final private static double CM_PER_DEGREE = ROBOT_CIRCUM_CM / 360.0;
+    final private static double ROBOT_DIAM_IN = Math.sqrt( 2.0 * ( ROBOT_LENGTH_IN * ROBOT_LENGTH_IN ) ) ;
+    final private static double ROBOT_CIRCUM_IN = ROBOT_DIAM_IN * Math.PI;
+    final private static double IN_PER_DEGREE = ROBOT_CIRCUM_IN / 360.0;
+    final private static double TIX_PER_DEGREE = IN_PER_DEGREE * TICKS_PER_IN;
     final private static double MAX_SECONDS = 4.5;
-    final private static double AUTON_MEDIUM_DISTANCE_CM = 15.0;
-    final private static double AUTON_SHORT_DISTANCE_CM = 8.0;
+    final private static double AUTON_MEDIUM_DISTANCE_IN = 15.0;
+    final private static double AUTON_SHORT_DISTANCE_IN = 8.0;
     final private static double TARGET_POWER_LONG = 0.4;
     final private static double TARGET_POWER_MEDIUM = 0.15;
     final private static double TARGET_POWER_SHORT = 0.075;
     final private static double INCREASING_FK = 0.3;                  // Increasing power filter constant
     final private static double DECREASING_FK = 0.8;                   // Decreasing power filter constant
     final private static int MOMENTUM_BUFFER_TICKS = 80;              // Stop ~1.5cm early to account for momentum
+    final private static double AUTON_POWER = 0.5;
 
-    private enum DIRECTION { FORWARD, REVERSE, RIGHT, LEFT, CLOCKWISE, COUNTERCLOCKWISE }
+    public enum DIRECTION { FORWARD, REVERSE, RIGHT, LEFT }
+    public enum ROTATION { CLOCKWISE, COUNTERCLOCKWISE }
 
-    public Drive(DcMotor FL, DcMotor FR, DcMotor RL, DcMotor RR )
+    // Constants for indexing into matrices
+    final private static int FRONT_AXLE = 0;
+    final private static int REAR_AXLE = 1;
+    final private static int NUM_AXLES = 2;
+    final private static int LEFT = 0;
+    final private static int RIGHT = 1;
+    final private static int NUM_SIDES = 2;
+
+    // Array for zero power
+    final private static double[][] ZERO_POWER = { { 0, 0 }, { 0, 0 } };
+
+
+    // Matrix for moving forward; to get reverse, multiply by -1.0
+    //                                                      LEFT   RIGHT
+    final private static double[ ][ ] FORWARD_MATRIX = { {  1.0,   1.0 },    // FRONT_AXLE
+                                                         {  1.0,   1.0 } };  // REAR_AXLE
+
+    //                                                      LEFT   RIGHT
+    final private static double [ ][ ]BACKWARD_MATRIX = {{ -1.0,   -1.0},
+                                                         { -1.0,   -1.0}};
+
+    // Matrix for moving right; to get left, multiply by -1.0
+    //                                                    LEFT   RIGHT
+    final private static double[ ][ ] RIGHT_MATRIX = { { -1.0,   1.0 },    // FRONT_AXLE
+                                                       {  1.0,  -1.0 } };  // REAR_AXLE
+
+    final private static double[ ][ ] LEFT_MATRIX =  { { 1.0,   -1.0 },
+                                                        {-1.0,   1.0 } };
+
+    // Matrix for rotating clockwise; to get CCW, multiply by -1.0
+    //                                                       LEFT   RIGHT
+    final private static double[ ][ ] CLOCKWISE_MATRIX = { {  1.0,  -1.0 },    // FRONT_AXLE
+                                                           {  1.0,  -1.0 } };  // REAR_AXLE
+
+    final private static double[ ][ ] COUNTERCLOCKWISE_MATRIX =
+                                                         { { -1.0,   1.0 },
+                                                           { -1.0,   1.0 } };
+
+
+    public Drive( HardwareMap ahwMap )
     {
         // Define and Initialize Motors
-        frontRight = FR;
-        frontLeft  = FL;
-        rearRight  = RR;
-        rearLeft   = RL;
+        motors[ FRONT_AXLE ][ RIGHT ] = ahwMap.dcMotor.get("front_right");
+        motors[ FRONT_AXLE ][ LEFT ]  = ahwMap.dcMotor.get("front_left");
+        motors[ REAR_AXLE ][ RIGHT ]  = ahwMap.dcMotor.get("rear_right");
+        motors[ REAR_AXLE ][ LEFT ]   = ahwMap.dcMotor.get("rear_left");
+
 
         // Set direction so positive is always forward with respect to
         // the robot. Right side motors need to be set to reverse, because
         // they spin counter-clockwise to move the robot forward.
-        frontRight.setDirection( DcMotor.Direction.FORWARD );
-        rearRight.setDirection( DcMotor.Direction.FORWARD );
-        frontLeft.setDirection( DcMotor.Direction.REVERSE );
-        rearLeft.setDirection( DcMotor.Direction.REVERSE );
+        for ( int axle = 0; axle < NUM_AXLES; axle++ )
+        {
+            motors[ axle ][ LEFT ].setDirection( DcMotor.Direction.FORWARD );
+            motors[ axle ][ RIGHT ].setDirection( DcMotor.Direction.REVERSE );
+        }
 
-        // Set all motors to zero power. Don't want robot moving till
+
+
+        // Set all motors to zero power and reset encoders. Don't want robot moving till
         // we're ready.
-        frontLeft.setPower( 0 );
-        frontRight.setPower( 0 );
-        rearLeft.setPower( 0 );
-        rearRight.setPower( 0 );
+        SetWheelPowers( ZERO_POWER );
+        SetMotorModes( DcMotor.RunMode.STOP_AND_RESET_ENCODER );
 
-        // Set all motors to run with encoders.
 
-        frontLeft.setMode( DcMotor.RunMode.RUN_WITHOUT_ENCODER );
-        frontRight.setMode( DcMotor.RunMode.RUN_WITHOUT_ENCODER );
-        rearLeft.setMode( DcMotor.RunMode.RUN_WITHOUT_ENCODER );
-        rearRight.setMode( DcMotor.RunMode.RUN_WITHOUT_ENCODER );
-
-        // Set motors to not brake
-        frontLeft.setZeroPowerBehavior( DcMotor.ZeroPowerBehavior.FLOAT );
-        frontRight.setZeroPowerBehavior( DcMotor.ZeroPowerBehavior.FLOAT );
-        rearLeft.setZeroPowerBehavior( DcMotor.ZeroPowerBehavior.FLOAT );
-        rearRight.setZeroPowerBehavior( DcMotor.ZeroPowerBehavior.FLOAT );
+        // Set all motors to run using encoders and not brake.
+        SetMotorModes( DcMotor.RunMode.RUN_USING_ENCODER );
+        for ( int axle = 0; axle < NUM_AXLES; axle++ )
+        {
+            for ( int side = 0; side < NUM_SIDES; side++ )
+            {
+                motors[ axle ][ side ].setZeroPowerBehavior( DcMotor.ZeroPowerBehavior.FLOAT );
+            }
+        }
 
         // Set up timers
         limitTimer = new ElapsedTime( ElapsedTime.Resolution.SECONDS );
@@ -92,51 +138,349 @@ public class Drive
 
 
     /*
-     *
+     * Basic drive control method used by auton routines. Takes 3 input
+     * values (FwdRev, LeftRight, rotate) and sets the motor powers
+     * to give the desired motion.
      */
     public void MoveSimple( double xLeftRight, double yFwdRev, double rotate )
     {
         // variables for calculating wheel powers
-        double frontLeftPower = ( -xLeftRight ) + ( yFwdRev ) + ( rotate );
-        double frontRightPower = ( xLeftRight ) + ( yFwdRev ) + (-rotate);
-        double rearLeftPower = xLeftRight + yFwdRev + rotate;
-        double rearRightPower = (-xLeftRight) + ( yFwdRev ) + (-rotate);
+        double[][] wheelPowers = { { 0, 0 }, { 0, 0 } };
+
+        for ( int axle = 0; axle < NUM_AXLES; axle++ )
+        {
+            for ( int side = 0; side < NUM_SIDES; side++ )
+            {
+                wheelPowers[ axle ][ side ] = xLeftRight * RIGHT_MATRIX[ axle ][ side ] +
+                                              yFwdRev * FORWARD_MATRIX[ axle ][ side ] +
+                                              rotate * CLOCKWISE_MATRIX[ axle ][ side ];
+            }
+        }
 
         // Powers can be > 1 using above equations, so scale if they are
-        double biggestFront = Math.max( Math.abs( frontLeftPower ), Math.abs( frontRightPower ) );
-        double biggestRear = Math.max( Math.abs( rearLeftPower ), Math.abs( rearRightPower ) );
+        double biggestFront = Math.max( Math.abs( wheelPowers[ FRONT_AXLE ][ LEFT ] ), Math.abs( wheelPowers[ FRONT_AXLE ][ RIGHT ] ) );
+        double biggestRear = Math.max( Math.abs( wheelPowers[ REAR_AXLE ][ LEFT ] ), Math.abs( wheelPowers[ REAR_AXLE ][ RIGHT ] ) );
         double biggest = Math.max( biggestFront, biggestRear );
 
         if ( biggest > 1.0 )
         {
-            frontLeftPower = frontLeftPower / biggest;
-            frontRightPower = frontRightPower / biggest;
-            rearLeftPower = rearLeftPower / biggest;
-            rearRightPower = rearRightPower / biggest;
+
+            for ( int axle = 0; axle < NUM_AXLES; axle++ )
+            {
+                for ( int side = 0; side < NUM_SIDES; side++ )
+                {
+                    wheelPowers[ axle ][ side ] = wheelPowers[ axle ][ side ] / biggest;
+                }
+            }
+
         }
 
-        frontLeft.setPower(frontLeftPower);
-        frontRight.setPower(frontRightPower);
-        rearLeft.setPower(rearLeftPower);
-        rearRight.setPower(rearRightPower);
+        SetWheelPowers( wheelPowers );
+
+    }
+
+    public double GetWheelPowerFrontLeft( )
+    {
+        return motors[ FRONT_AXLE ][ LEFT ].getPower();
+    }
+
+    public double GetWheelPowerFrontRight( )
+    {
+        return motors[ FRONT_AXLE ][ RIGHT ].getPower();
+    }
+
+    public double GetWheelPowerRearLeft( )
+    {
+        return motors[ REAR_AXLE ][ LEFT ].getPower();
+    }
+
+    public double GetWheelPowerRearRight( )
+    {
+        return motors[ REAR_AXLE ][ RIGHT ].getPower();
+    }
+
+    public int GetEncoderFrontLeft( )
+    {
+        return motors[ FRONT_AXLE ][ LEFT ].getCurrentPosition();
+    }
+
+    public int GetEncoderFrontRight( )
+    {
+        return motors[ FRONT_AXLE ][ RIGHT ].getCurrentPosition();
+    }
+
+    public int GetEncoderRearLeft( )
+    {
+        return motors[ REAR_AXLE ][ LEFT ].getCurrentPosition();
+    }
+
+    public int GetEncoderRearRight( )
+    {
+        return motors[ REAR_AXLE ][ RIGHT ].getCurrentPosition();
     }
 
     /*
-     * Method to move the robot forward a specified distance. For use in auton modes.
-     * Parameter is distance to move forward in centimeters.
+     *  Method to set wheel powers
      */
-    public int AutonForward( double distance_cm )
+    private void SetWheelPowers( double[][] powers )
     {
-        /*
-         This method just uses MoveDistanceWithRamp to move forward the
-         distance requested.
-         */
-        int errorTicks = MoveDistanceWithRamp( distance_cm, DIRECTION.REVERSE);
+        for ( int axle = 0; axle < NUM_AXLES; axle++ )
+        {
+            for ( int side = 0; side < NUM_SIDES; side++ )
+            {
+                motors[ axle ][ side ].setPower( powers[ axle ][ side ] );
+            }
+        }
+    }
 
-        // Make sure we stop moving
-        MoveSimple( 0.0, 0.0, 0.0 );
 
-        return errorTicks;
+
+
+    private void SetEncoderTargets( DIRECTION direction, double distance_in )
+    {
+        double ticks_2_move = distance_in * TICKS_PER_IN;
+
+        double[][] move_matrix = null;
+
+        // Pick the correct direction matrix to multiply distance by
+        switch (direction)
+        {
+            case FORWARD:
+            {
+                move_matrix = FORWARD_MATRIX;
+                break;
+            }
+
+            case REVERSE:
+            {
+                move_matrix = BACKWARD_MATRIX;
+                break;
+            }
+
+            case RIGHT:
+            {
+                move_matrix = RIGHT_MATRIX;
+                break;
+            }
+
+            default:
+            {
+                move_matrix = LEFT_MATRIX;
+                break;
+            }
+        }
+
+        // Loop through each wheel and calculate new position and set. Must read current position
+        // and
+        for ( int axle = 0; axle < NUM_AXLES; axle++ )
+        {
+            for ( int side = 0; side < NUM_SIDES; side++ )
+            {
+                int position = motors[ axle ][ side ].getCurrentPosition();
+                motors[ axle ][ side ].setTargetPosition( position +
+                        (int)( move_matrix[ axle ][ side ] * ticks_2_move ) );
+            }
+        }
+    }
+
+    private void SetEncoderTargetsRotate( ROTATION rotation, double distance_degrees )
+    {
+        double ticks_2_move = distance_degrees * TIX_PER_DEGREE;
+
+        double[][] move_matrix = null;
+
+        // Pick the correct direction matrix to multiply distance by
+        switch (rotation)
+        {
+            case COUNTERCLOCKWISE:
+            {
+                move_matrix = COUNTERCLOCKWISE_MATRIX;
+                break;
+            }
+
+
+            default:
+            {
+                move_matrix = COUNTERCLOCKWISE_MATRIX;
+                break;
+            }
+        }
+
+        // Loop through each wheel and calculate new position and set. Must read current position
+        // and
+        for ( int axle = 0; axle < NUM_AXLES; axle++ )
+        {
+            for ( int side = 0; side < NUM_SIDES; side++ )
+            {
+                int position = motors[ axle ][ side ].getCurrentPosition();
+                motors[ axle ][ side ].setTargetPosition( position +
+                        (int)( move_matrix[ axle ][ side ] * ticks_2_move ) );
+            }
+        }
+    }
+
+
+    private void SetMotorPowersAuton( DIRECTION direction )
+    {
+        double[][] move_matrix = null;
+        double power = 0.0;
+
+        // Pick the correct direction matrix to multiply distance by and power to use
+        switch ( direction )
+        {
+            case FORWARD:
+            {
+                move_matrix = FORWARD_MATRIX;
+                power = AUTON_POWER;
+                break;
+            }
+
+            case REVERSE:
+            {
+                move_matrix = BACKWARD_MATRIX;
+                power = AUTON_POWER;
+                break;
+            }
+
+            case RIGHT:
+            {
+                move_matrix = RIGHT_MATRIX;
+                power = AUTON_POWER;
+                break;
+            }
+
+            default:
+            {
+                move_matrix = LEFT_MATRIX;
+                power = AUTON_POWER;
+                break;
+            }
+        }
+
+        // Loop through each wheel and calculate power and set.
+        for ( int axle = 0; axle < NUM_AXLES; axle++ )
+        {
+            for ( int side = 0; side < NUM_SIDES; side++ )
+            {
+                motors[ axle ][ side ].setPower( power * move_matrix[ axle ][ side ] );
+            }
+        }
+    }
+    private void SetMotorPowersAutonRotate( ROTATION rotation )
+    {
+        double[][] move_matrix = null;
+        double power = 0.0;
+
+        // Pick the correct direction matrix to multiply distance by and power to use
+        switch ( rotation )
+        {
+            case COUNTERCLOCKWISE:
+            {
+                move_matrix = COUNTERCLOCKWISE_MATRIX;
+                power = AUTON_POWER;
+                break;
+            }
+
+
+
+            default:
+            {
+                move_matrix = CLOCKWISE_MATRIX;
+                power = AUTON_POWER;
+                break;
+            }
+        }
+
+        // Loop through each wheel and calculate power and set.
+        for ( int axle = 0; axle < NUM_AXLES; axle++ )
+        {
+            for ( int side = 0; side < NUM_SIDES; side++ )
+            {
+                motors[ axle ][ side ].setPower( power * move_matrix[ axle ][ side ] );
+            }
+        }
+    }
+
+    /*
+     * Method to move the robot a specified distance in the given direction. For use in auton modes.
+     * Parameters are direction and distance to move in inches.
+
+     */
+
+    public void AutonMove( Drive.DIRECTION direction, double distance_in )
+    {
+        // Set encoder values
+        SetEncoderTargets( direction, distance_in );
+
+        // Set mode to run to position
+        SetMotorModes( DcMotor.RunMode.RUN_TO_POSITION );
+
+        // Set power to make it move
+        // motor powers = desired speed * direction matrix
+        SetMotorPowersAuton( direction );
+
+        // Wait for completion
+        //! TODO: TO BE COMPLETED BY MAXWELL
+        boolean notAtTarget = true;
+        limitTimer.reset();
+
+        while ( notAtTarget && ( limitTimer.seconds() < MAX_SECONDS ) )
+        {
+
+            //! If any motor finishes, we stop
+            notAtTarget = motors[ FRONT_AXLE ][ LEFT ].isBusy() && motors[ FRONT_AXLE ][ RIGHT ].isBusy() &&
+                          motors[ REAR_AXLE ][ LEFT ].isBusy() && motors[ REAR_AXLE ][ RIGHT ].isBusy();
+        }
+
+        // Done moving, so set power to 0 and mode back to use encoders
+        SetWheelPowers( ZERO_POWER );
+        SetMotorModes( DcMotor.RunMode.RUN_USING_ENCODER );
+    }
+
+    public void AutonMoveRotate( Drive.ROTATION rotation, double distance_degrees )
+    {
+        // Set encoder values
+        SetEncoderTargetsRotate( rotation, distance_degrees );
+
+        // Set mode to run to position
+        SetMotorModes( DcMotor.RunMode.RUN_TO_POSITION );
+
+        // Set power to make it move
+        // motor powers = desired speed * direction matrix
+        SetMotorPowersAutonRotate( rotation );
+
+        // Wait for completion
+        //! TODO: TO BE COMPLETED BY MAXWELL
+        boolean notAtTarget = true;
+        limitTimer.reset();
+
+        while ( notAtTarget && ( limitTimer.seconds() < MAX_SECONDS ) )
+        {
+
+            //! If any motor finishes, we stop
+            notAtTarget = motors[ FRONT_AXLE ][ LEFT ].isBusy() && motors[ FRONT_AXLE ][ RIGHT ].isBusy() &&
+                    motors[ REAR_AXLE ][ LEFT ].isBusy() && motors[ REAR_AXLE ][ RIGHT ].isBusy();
+        }
+
+        // Done moving, so set power to 0 and mode back to use encoders
+        SetWheelPowers( ZERO_POWER );
+        SetMotorModes( DcMotor.RunMode.RUN_USING_ENCODER );
+    }
+
+
+
+
+
+    // Method to set mode of DC motors
+    private void SetMotorModes( DcMotor.RunMode mode )
+    {
+        for ( int axle = 0; axle < NUM_AXLES; axle++ )
+        {
+            for ( int side = 0; side < NUM_SIDES; side++ )
+            {
+                motors[ axle ][ side ].setMode( mode );
+            }
+        }
     }
 
     /*
@@ -149,12 +493,18 @@ public class Drive
          This method just uses MoveDistanceWithRamp to move forward the
          distance requested.
          */
-        int errorTicks = MoveDistanceWithRamp( distance_cm, DIRECTION.REVERSE);
 
-        // Make sure we stop moving
-        MoveSimple( 0.0, 0.0, 0.0 );
+        return 0;
+    }
 
-        return errorTicks;
+    public int AutonForward( double distance_cm )
+    {
+        /*
+         This method just uses MoveDistanceWithRamp to move forward the
+         distance requested.
+         */
+
+        return 0;
     }
 
 
@@ -164,19 +514,8 @@ public class Drive
      */
     public int AutonRotateClockwise( double degrees )
     {
-        /*
-         This method calculates how far to turn in cm to get the desired
-         angle of rotation and then uses MoveDistanceWithRamp to
-         actually move the robot the required amount.
-         */
-        double distanceToRotate_cm = degrees * CM_PER_DEGREE;
 
-        int errorTicks = MoveDistanceFullPower( distanceToRotate_cm, DIRECTION.CLOCKWISE );
-
-        // Make sure robot is not moving
-        MoveSimple( 0.0, 0.0, 0.0 );
-
-        return errorTicks;
+        return 0;
     }
 
 
@@ -186,19 +525,7 @@ public class Drive
     */
     public int AutonRotateCounterclockwise( double degrees )
     {
-        /*
-         This method calculates how far to turn in cm to get the desired
-         angle of rotation and then uses MoveDistanceWithRamp to
-         actually move the robot the required amount.
-         */
-        double distanceToRotate_cm = degrees * CM_PER_DEGREE;
-
-        int errorTicks = MoveDistanceFullPower( distanceToRotate_cm, DIRECTION.COUNTERCLOCKWISE );
-
-        // Make sure robot is not moving
-        MoveSimple( 0.0, 0.0, 0.0 );
-
-        return errorTicks;
+        return 0;
     }
 
     /*
@@ -207,157 +534,13 @@ public class Drive
      */
     public int AutonRight( double distance_cm )
     {
-        /*
-         This method just uses MoveDistanceWithRamp to move right the
-         distance requested.
-         */
-        int errorTicks = MoveDistanceFullPower( distance_cm, DIRECTION.RIGHT );
-
-        // Make sure we stop moving
-        MoveSimple( 0.0, 0.0, 0.0 );
-
-        return errorTicks;
+        return 0;
     }
 
-    /*
-     * Method to move the robot left a specified distance. For use in auton modes.
-     * Parameter is distance to move left in centimeters.
-     */
+
     public int AutonLeft( double distance_cm )
     {
-        /*
-         This method just uses MoveDistanceWithRamp to move left the
-         distance requested.
-         */
-        int errorTicks = MoveDistanceFullPower( distance_cm, DIRECTION.LEFT );
-
-        // Make sure we stop moving
-        MoveSimple( 0.0, 0.0, 0.0 );
-
-        return errorTicks;
-    }
-
-    /*
-     * Method to move the robot a specified distance in a specified direction.
-     * Parameters are distance to move in centimeters and direction
-     */
-    private int MoveDistanceWithRamp( double distance_cm, DIRECTION whichWay )
-    {
-        /*
-         This algorithm calculates the total number encoder ticks we need to move for
-         the given distance, and then runs the wheels until that distance is met.
-         The direction to move is provided by the caller and the power is ramped from
-         0 to 0.5 and then held there while still running using RampUpPower.
-         */
-        int encoderStart = frontLeft.getCurrentPosition();
-        int totalTicks = (int) Math.round( distance_cm * TICKS_PER_CM );
-        int ticksMoved = 0;
-
-        limitTimer.reset();
-        double powerNow = 0.0;
-        while ( ( ticksMoved < ( totalTicks - MOMENTUM_BUFFER_TICKS ) ) && ( limitTimer.time() < MAX_SECONDS ) )
-        {
-            // apply power to wheels, select power based on distance left
-            double powerTarget = TARGET_POWER_LONG;
-            int ticksLeft = totalTicks - ticksMoved;
-            if ( ticksLeft < ( AUTON_SHORT_DISTANCE_CM * TICKS_PER_CM ) )
-            {
-                powerTarget = TARGET_POWER_SHORT;
-            }
-            else if ( ticksLeft < ( AUTON_MEDIUM_DISTANCE_CM * TICKS_PER_CM ) )
-            {
-                powerTarget = TARGET_POWER_MEDIUM;
-            }
-            // Default else is taken care of by setting initial value to TARGET_POWER_LONG
-
-            powerNow = PowerFilterAndSet( powerNow, powerTarget, whichWay );
-
-            // Delay 20ms to control ramp rate
-            Delay_ms( 20.0 );
-
-            // calc how much we have moved
-            int encoderNow = frontLeft.getCurrentPosition();
-            ticksMoved = Math.abs( encoderNow - encoderStart );
-        }
-
-        // Stop moving
-        MoveSimple( 0.0, 0.0, 0.0 );
-
-        return ( totalTicks - ticksMoved );
-    }
-
-    /*
-     * Method to move the robot a specified distance in a specified direction.
-     * Parameters are distance to move in centimeters and direction and it always
-     * uses full power. Most useful for rotation and sideways movement
-     */
-    private int MoveDistanceFullPower( double distance_cm, DIRECTION whichWay )
-    {
-        /*
-         This algorithm calculates the total number encoder ticks we need to move for
-         the given distance, and then runs the wheels until that distance is met.
-         The direction to move is provided by the caller and the power is set using
-         PowerFilterAndSet.
-         */
-        int encoderStart = frontLeft.getCurrentPosition();
-        int totalTicks = (int) Math.round( distance_cm * TICKS_PER_CM );
-        int ticksMoved = 0;
-
-        limitTimer.reset();
-        double powerNow = 0.0;
-        while ( ( ticksMoved < totalTicks ) && ( limitTimer.time() < MAX_SECONDS ) )
-        {
-            // apply power to wheels, select power based on distance left
-            int ticksLeft = totalTicks - ticksMoved;
-            powerNow = PowerFilterAndSet( powerNow, TARGET_POWER_LONG, whichWay );
-
-            // Delay 20ms to control ramp rate
-            Delay_ms( 20.0 );
-
-            // calc how much we have moved
-            int encoderNow = frontLeft.getCurrentPosition();
-            ticksMoved = Math.abs( encoderNow - encoderStart );
-        }
-
-        // Stop moving
-        MoveSimple( 0.0, 0.0, 0.0 );
-
-        return ( totalTicks - ticksMoved );
-    }
-
-    // Method to ramp up power in a given direction and then hold it
-    private double PowerFilterAndSet( double powerNow, double targetPower, DIRECTION whichWay )
-    {
-        powerNow = JoystickUtilities.LowPassFilter( powerNow, targetPower, INCREASING_FK, DECREASING_FK );
-
-        switch (whichWay)
-        {
-            case FORWARD:
-                MoveSimple( 0.0, -powerNow, 0.0 );
-                break;
-
-            case REVERSE:
-                MoveSimple( 0.0, powerNow , 0.0 );
-                break;
-
-            case RIGHT:
-                MoveSimple( powerNow, 0.0, 0.0 );
-                break;
-
-            case LEFT:
-                MoveSimple( ( -1.0 * powerNow ), 0.0, 0.0 );
-                break;
-
-            case CLOCKWISE:
-                MoveSimple( 0.0, 0.0, -powerNow );
-                break;
-
-            case COUNTERCLOCKWISE:
-                MoveSimple( 0.0, 0.0, powerNow  );
-                break;
-        }
-
-        return powerNow;
+        return 0;
     }
 
     private void Delay_ms( double milliseconds )

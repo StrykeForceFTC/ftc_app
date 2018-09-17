@@ -32,11 +32,6 @@ public class Auton_Red_Front extends OpMode {
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
 
-    private DcMotor frontLeft = null;
-    private DcMotor frontRight = null;
-    private DcMotor rearLeft = null;
-    private DcMotor rearRight = null;
-
     HardwareMap robotMap = hardwareMap;
     private Drive go = null;
     private Pole wep = null;
@@ -47,11 +42,6 @@ public class Auton_Red_Front extends OpMode {
     // Jewel Knocker hardware
     private Servo knockerServo = null;
     private ColorSensor colorSensor = null;
-
-    // determine new target
-    private int newLeftTarget;
-    private int newRightTarget;
-    private int targetX, targetY, targetSpin;
 
     VuforiaTrackables relicTrackables;
     VuforiaTrackable relicTemplate;
@@ -97,12 +87,7 @@ public class Auton_Red_Front extends OpMode {
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
-        frontLeft = hardwareMap.dcMotor.get("front_left");
-        frontRight = hardwareMap.dcMotor.get("front_right");
-        rearLeft = hardwareMap.dcMotor.get("rear_left");
-        rearRight = hardwareMap.dcMotor.get("rear_right");
-
-        go = new Drive(frontLeft, frontRight, rearLeft, rearRight);
+        go = new Drive( hardwareMap );
 
         // Set up Claw
         claw = new Claw( hardwareMap );
@@ -160,7 +145,7 @@ public class Auton_Red_Front extends OpMode {
         relicTrackables.activate();
 
         telemetry.addData("Status", "Initialized");
-    }
+        telemetry.update();
 
     /*
      * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
