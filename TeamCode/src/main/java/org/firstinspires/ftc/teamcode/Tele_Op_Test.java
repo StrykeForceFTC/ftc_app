@@ -57,16 +57,8 @@ public class Tele_Op_Test extends OpMode
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
 
-    // Jewel Knocker hardware
-    private Servo knockerServo = null;
-    private ColorSensor colorSensor = null;
-
     HardwareMap robotMap = hardwareMap;
     private Drive go = null;
-    private Pole wep = null;
-    private Claw claw = null;
-    private Lift lift = null;
-    private JewelKnocker jewelKnocker = null;
 
     // Joystick input values
     private double robotLeftRight = 0.0;
@@ -91,19 +83,6 @@ public class Tele_Op_Test extends OpMode
          */
         go = new Drive( hardwareMap );
 
-        knockerServo = hardwareMap.servo.get("knocker_servo");
-        colorSensor = hardwareMap.colorSensor.get("color");
-        jewelKnocker = new JewelKnocker( knockerServo, colorSensor );
-
-        // Set up Claw
-        claw = new Claw( hardwareMap );
-
-        // Set up pole
-        wep = new Pole( hardwareMap );
-
-        // Set up lift
-        lift = new Lift( hardwareMap );
-
         telemetry.addData("Status", "Initialized");
     }
 
@@ -118,9 +97,9 @@ public class Tele_Op_Test extends OpMode
      * Code to run ONCE when the driver hits PLAY
      */
     @Override
-    public void start() {
+    public void start()
+    {
         runtime.reset();
-        jewelKnocker.RaiseKnocker();
     }
 
     /*
@@ -129,9 +108,6 @@ public class Tele_Op_Test extends OpMode
     @Override
     public void loop() {
         telemetry.addData("Status", "Running: " + runtime.toString());
-
-        double leftClawPosition = claw.GetLeftPosition();
-        double rightClawPosition = claw.GetRightPosition();
 
         // Show joystick information as some other illustrative data
         telemetry.addLine("left joystick | ")
@@ -145,52 +121,7 @@ public class Tele_Op_Test extends OpMode
         robotRotate = JoystickUtilities.ShapeCubePlusInputWeighted( gamepad1.right_stick_x, ROBOT_ROTATE_WEIGHTING );
         go.MoveSimple( robotLeftRight, robotForwardBack, robotRotate );
 
-        // ************* Test code for auton Drive methods **************
-
-        // Gamepad1.x moves forward 20cm
-
-        if ( gamepad1.x )
-        {
-            go.AutonForward( 50.0 );
-            while ( gamepad1.x )
-            {
-
-            }
-        }
-
-        // Gamepad1.y moves backwards 20cm
-        if ( gamepad1.y )
-        {
-            go.AutonReverse( 20.0 );
-            while ( gamepad1.y )
-            {
-
-            }
-        }
-
-        // Gamepad1.a moves forward 10cm
-        if ( gamepad1.a )
-        {
-            go.AutonForward( 10.0 );
-            while ( gamepad1.a )
-            {
-
-            }
-        }
-
-        // Gamepad1.y moves backwards 10cm
-        if ( gamepad1.b )
-        {
-            go.AutonReverse( 10.0 );
-            while ( gamepad1.b )
-            {
-
-            }
-        }
-
         telemetry.addLine("Encoders ")
-                .addData("FL ", go.GetEncoderFrontLeft() )
-                .addData("FR ", go.GetEncoderFrontRight() )
                 .addData("RL ", go.GetEncoderRearLeft() )
                 .addData("RR ", go.GetEncoderRearRight() );
 
@@ -202,8 +133,10 @@ public class Tele_Op_Test extends OpMode
      * Code to run ONCE after the driver hits STOP
      */
     @Override
-    public void stop() {
-        jewelKnocker.RaiseKnocker();
+    public void stop()
+    {
+        // Make sure Robot stops
+        go.MoveSimple( 0.0, 0.0, 0.0 );
     }
 
 }
