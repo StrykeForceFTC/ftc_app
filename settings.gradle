@@ -3,3 +3,6 @@ include ':TeamCode'
 include ':openCVLibrary3'
 include ':dogecv'
 
+project (':openCVLibrary3').projectDir = new File( '../dogecv/openCVLibrary3')
+project (':dogecv').projectDir = new File( '../dogecv/DogeCV')
+
