@@ -32,6 +32,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -44,72 +45,45 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  *
  */
 
-@TeleOp(name="Tele Op Test", group="Iterative Opmode")
+// @TeleOp(name="Tele Op Test", group="Iterative Opmode")
 // @Disabled
-public class Tele_Op_Test extends Tele_Op_Base
+public abstract class Tele_Op_Base extends OpMode
 {
+    // Declare HW objects
+    public Drive go = null;
 
-    /* Declare OpMode members. */
-    private ElapsedTime runtime = new ElapsedTime();
+    // Joystick input values
+    public double robotLeftRight = 0.0;
+    public double robotForwardBack = 0.0;
+    public double robotRotate = 0.0;
+
+    // Constants for joystick shaping
+    private static final double ROBOT_LEFT_RIGHT_WEIGHTING = 0.5;
+    private static final double ROBOT_FWD_BACK_WEIGHTING = 0.5;
+    private static final double ROBOT_ROTATE_WEIGHTING = 0.5;
 
     /*
-     * Code to run ONCE when the driver hits INIT
+     * HW initialization code
      */
-    @Override
-    public void init()
+    public void HwInit()
     {
-        // Use base class to init HW
-        HwInit();
+        /* Initialize the hardware variables.
+         * TODO: Detect robot here and select appropriate HW
+         */
+        go = new Drive( hardwareMap );
+
+        // TODO: use telemetry to put team on phone
     }
 
     /*
-     * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
+     * Code to process gamepad1 joysticks into fwd/back, left/right and rotate
      */
-    @Override
-    public void init_loop()
+    public void ProcessGamepad1Joysticks()
     {
-    }
-
-    /*
-     * Code to run ONCE when the driver hits PLAY
-     */
-    @Override
-    public void start()
-    {
-        runtime.reset();
-    }
-
-    /*
-     * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
-     */
-    @Override
-    public void loop()
-    {
-        telemetry.addData("Status ", "Running: " + runtime.toString());
-
-        // Move robot based on joystick inputs from gamepad 1 / driver 1
-        // shape joystick inputs
-        ProcessGamepad1Joysticks();
-        go.MoveSimple( robotLeftRight, robotForwardBack, robotRotate );
-
-        telemetry.addLine("Encoders ")
-                .addData("FL ", go.GetEncoderFrontLeft() )
-                .addData("FR ", go.GetEncoderFrontRight() )
-                .addData("RL ", go.GetEncoderRearLeft() )
-                .addData("RR ", go.GetEncoderRearRight() );
-
-        telemetry.update();
-    }
-
-
-    /*
-     * Code to run ONCE after the driver hits STOP
-     */
-    @Override
-    public void stop()
-    {
-        // Make sure Robot stops
-        go.MoveSimple( 0.0, 0.0, 0.0 );
+        // Shape joystick inputs
+        robotForwardBack = JoystickUtilities.ShapeCubePlusInputWeighted( -gamepad1.left_stick_y, ROBOT_FWD_BACK_WEIGHTING );
+        robotLeftRight = JoystickUtilities.ShapeCubePlusInputWeighted( gamepad1.left_stick_x, ROBOT_LEFT_RIGHT_WEIGHTING );
+        robotRotate = JoystickUtilities.ShapeCubePlusInputWeighted( gamepad1.right_stick_x, ROBOT_ROTATE_WEIGHTING );
     }
 
 }
