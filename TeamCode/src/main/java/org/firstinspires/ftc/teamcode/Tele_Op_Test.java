@@ -34,11 +34,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.hardware.Servo;
 
 
 /**
@@ -49,7 +46,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  *
  */
 
-@TeleOp(name="Tele Op Test", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
+@TeleOp(name="Tele Op Test", group="Iterative Opmode")
 // @Disabled
 public class Tele_Op_Test extends OpMode
 {
@@ -57,7 +54,6 @@ public class Tele_Op_Test extends OpMode
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
 
-    HardwareMap robotMap = hardwareMap;
     private Drive go = null;
 
     // Joystick input values
@@ -74,23 +70,20 @@ public class Tele_Op_Test extends OpMode
      * Code to run ONCE when the driver hits INIT
      */
     @Override
-    public void init() {
-        telemetry.addData("Status", "Initializing");
-
-        /* eg: Initialize the hardware variables. Note that the strings used here as parameters
-         * to 'get' must correspond to the names assigned during the robot configuration
-         * step (using the FTC Robot Controller app on the phone).
+    public void init()
+    {
+        /* Initialize the hardware variables.
+         * TODO: Detect robot here and select appropriate HW
          */
         go = new Drive( hardwareMap );
-
-        telemetry.addData("Status", "Initialized");
     }
 
     /*
      * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
      */
     @Override
-    public void init_loop() {
+    public void init_loop()
+    {
     }
 
     /*
@@ -106,13 +99,9 @@ public class Tele_Op_Test extends OpMode
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
     @Override
-    public void loop() {
-        telemetry.addData("Status", "Running: " + runtime.toString());
-
-        // Show joystick information as some other illustrative data
-        telemetry.addLine("left joystick | ")
-                .addData("x", gamepad1. left_stick_x)
-                .addData("y", gamepad1.left_stick_y);
+    public void loop()
+    {
+        telemetry.addData("Status ", "Running: " + runtime.toString());
 
         // Move robot based on joystick inputs from gamepad 1 / driver 1
         // shape joystick inputs
@@ -122,6 +111,8 @@ public class Tele_Op_Test extends OpMode
         go.MoveSimple( robotLeftRight, robotForwardBack, robotRotate );
 
         telemetry.addLine("Encoders ")
+                .addData("FL ", go.GetEncoderFrontLeft() )
+                .addData("FR ", go.GetEncoderFrontRight() )
                 .addData("RL ", go.GetEncoderRearLeft() )
                 .addData("RR ", go.GetEncoderRearRight() );
 
