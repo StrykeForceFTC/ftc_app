@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -8,35 +9,46 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Class for controlling load/unload motor on arm of 2018 robot.
  */
 
-public class Loader
-{
-    // TODO: declare motor
+public class Loader {
+    // motor to spin lodar
+    private DcMotor loadmotor = null;
 
-    // TODO: Create constants for different arm positions
+    // Constants for speed
+    private static final double LOAD_POWER = 1.0;
+    private static final double UNLOAD_POWER = -1.0;
 
-    // TODO: Create timer for running in auton
+    // timer for auton
+    private ElapsedTime runtime = new ElapsedTime();
 
+// run time for auton
     // Constructor
-    // TODO: Initialize HW and variables here
-    public Loader( HardwareMap ahwMap )
-    {
-        // TODO: set up motor object using ahwMap.dcMotor.get( )
 
-        // TODO: Setup motor (set direction, run mode, use encoder, etc.)
+    public Loader(HardwareMap ahwMap) {
+
+        loadmotor = ahwMap.dcMotor.get("loader");
+
+        loadmotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        loadmotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
     }
-
 
     // Method to load in tele op
-    public void TeleopLoadSamples( boolean load )
-    {
-        // TODO: when load is true, run the motor to load, when false, turn motor off
+    public void TeleopLoad() {
+        // run motar at load power to load stuff
+        loadmotor.setPower(LOAD_POWER);
+    }
+    // Method to unload in tele op
+    public void TeleopUnloadSamples() {
+        // run motor at load power to unload stuff
+        loadmotor.setPower(UNLOAD_POWER);
     }
 
-    // Method to unload in tele op
-    public void TeleopUnloadSamples( boolean unload )
-    {
-        // TODO: when unload is true, run the motor to unload, when false, turn motor off
+    //Method to stop in teleop
+    public void teleopstop()
+    {  //stop motor to stop loading
+        loadmotor.setPower(0);
     }
+
 
     // Method to unload in auton
     public void AutonUnload( )
