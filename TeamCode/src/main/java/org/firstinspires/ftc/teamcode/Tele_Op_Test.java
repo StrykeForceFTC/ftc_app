@@ -97,6 +97,8 @@ public class Tele_Op_Test extends Tele_Op_Base
                 .addData("FR ", go.GetEncoderFrontRight() )
                 .addData("RL ", go.GetEncoderRearLeft() )
                 .addData("RR ", go.GetEncoderRearRight() );
+        telemetry.addLine("Team Id"  )
+                .addData("team", TeamId.name());
 
         telemetry.update();
     }
