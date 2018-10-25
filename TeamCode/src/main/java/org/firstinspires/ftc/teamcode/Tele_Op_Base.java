@@ -52,6 +52,7 @@ public abstract class Tele_Op_Base extends OpMode
     // Declare HW objects
     public Drive go = null;
 
+
     // Joystick input values
     public double robotLeftRight = 0.0;
     public double robotForwardBack = 0.0;
@@ -62,6 +63,13 @@ public abstract class Tele_Op_Base extends OpMode
     private static final double ROBOT_FWD_BACK_WEIGHTING = 0.5;
     private static final double ROBOT_ROTATE_WEIGHTING = 0.5;
 
+    //enum for detection
+    public enum teamId
+    {
+       teamUnknown, team8553, team7228, team15106;
+    }
+
+    public teamId TeamId = teamId.teamUnknown;
     /*
      * HW initialization code
      */
@@ -70,10 +78,56 @@ public abstract class Tele_Op_Base extends OpMode
         /* Initialize the hardware variables.
          * TODO: Detect robot here and select appropriate HW
          */
+        //
+        WhoAmI();
         go = new Drive( hardwareMap );
+
+
 
         // TODO: use telemetry to put team on phone
     }
+
+    //This looks for the name in the team so, if team is 8553, the name it looks for is 8553.
+    //Then it will throw a exception if it was false, which is caught by the catch exception and is made as false in the boolean.
+    private boolean AmI(String team )
+    {
+        try
+        {
+            hardwareMap.get(team);
+            return true;
+        }
+        catch ( Exception e)
+        {
+          return false;
+        }
+
+    }
+    //This takes the above method and runs it until it returns true.
+    //If it returns true, the teamId will change to be given team
+    //Ex.  If the 8553 is true, the teamId is set to team8553.
+    //If all return false, the team id will stay at default, (team unknown) so that nothing mechanical will break.
+    private void WhoAmI()
+    {
+        if (AmI("8553"))
+        {
+            TeamId = teamId.team8553;
+        }
+        else if (AmI("7228"))
+        {
+            TeamId = teamId.team7228;
+        }
+        else if (AmI("15106"))
+        {
+            TeamId = teamId.team15106;
+        }
+
+    }
+
+
+
+
+
+
 
     /*
      * Code to process gamepad1 joysticks into fwd/back, left/right and rotate

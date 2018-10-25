@@ -50,6 +50,8 @@ public class Auton_Testcode extends AutonLinearBase
                     .addData("FR ", go.GetEncoderFrontRight())
                     .addData("RL ", go.GetEncoderRearLeft())
                     .addData("RR ", go.GetEncoderRearRight());
+            telemetry.addLine("TeamId")
+                    .addData("Team", TeamId.name());
 
             telemetry.update();
 
