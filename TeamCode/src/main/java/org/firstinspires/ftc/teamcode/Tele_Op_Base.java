@@ -51,7 +51,7 @@ public abstract class Tele_Op_Base extends OpMode
 {
     // Declare HW objects
     public Drive go = null;
-
+    public Loader loader = null;
 
     // Joystick input values
     public double robotLeftRight = 0.0;
@@ -75,16 +75,12 @@ public abstract class Tele_Op_Base extends OpMode
      */
     public void HwInit()
     {
-        /* Initialize the hardware variables.
-         * TODO: Detect robot here and select appropriate HW
-         */
-        //
+        /*
+        ** Initialize the hardware variables and determine team / robot.
+        */
         WhoAmI();
         go = new Drive( hardwareMap );
-
-
-
-        // TODO: use telemetry to put team on phone
+        loader = new Loader( hardwareMap );
     }
 
     //This looks for the name in the team so, if team is 8553, the name it looks for is 8553.
@@ -102,6 +98,8 @@ public abstract class Tele_Op_Base extends OpMode
         }
 
     }
+
+
     //This takes the above method and runs it until it returns true.
     //If it returns true, the teamId will change to be given team
     //Ex.  If the 8553 is true, the teamId is set to team8553.
@@ -124,11 +122,6 @@ public abstract class Tele_Op_Base extends OpMode
     }
 
 
-
-
-
-
-
     /*
      * Code to process gamepad1 joysticks into fwd/back, left/right and rotate
      */
@@ -139,5 +132,23 @@ public abstract class Tele_Op_Base extends OpMode
         robotLeftRight = JoystickUtilities.ShapeCubePlusInputWeighted( gamepad1.left_stick_x, ROBOT_LEFT_RIGHT_WEIGHTING );
         robotRotate = JoystickUtilities.ShapeCubePlusInputWeighted( gamepad1.right_stick_x, ROBOT_ROTATE_WEIGHTING );
     }
+
+
+
+    /*
+     * The stop method is created in the base class to ensure it is consistent
+     * across all teleop modes. Want to ensure hardware is "off" and in a safe
+     * state when stopping robot.
+     */
+    @Override
+    public void stop()
+    {
+        // Turn loader off
+        loader.teleopstop();
+
+        // Make sure Robot stops
+        go.MoveSimple( 0.0, 0.0, 0.0 );
+    }
+
 
 }
