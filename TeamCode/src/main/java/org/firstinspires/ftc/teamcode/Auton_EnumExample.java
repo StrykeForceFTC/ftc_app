@@ -107,18 +107,6 @@ public class Auton_EnumExample extends AutonLinearBase
         // do whatever to disconnect from lander
     }
 
-    protected void StopActions( )
-    {
-        // Setting all inputs to move simple to 0 ensures all
-        // drive motors are set to 0 power and stopped.
-        go.MoveSimple( 0, 0, 0 );
-
-        // Next line indicates to robot core that we are requesting
-        // to stop the op mode (like hitting stop button on driver station)
-        requestOpModeStop( );
-    }
-
-
 }
 
 

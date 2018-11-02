@@ -21,6 +21,7 @@ public abstract class AutonLinearBase extends LinearOpMode
 
     // Declare HW objects
     public Drive go = null;
+    public Loader loader = null;
 
     // Detectors
     private GoldAlignDetector detector;
@@ -36,12 +37,15 @@ public abstract class AutonLinearBase extends LinearOpMode
     // Method to initialize any connected hardware
     public void InitHardware( )
     {
-        // TODO Determine correct robot and initialize HW modules for it
-        //Status: Not tested yet (For Auton)
-        //Find what robot you are running
+        // Find what robot you are running and set up hardware
         WhoAmI();
         go = new Drive( hardwareMap );
+        loader = new Loader( hardwareMap );
 
+        /*
+        ** Rest of this method is about starting up a Gold detector from
+        ** DogeCV.
+        */
         // Initialize
         detector = new GoldAlignDetector();
         detector.init( hardwareMap.appContext, CameraViewDisplay.getInstance( ) );
@@ -113,6 +117,23 @@ public abstract class AutonLinearBase extends LinearOpMode
     {
         return detector.getXPosition( );
     }
+
+    // Method to run for stop step of auton - ensures all HW left in
+    // known and safe state
+    protected void StopActions( )
+    {
+        // Ensure loader motor is off
+        loader.teleopstop();
+
+        // Setting all inputs to move simple to 0 ensures all
+        // drive motors are set to 0 power and stopped.
+        go.MoveSimple( 0, 0, 0 );
+
+        // Next line indicates to robot core that we are requesting
+        // to stop the op mode (like hitting stop button on driver station)
+        requestOpModeStop( );
+    }
+
 
 
 }
