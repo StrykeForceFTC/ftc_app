@@ -45,7 +45,8 @@ public class Auton_EnumExample extends AutonLinearBase
     @Override
     public void runOpMode()
     {
-        /* Initialize the hardware variables.
+        /*
+         * Initialize the hardware variables.
          */
         InitHardware();
 
