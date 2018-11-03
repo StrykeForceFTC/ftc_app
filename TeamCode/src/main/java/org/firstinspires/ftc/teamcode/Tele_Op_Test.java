@@ -92,38 +92,6 @@ public class Tele_Op_Test extends Tele_Op_Base
         ProcessGamepad1Joysticks();
         go.MoveSimple( robotLeftRight, robotForwardBack, robotRotate );
 
-        if ( gamepad1.a )
-        {
-            go.AutonMove(Drive.DIRECTION.RIGHT, 12);
-        }
-        else
-        {
-
-        }
-
-        if (gamepad1.b)
-        {
-            go.AutonMove(Drive.DIRECTION.LEFT, 12);
-        }
-        else
-        {
-
-        }
-
-        if (gamepad1.x)
-        {
-            go.AutonMoveRotate(Drive.ROTATION.CLOCKWISE, 90);
-        }
-        else
-        {
-
-        }
-
-        if (gamepad1.y)
-        {
-            go.AutonMoveRotate(Drive.ROTATION.COUNTERCLOCKWISE, 90);
-        }
-
         telemetry.addLine("Encoders ")
                 .addData("FL ", go.GetEncoderFrontLeft() )
                 .addData("FR ", go.GetEncoderFrontRight() )
