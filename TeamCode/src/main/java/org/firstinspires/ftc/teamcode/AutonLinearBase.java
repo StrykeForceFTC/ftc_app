@@ -129,6 +129,9 @@ public abstract class AutonLinearBase extends LinearOpMode
         // drive motors are set to 0 power and stopped.
         go.MoveSimple( 0, 0, 0 );
 
+        // Stop the gold align detector
+        detector.disable( );
+
         // Next line indicates to robot core that we are requesting
         // to stop the op mode (like hitting stop button on driver station)
         requestOpModeStop( );
