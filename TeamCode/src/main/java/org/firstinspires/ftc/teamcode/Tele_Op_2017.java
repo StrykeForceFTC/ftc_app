@@ -57,7 +57,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
  */
 
 @TeleOp(name="Tele Op 2017", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
-// @Disabled
+@Disabled
 public class Tele_Op_2017 extends OpMode
 {
 
