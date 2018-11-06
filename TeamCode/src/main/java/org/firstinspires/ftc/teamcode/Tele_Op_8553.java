@@ -39,6 +39,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -56,7 +57,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @TeleOp(name="Tele Op 8553 ", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
-// @Disabled
+@Disabled
 public class Tele_Op_8553 extends OpMode
 {
 
