@@ -51,6 +51,7 @@ public class Tele_Op_Test extends Tele_Op_Base
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
+    private Arm arm = null;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -60,6 +61,7 @@ public class Tele_Op_Test extends Tele_Op_Base
     {
         // Use base class to init HW
         HwInit();
+        arm = new Arm( hardwareMap );
     }
 
     /*
@@ -91,6 +93,11 @@ public class Tele_Op_Test extends Tele_Op_Base
         // shape joystick inputs
         ProcessGamepad1Joysticks();
         go.MoveSimple( robotLeftRight, robotForwardBack, robotRotate );
+
+        if (gamepad2.left_stick_y <= -.1)
+            arm.adjust_lift(Arm.lift_dir.down, gamepad2.left_stick_y * -1, 5 );
+        else if (gamepad2.left_stick_y >= .1)
+            arm.adjust_lift(Arm.lift_dir.up, gamepad2.left_stick_y, 5 );
 
         telemetry.addLine("Encoders ")
                 .addData("FL ", go.GetEncoderFrontLeft() )
