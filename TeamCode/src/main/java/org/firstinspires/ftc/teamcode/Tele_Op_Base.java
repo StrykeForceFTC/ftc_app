@@ -53,6 +53,7 @@ public abstract class Tele_Op_Base extends OpMode
     public Drive go = null;
     public Loader loader = null;
     public Auto_Robot_Detect robotDetector = null;
+    public Arm arm = null;
 
     // Joystick input values
     public double robotLeftRight = 0.0;
@@ -77,6 +78,7 @@ public abstract class Tele_Op_Base extends OpMode
         TeamId = robotDetector.TeamId;
         go = new Drive( hardwareMap );
         loader = new Loader( hardwareMap );
+        arm = new Arm( hardwareMap );
     }
 
 
