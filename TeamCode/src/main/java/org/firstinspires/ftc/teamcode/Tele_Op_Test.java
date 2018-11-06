@@ -110,15 +110,4 @@ public class Tele_Op_Test extends Tele_Op_Base
         telemetry.update();
     }
 
-
-    /*
-     * Code to run ONCE after the driver hits STOP
-     */
-    @Override
-    public void stop()
-    {
-        // Make sure Robot stops
-        go.MoveSimple( 0.0, 0.0, 0.0 );
-    }
-
 }

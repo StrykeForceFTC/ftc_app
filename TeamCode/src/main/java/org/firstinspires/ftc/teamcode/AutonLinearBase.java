@@ -21,27 +21,26 @@ public abstract class AutonLinearBase extends LinearOpMode
 
     // Declare HW objects
     public Drive go = null;
+    public Loader loader = null;
+    public Auto_Robot_Detect robotDetector = null;
 
     // Detectors
     private GoldAlignDetector detector;
 
-    //This is where we put in the name of he team.  (At least the enum for it.)
-    public enum teamId
-    {
-        teamUnknown, team8553, team7228, team15106;
-    }
-
-    public AutonLinearBase.teamId TeamId = AutonLinearBase.teamId.teamUnknown;
+    public Auto_Robot_Detect.teamId TeamId = Auto_Robot_Detect.teamId.teamUnknown;
 
     // Method to initialize any connected hardware
     public void InitHardware( )
     {
-        // TODO Determine correct robot and initialize HW modules for it
-        //Status: Not tested yet (For Auton)
-        //Find what robot you are running
-        WhoAmI();
+        // Find what robot you are running and set up hardware
+        robotDetector = new Auto_Robot_Detect( hardwareMap );
         go = new Drive( hardwareMap );
+        loader = new Loader( hardwareMap );
 
+        /*
+         ** Rest of this method is about starting up a Gold detector from
+         ** DogeCV.
+         */
         // Initialize
         detector = new GoldAlignDetector();
         detector.init( hardwareMap.appContext, CameraViewDisplay.getInstance( ) );
@@ -62,44 +61,6 @@ public abstract class AutonLinearBase extends LinearOpMode
         detector.enable();
     }
 
-    //
-    private boolean AmI(String team )
-    //This looks for the name in the team so, if team is 8553, the name it looks for is 8553.
-    //Then it will throw a exception if it was false, which is caught by the catch exception and is made as false in the boolean.
-    {
-        try
-        {
-            hardwareMap.get(team);
-            return true;
-        }
-        catch ( Exception e)
-        {
-            return false;
-        }
-
-    }
-
-    //This takes the above method and runs it until it returns true.
-    //If it returns true, the teamId will change to be given team
-    //Ex.  If the 8553 is true, the teamId is set to team8553.
-    //If all return false, the team id will stay at default, (team unknown) so that nothing mechanical will break.
-    private void WhoAmI()
-    {
-        if (AmI("8553"))
-        {
-            TeamId = teamId.team8553;
-        }
-        else if (AmI("7228"))
-        {
-            TeamId = teamId.team7228;
-        }
-        else if (AmI("15106"))
-        {
-            TeamId = teamId.team15106;
-        }
-
-    }
-
 
     // Method to determined if aligned on gold block
     public boolean GoldAligned( )
@@ -114,7 +75,23 @@ public abstract class AutonLinearBase extends LinearOpMode
         return detector.getXPosition( );
     }
 
+    // Method to run for stop step of auton - ensures all HW left in
+    // known and safe state
+    protected void StopActions( )
+    {
+        // Ensure loader motor is off
+        loader.teleopstop();
+
+        // Setting all inputs to move simple to 0 ensures all
+        // drive motors are set to 0 power and stopped.
+        go.MoveSimple( 0, 0, 0 );
+
+        // Stop the gold align detector
+        detector.disable( );
+
+        // Next line indicates to robot core that we are requesting
+        // to stop the op mode (like hitting stop button on driver station)
+        requestOpModeStop( );
+    }
 
 }
-
-
