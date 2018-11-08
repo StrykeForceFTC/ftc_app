@@ -97,13 +97,24 @@ public class Tele_Op_Test extends Tele_Op_Base
         if (gamepad2.left_stick_y <= -.1)
             arm.adjust_lift(Arm.lift_dir.down, gamepad2.left_stick_y * -1, 5 );
         else if (gamepad2.left_stick_y >= .1)
-            arm.adjust_lift(Arm.lift_dir.up, gamepad2.left_stick_y, 5 );
+            arm.adjust_lift(Arm.lift_dir.up, gamepad2.left_stick_y, 2 );
+        if (gamepad2.dpad_down)
+            arm.position_lift(Arm.lift_pos.fulldown, 5);
+        if (gamepad2.dpad_up)
+            arm.position_lift(Arm.lift_pos.fullup, 5);
+        if (gamepad2.dpad_left)
+            arm.position_lift(Arm.lift_pos.mid1, 3);
+        if (gamepad2.dpad_right)
+            arm.position_lift(Arm.lift_pos.mid2, 7);
+
 
         telemetry.addLine("Encoders ")
                 .addData("FL ", go.GetEncoderFrontLeft() )
                 .addData("FR ", go.GetEncoderFrontRight() )
                 .addData("RL ", go.GetEncoderRearLeft() )
-                .addData("RR ", go.GetEncoderRearRight() );
+                .addData("RR ", go.GetEncoderRearRight() )
+                .addData("stick ", gamepad2.left_stick_y)
+                .addData("Lift ", arm.LiftEncoderValue());
         telemetry.addLine("Team Id"  )
                 .addData("team", TeamId.name());
 

@@ -82,13 +82,13 @@ public class Arm {
         switch(pos)
         {
             case fulldown:
-                return 5;
+                return 5000;
             case fullup:
-                return 3;
+                return 3000;
             case mid1:
-                return 2;
+                return 2000;
             case mid2:
-                return 4;
+                return 4000;
             default:
                 return lift.getCurrentPosition();
         }
@@ -111,8 +111,8 @@ public class Arm {
     }
 
     private int MAX_LIFT_ADJUST_VALUE = 5;
-    private int MAX_LIFT_POS = 10;
-    private int MIN_LIFT_POS = 0;
+    private int MAX_LIFT_POS = 10000;
+    private int MIN_LIFT_POS = -10000;
 
 
     private int LiftPosLimit(int pos)
@@ -157,7 +157,7 @@ public class Arm {
     public int LiftEncoderValue( )
     {
         // TODO: Make return encoder value
-        return 0;
+        return (lift.getCurrentPosition());
     }
 
     public int WristEncoderValue( )
