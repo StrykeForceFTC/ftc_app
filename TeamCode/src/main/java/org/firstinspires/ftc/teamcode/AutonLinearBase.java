@@ -23,6 +23,7 @@ public abstract class AutonLinearBase extends LinearOpMode
     public Drive go = null;
     public Loader loader = null;
     public Auto_Robot_Detect robotDetector = null;
+    public Arm arm = null;
 
     // Detectors
     private GoldAlignDetector detector;
@@ -34,8 +35,10 @@ public abstract class AutonLinearBase extends LinearOpMode
     {
         // Find what robot you are running and set up hardware
         robotDetector = new Auto_Robot_Detect( hardwareMap );
+        TeamId = robotDetector.TeamId;
         go = new Drive( hardwareMap );
         loader = new Loader( hardwareMap );
+        arm = new Arm( hardwareMap );
 
         /*
          ** Rest of this method is about starting up a Gold detector from

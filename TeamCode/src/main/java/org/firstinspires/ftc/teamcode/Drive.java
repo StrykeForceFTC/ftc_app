@@ -45,6 +45,7 @@ public class Drive
     final private static double TIX_PER_DEGREE = IN_PER_DEGREE * TICKS_PER_IN;
     final private static double MAX_SECONDS = 4.5;
     final private static double AUTON_POWER = 0.5;
+
     //these are enums that are to be given numerical values later so that we don't have to write in the matrices all the time.
     //These enums are also easier to change for debugging (The values assigned to them.)
     public enum DIRECTION { FORWARD, REVERSE, RIGHT, LEFT }
@@ -57,6 +58,10 @@ public class Drive
     final private static int LEFT = 0;
     final private static int RIGHT = 1;
     final private static int NUM_SIDES = 2;
+
+    // adjustment for moving left and right in auton
+    final private static double LEFT_RIGHT_ADJUSTMENT = 1.2;
+    final private static double ROTATE_ADJUSTMENT = 1.46;
 
     // Array for zero power
     final private static double[][] ZERO_POWER = { { 0, 0 }, { 0, 0 } };
@@ -233,8 +238,13 @@ public class Drive
     private void SetEncoderTargets( DIRECTION direction, double distance_in )
     {
         double ticks_2_move = distance_in * TICKS_PER_IN;
-
         double[][] move_matrix = null;
+
+        // Adjust distance for left-right
+        if ( ( direction == DIRECTION.LEFT ) || ( direction == DIRECTION.RIGHT ) )
+        {
+            ticks_2_move = LEFT_RIGHT_ADJUSTMENT * ticks_2_move;
+        }
 
         // Pick the correct direction matrix to multiply distance by
         switch (direction)
@@ -281,7 +291,8 @@ public class Drive
     // based on which direction was chosen when the method was called.
     private void SetEncoderTargetsRotate( ROTATION rotation, double distance_degrees )
     {
-        double ticks_2_move = distance_degrees * TIX_PER_DEGREE;
+        double ticks_2_move = distance_degrees * TIX_PER_DEGREE * ROTATE_ADJUSTMENT;
+
 
         double[][] move_matrix = null;
 
@@ -297,7 +308,7 @@ public class Drive
 
             default:
             {
-                move_matrix = COUNTERCLOCKWISE_MATRIX;
+                move_matrix = CLOCKWISE_MATRIX;
                 break;
             }
         }
