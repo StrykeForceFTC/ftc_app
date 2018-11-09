@@ -24,8 +24,8 @@ public class Auton_Testcode extends AutonLinearBase
         UNLOAD, PARK, STOP }
 
     private enum GOLD_POSITIONS { LEFT_POS, MID_POS, RIGHT_POS, TERMINATE}
-    private AUTON_STEPS step = AUTON_STEPS.FIND_GOLD;
-    private GOLD_POSITIONS gold;
+    private AUTON_STEPS step = AUTON_STEPS.MOVE_TO_MINERAL;
+    private GOLD_POSITIONS gold=GOLD_POSITIONS.TERMINATE;
     /*
      * There is only runOpMode for linear op modes
      */
@@ -94,7 +94,7 @@ public class Auton_Testcode extends AutonLinearBase
                     step=AUTON_STEPS.MOVE_TO_MINERAL;
                     break;
                 case MOVE_TO_MINERAL:
-                    go.AutonMove(Drive.DIRECTION.FORWARD, 12);
+                    go.AutonMove(Drive.DIRECTION.FORWARD, 8);
                     switch(gold){
                         case LEFT_POS:
                             go.AutonMove(Drive.DIRECTION.LEFT, 8);
@@ -130,10 +130,11 @@ public class Auton_Testcode extends AutonLinearBase
                     break;
 
                 case DRIVE_DEPOT:
-                    go.AutonMoveRotate(Drive.ROTATION.COUNTERCLOCKWISE, 90);
-                    go.AutonMove(Drive.DIRECTION.FORWARD,55);
-                    go.AutonMoveRotate(Drive.ROTATION.COUNTERCLOCKWISE,45);
-                    go.AutonMove(Drive.DIRECTION.FORWARD, 57);
+                    go.AutonMoveRotate(Drive.ROTATION.COUNTERCLOCKWISE, 75);
+                   go.AutonMove(Drive.DIRECTION.FORWARD,37);
+                    go.AutonMoveRotate(Drive.ROTATION.COUNTERCLOCKWISE,27.5);
+                    go.AutonMove(Drive.DIRECTION.RIGHT,11);
+                    go.AutonMove(Drive.DIRECTION.FORWARD, 32.5);
                     step=AUTON_STEPS.UNLOAD;
                     break;
                 case UNLOAD:
@@ -141,7 +142,7 @@ public class Auton_Testcode extends AutonLinearBase
                     step=AUTON_STEPS.PARK;
                     break;
                 case PARK:
-                    go.AutonMove(Drive.DIRECTION.REVERSE, 75);
+                    go.AutonMove(Drive.DIRECTION.REVERSE, 54);
                     step=AUTON_STEPS.STOP;
                     break;
                 case STOP:
