@@ -20,10 +20,12 @@ public class Auton_Testcode extends AutonLinearBase
     // Hardware objects are created in AutonLinearBase
 
     // Enumeration for auton steps
-    private enum AUTON_STEPS { START, STOP }
+    private enum AUTON_STEPS {RELEASE_LANDER, FIND_GOLD, MOVE_TO_MINERAL, LOAD_GOLD, DRIVE_DEPOT,
+        UNLOAD, PARK, STOP }
 
-    private AUTON_STEPS step = AUTON_STEPS.START;
-
+    private enum GOLD_POSITIONS { LEFT_POS, MID_POS, RIGHT_POS, TERMINATE}
+    private AUTON_STEPS step = AUTON_STEPS.FIND_GOLD;
+    private GOLD_POSITIONS gold;
     /*
      * There is only runOpMode for linear op modes
      */
@@ -55,7 +57,100 @@ public class Auton_Testcode extends AutonLinearBase
 
             telemetry.update();
 
-            idle();
+            //Auton steps
+            switch(step){
+                case RELEASE_LANDER:
+                    step= AUTON_STEPS.FIND_GOLD;
+                    break;
+                case FIND_GOLD:
+                    go.AutonMoveRotate(Drive.ROTATION.CLOCKWISE, 135);
+                    if(GoldAligned()){
+                        gold=GOLD_POSITIONS.LEFT_POS;
+                        go.AutonMoveRotate(Drive.ROTATION.CLOCKWISE,45);
+
+                    }
+                    else {
+                        go.AutonMoveRotate(Drive.ROTATION.CLOCKWISE, 45);
+                        if(GoldAligned()){
+                            gold=GOLD_POSITIONS.MID_POS;
+
+                        }
+                        else {
+                            go.AutonMoveRotate(Drive.ROTATION.CLOCKWISE, 45);
+                            if(GoldAligned()){
+                                gold=GOLD_POSITIONS.RIGHT_POS;
+                                go.AutonMoveRotate(Drive.ROTATION.COUNTERCLOCKWISE, 45);
+                            }
+                            else{
+                                gold=GOLD_POSITIONS.TERMINATE;
+                                go.AutonMoveRotate(Drive.ROTATION.COUNTERCLOCKWISE, 45);
+
+                            }
+                        }
+
+                    }
+                    telemetry.addData("GP", gold);
+
+                    step=AUTON_STEPS.MOVE_TO_MINERAL;
+                    break;
+                case MOVE_TO_MINERAL:
+                    go.AutonMove(Drive.DIRECTION.FORWARD, 12);
+                    switch(gold){
+                        case LEFT_POS:
+                            go.AutonMove(Drive.DIRECTION.LEFT, 8);
+                            break;
+                        case MID_POS:
+                            break;
+                        case RIGHT_POS:
+                            go.AutonMove(Drive.DIRECTION.RIGHT, 8);
+                            break;
+                        case TERMINATE:
+                            break;
+                    }
+                    step=AUTON_STEPS.LOAD_GOLD;
+                    break;
+                case LOAD_GOLD:
+                    if(gold!=GOLD_POSITIONS.TERMINATE){
+                        go.AutonMove(Drive.DIRECTION.FORWARD, 4);
+                        //put down arm and turn on loader
+                        go.AutonMove(Drive.DIRECTION.REVERSE, 4);
+
+                        switch (gold){
+                            case LEFT_POS:
+                                go.AutonMove(Drive.DIRECTION.RIGHT, 8);
+                                break;
+                            case MID_POS:
+                                break;
+                            case RIGHT_POS:
+                                go.AutonMove(Drive.DIRECTION.LEFT, 8);
+                                break;
+                        }
+                    }
+                    step=AUTON_STEPS.DRIVE_DEPOT;
+                    break;
+
+                case DRIVE_DEPOT:
+                    go.AutonMoveRotate(Drive.ROTATION.COUNTERCLOCKWISE, 90);
+                    go.AutonMove(Drive.DIRECTION.FORWARD,55);
+                    go.AutonMoveRotate(Drive.ROTATION.COUNTERCLOCKWISE,45);
+                    go.AutonMove(Drive.DIRECTION.FORWARD, 57);
+                    step=AUTON_STEPS.UNLOAD;
+                    break;
+                case UNLOAD:
+                    // attach unloading thingy
+                    step=AUTON_STEPS.PARK;
+                    break;
+                case PARK:
+                    go.AutonMove(Drive.DIRECTION.REVERSE, 75);
+                    step=AUTON_STEPS.STOP;
+                    break;
+                case STOP:
+                    break;
+
+
+            }
+
+
         }
 
     }
