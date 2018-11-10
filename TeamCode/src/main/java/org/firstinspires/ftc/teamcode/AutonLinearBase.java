@@ -72,7 +72,7 @@ public abstract class AutonLinearBase extends LinearOpMode
     // Values for distances to move, degrees to rotate, etc.
     protected double FIND_GOLD_INITIAL_CW_ROT_DEG = 135.0;
     protected double FIND_GOLD_ROTATE_4_SAMPLE_IN = 45.0;
-    protected double GO_TO_GOLD_FWD_IN = 8.0;
+    protected double GO_TO_GOLD_FWD_IN = 10.0;
     protected double GO_TO_GOLD_SIDEWAYS_IN = 8.0;
     protected double LOAD_GOLD_FWD_IN = 4.0;
     protected double PARK_DISTANCE_IN = 54.0;
@@ -151,6 +151,14 @@ public abstract class AutonLinearBase extends LinearOpMode
     protected void ReleaseLander( )
     {
         //! @todo Need to implement releasing from lander
+        go.AutonMove(Drive.DIRECTION.RIGHT, 4);
+        go.AutonMove(Drive.DIRECTION.REVERSE, 6);
+        go.AutonMove(Drive.DIRECTION.LEFT, 4);
+        go.AutonMoveRotate(Drive.ROTATION.COUNTERCLOCKWISE, 180);
+        go.AutonMove(Drive.DIRECTION.REVERSE, 6);
+
+
+
     }
 
     // Method to find position of gold mineral.
