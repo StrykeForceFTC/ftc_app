@@ -37,6 +37,9 @@ public class Auton_Facing_Depot extends AutonLinearBase
         // Override values for various auton movements - if you want
         // to change from values in AutonLinearBase, then delete the "//"
         // and set to the desired value.
+        // RELEASE_STRAFE_IN = 4.0;
+        // RELEASE_MOVE_AWAY_IN = 6.0;
+        // RELEASE_ROTATE_DEG = 180.0;
         // FIND_GOLD_INITIAL_CW_ROT_DEG = 135.0;
         // FIND_GOLD_ROTATE_4_SAMPLE_IN = 45.0;
         // GO_TO_GOLD_FWD_IN = 8.0;
