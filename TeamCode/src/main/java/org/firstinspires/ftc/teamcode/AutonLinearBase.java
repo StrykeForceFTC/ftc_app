@@ -263,6 +263,11 @@ public abstract class AutonLinearBase extends LinearOpMode
     protected void UnloadGoldAndMarker( )
     {
         //! @todo Need method / object to drop marker
+
+        // Delay to give time for marker to drop - 0.5s delay
+        sleep( 500 );
+
+        // Unload gold sample
         loader.AutonUnload();
     }
 
