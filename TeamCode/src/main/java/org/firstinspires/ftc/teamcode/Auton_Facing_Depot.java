@@ -19,9 +19,9 @@ public class Auton_Facing_Depot extends AutonLinearBase
     // the facing depot auton, so the values are set up here.
     private final static double DRIVE_DEPOT_TURN_2_WALL_DEG = 95.0;
     private final static double DRIVE_DEPOT_MOVE_2_WALL_IN = 35.0;
-    private final static double DRIVE_DEPOT_ROT_PARALLEL_2_WALL_DEG = 27.5;
-    private final static double DRIVE_DEPOT_STRAFE_2_WALL_IN = 11.0;
-    private final static double DRIVE_DEPOT_FWD_2_DEPOT = 32.5;
+    private final static double DRIVE_DEPOT_ROT_PARALLEL_2_WALL_DEG = 44;
+    private final static double DRIVE_DEPOT_STRAFE_2_WALL_IN = 13.0;
+    private final static double DRIVE_DEPOT_FWD_2_DEPOT = 37;
 
     /*
      * There is only runOpMode for linear op modes
@@ -42,14 +42,14 @@ public class Auton_Facing_Depot extends AutonLinearBase
         // GO_TO_GOLD_FWD_IN = 8.0;
         // GO_TO_GOLD_SIDEWAYS_IN = 8.0;
         // LOAD_GOLD_FWD_IN = 4.0;
-        // PARK_DISTANCE_IN = 75.0;
+        PARK_DISTANCE_IN = 84.0;
 
         // Wait hit till start button pressed
         waitForStart();
         runtime.reset();
 
         // Start at move to mineral, for now
-        step = AUTON_STEPS.MOVE_TO_MINERAL;
+        //step = AUTON_STEPS.MOVE_TO_MINERAL;
 
         // Loop until stop or forced to end
         while ( opModeIsActive() )
@@ -62,7 +62,7 @@ public class Auton_Facing_Depot extends AutonLinearBase
                     // Run common method from AutonLinearBase and
                     // go to next step
                     ReleaseLander();
-                    step = step.Next();
+                    step = AUTON_STEPS.MOVE_TO_MINERAL;
                     break;
                 }
 
