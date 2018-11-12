@@ -95,17 +95,17 @@ public class Tele_Op_Test extends Tele_Op_Base
         go.MoveSimple( robotLeftRight, robotForwardBack, robotRotate );
 
         if (gamepad2.left_stick_y <= -.1)
-            arm.adjust_lift(Arm.lift_dir.down, gamepad2.left_stick_y * -1, 5 );
+            arm.adjust_lift(Arm.lift_dir.down, gamepad2.left_stick_y * -1, 10 );
         else if (gamepad2.left_stick_y >= .1)
-            arm.adjust_lift(Arm.lift_dir.up, gamepad2.left_stick_y, 2 );
+            arm.adjust_lift(Arm.lift_dir.up, gamepad2.left_stick_y * 1, 10 );
         if (gamepad2.dpad_down)
-            arm.position_lift(Arm.lift_pos.fulldown, 5);
+            arm.position_lift(Arm.lift_pos.fulldown, 9);
         if (gamepad2.dpad_up)
-            arm.position_lift(Arm.lift_pos.fullup, 5);
+            arm.position_lift(Arm.lift_pos.fullup, 9);
         if (gamepad2.dpad_left)
-            arm.position_lift(Arm.lift_pos.mid1, 3);
+            arm.position_lift(Arm.lift_pos.mid1, 9);
         if (gamepad2.dpad_right)
-            arm.position_lift(Arm.lift_pos.mid2, 7);
+            arm.position_lift(Arm.lift_pos.mid2, 9);
 
 
         telemetry.addLine("Encoders ")

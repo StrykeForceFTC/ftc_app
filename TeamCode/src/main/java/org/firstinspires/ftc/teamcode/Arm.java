@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -10,13 +11,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 public class Arm {
-    public enum lift_pos {
-        fulldown, fullup, mid1, mid2
-    }
-
-    public enum lift_dir {
-        up, down
-    }
 
     // TODO: declare motors
     private DcMotor lift;
@@ -43,6 +37,51 @@ public class Arm {
     }
 
 
+    public enum lift_pos {
+        fulldown, fullup, mid1, mid2
+    }
+
+    public void position_lift(lift_pos pos, int speed) {
+        lift.setPower(TranslateLiftSpeed(speed));
+        lift.setTargetPosition(TranslateLiftPos(pos));
+        //wrist.setPower(TranslateWristPower);
+        //wrist.setTargetPosition(TranslateWristPos());
+    }
+
+    public enum lift_dir {
+        up, down
+    }
+
+    public void adjust_lift(lift_dir dir, double adjustrate, int speed) {
+        lift.setPower(TranslateLiftSpeed(speed));
+        lift.setTargetPosition(TranslateLiftAdjust(dir, adjustrate));
+        //wrist.setPower(TranslateWristPower);
+        //wrist.setTargetPosition(TranslateWristPos());
+    }
+
+    public boolean isInPos()
+    {
+        if(lift.isBusy())
+            return (false);
+        return (true);
+    }
+
+    private static double MAX_WAIT_TIME = 5.0;
+
+    public void WaitForInPos()
+    {   ElapsedTime limitTimer = new ElapsedTime();
+
+        limitTimer.reset();
+
+        while (limitTimer.seconds() < MAX_WAIT_TIME)
+        {
+            if (isInPos())
+                return;
+        }
+
+        lift.setTargetPosition(lift.getCurrentPosition());
+    }
+
     /*
      * Method to provide continuous control of Arm in auton. After choosing a position, this method monitors whether a position has
      * been reached.
@@ -68,13 +107,13 @@ public class Arm {
     /*
      ** Debug methods for getting encoder values and moving motors
      */
-    private double TranslateLiftPower(int power) {
-        if (power > 10)
-            power = 10;
-        if (power < 0)
-            power = 0;
+    private double TranslateLiftSpeed(int speed) {
+        if (speed > 10)
+            speed = 10;
+        if (speed < 0)
+            speed = 0;
 
-        return (power / 10);
+        return (((double) speed) / 10);
     }
 
     private int TranslateLiftPos(lift_pos pos)
@@ -94,25 +133,10 @@ public class Arm {
         }
     }
 
-    public void position_lift(lift_pos pos, int power)
-    {
-        lift.setPower(TranslateLiftPower(power));
-        lift.setTargetPosition(TranslateLiftPos(pos));
-        //wrist.setPower(TranslateWristPower);
-        //wrist.setTargetPosition(TranslateWristPos());
-    }
-
-    public void adjust_lift(lift_dir dir, double adjustrate, int power)
-    {
-        lift.setPower(TranslateLiftPower(power));
-        lift.setTargetPosition(TranslateLiftAdjust(dir, adjustrate));
-        //wrist.setPower(TranslateWristPower);
-        //wrist.setTargetPosition(TranslateWristPos());
-    }
-
-    private int MAX_LIFT_ADJUST_VALUE = 5;
-    private int MAX_LIFT_POS = 10000;
-    private int MIN_LIFT_POS = -10000;
+    private int MAX_LIFT_ADJUST_VALUE = 300;
+    private int MIN_LIFT_ADJUST_VALUE = 20;
+    private int MAX_LIFT_POS = 5000;
+    private int MIN_LIFT_POS = -5000;
 
 
     private int LiftPosLimit(int pos)
@@ -133,25 +157,19 @@ public class Arm {
 
          int offset = (int) (adjustrate * MAX_LIFT_ADJUST_VALUE +.5);
 
+         if (lift.getCurrentPosition() < 5 )
+             offset = MIN_LIFT_ADJUST_VALUE;
+
          switch(dir)
          {
              case up:
-                 return LiftPosLimit(lift.getCurrentPosition() + offset);
-             case down:
                  return LiftPosLimit(lift.getCurrentPosition() - offset);
+             case down:
+                 return LiftPosLimit(lift.getCurrentPosition() + offset);
              default:
                  return lift.getCurrentPosition();
          }
     }
-
-    public void Move(int counts, double power)
-    {
-        lift.setPower(power);
-        lift.setTargetPosition(lift.getCurrentPosition() + counts);
-        //wrist.setPower(power);
-        //wrist.setTargetPosition(wrist.getCurrentPosition() + counts);
-    }
-
 
 
     public int LiftEncoderValue( )
@@ -164,17 +182,6 @@ public class Arm {
     {
         // TODO: Make return encoder value
         return 0;
-    }
-
-    public void LiftMotorPowerSet( double power )
-    {
-        // TODO: make set lift motor power
-        // NOTE: to use methods that set power, may need to change motor run mode
-    }
-
-    public void WristMotorPowerSet( double power )
-    {
-        // TODO: make set wrist motor power
     }
 
 }
