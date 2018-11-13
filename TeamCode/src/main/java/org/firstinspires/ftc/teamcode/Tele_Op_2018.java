@@ -59,9 +59,10 @@ public class Tele_Op_2018 extends Tele_Op_Base
         // Move robot based on joystick inputs from gamepad 1 / driver 1
         // shape joystick inputs
         ProcessGamepad1Joysticks();
+        ProcessLoadingInput();
         go.MoveSimple( robotLeftRight, robotForwardBack, robotRotate );
 
-        //! @todo Add loader controls in
+
 
         //! @todo Add Arm controls in
 

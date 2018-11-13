@@ -91,6 +91,28 @@ public abstract class Tele_Op_Base extends OpMode
         robotForwardBack = JoystickUtilities.ShapeCubePlusInputWeighted( -gamepad1.left_stick_y, ROBOT_FWD_BACK_WEIGHTING );
         robotLeftRight = JoystickUtilities.ShapeCubePlusInputWeighted( gamepad1.left_stick_x, ROBOT_LEFT_RIGHT_WEIGHTING );
         robotRotate = JoystickUtilities.ShapeCubePlusInputWeighted( gamepad1.right_stick_x, ROBOT_ROTATE_WEIGHTING );
+
+       if( ( Math.abs(robotForwardBack) > 0.1 ) || ( Math.abs(robotLeftRight) > 0.1 ))
+       {
+           robotRotate = robotRotate * 0.5;
+       }
+    }
+
+    public void ProcessLoadingInput()
+    {
+        if ((gamepad2.left_trigger > 0.1) || (gamepad2.left_bumper ))
+        {
+
+            loader.TeleopUnloadSamples();
+        }
+        else if (( gamepad2.right_bumper ) || (gamepad2.right_trigger > 0.1))
+        {
+            loader.TeleopLoad();
+        }
+        else
+        {
+            loader.teleopstop();
+        }
     }
 
 
