@@ -51,6 +51,7 @@ public class Tele_Op_Test extends Tele_Op_Base
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
+    private Arm arm = null;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -60,6 +61,7 @@ public class Tele_Op_Test extends Tele_Op_Base
     {
         // Use base class to init HW
         HwInit();
+        arm = new Arm( hardwareMap );
     }
 
     /*
@@ -92,11 +94,27 @@ public class Tele_Op_Test extends Tele_Op_Base
         ProcessGamepad1Joysticks();
         go.MoveSimple( robotLeftRight, robotForwardBack, robotRotate );
 
+        if (gamepad2.left_stick_y <= -.1)
+            arm.adjust_lift(Arm.lift_dir.down, gamepad2.left_stick_y * -1, 10 );
+        else if (gamepad2.left_stick_y >= .1)
+            arm.adjust_lift(Arm.lift_dir.up, gamepad2.left_stick_y * 1, 10 );
+        if (gamepad2.dpad_down)
+            arm.position_lift(Arm.lift_pos.fulldown, 9);
+        if (gamepad2.dpad_up)
+            arm.position_lift(Arm.lift_pos.fullup, 9);
+        if (gamepad2.dpad_left)
+            arm.position_lift(Arm.lift_pos.mid1, 9);
+        if (gamepad2.dpad_right)
+            arm.position_lift(Arm.lift_pos.mid2, 9);
+
+
         telemetry.addLine("Encoders ")
                 .addData("FL ", go.GetEncoderFrontLeft() )
                 .addData("FR ", go.GetEncoderFrontRight() )
                 .addData("RL ", go.GetEncoderRearLeft() )
-                .addData("RR ", go.GetEncoderRearRight() );
+                .addData("RR ", go.GetEncoderRearRight() )
+                .addData("stick ", gamepad2.left_stick_y)
+                .addData("Lift ", arm.LiftEncoderValue());
         telemetry.addLine("Team Id"  )
                 .addData("team", TeamId.name());
 
