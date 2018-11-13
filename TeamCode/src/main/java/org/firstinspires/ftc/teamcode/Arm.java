@@ -30,7 +30,6 @@ public class Arm {
         lift.setDirection(DcMotor.Direction.FORWARD);
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        //wrist.setTargetPosition(lift.getCurrentPosition());
         //wrist.setDirection(DcMotor.Direction.FORWARD);
         //wrist.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         //wrist.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -44,8 +43,8 @@ public class Arm {
     public void position_lift(lift_pos pos, int speed) {
         lift.setPower(TranslateLiftSpeed(speed));
         lift.setTargetPosition(TranslateLiftPos(pos));
-        //wrist.setPower(TranslateWristPower);
-        //wrist.setTargetPosition(TranslateWristPos());
+        //wrist.setPower(TranslateWristSpeed);
+        //wrist.setTargetPosition(TranslateWristPos(pos));
     }
 
     public enum lift_dir {
@@ -55,8 +54,8 @@ public class Arm {
     public void adjust_lift(lift_dir dir, double adjustrate, int speed) {
         lift.setPower(TranslateLiftSpeed(speed));
         lift.setTargetPosition(TranslateLiftAdjust(dir, adjustrate));
-        //wrist.setPower(TranslateWristPower);
-        //wrist.setTargetPosition(TranslateWristPos());
+        //wrist.setPower(TranslateWristSpeed(speed));
+        //wrist.setTargetPosition(TranslateWristAdjust(dir, adjustrate));
     }
 
     public boolean isInPos()
@@ -116,6 +115,15 @@ public class Arm {
         return (((double) speed) / 10);
     }
 
+    //private double TranslateWristSpeed(int speed) {
+        //if (speed > 10)
+            //speed = 10;
+        //if (speed < 0)
+            //speed = 0;
+
+        //return (((double) speed) / 10);
+    //}
+
     private int TranslateLiftPos(lift_pos pos)
     {
         switch(pos)
@@ -133,16 +141,40 @@ public class Arm {
         }
     }
 
+    //private int TranslateWristPos(lift_pos pos)
+    //{
+        //switch(pos)
+        //{
+            // fulldown:
+                //return 5000;
+            //case fullup:
+                //return 3000;
+            //case mid1:
+                //return 2000;
+            //case mid2:
+                //return 4000;
+            //default:
+                //return lift.getCurrentPosition();
+        //}
+    //}
+
     private int MAX_LIFT_ADJUST_VALUE = 300;
     private int MIN_LIFT_ADJUST_VALUE = 20;
     private int MAX_LIFT_POS = 5000;
     private int MIN_LIFT_POS = -5000;
+
+    //private int MAX_WRIST_ADJUST_VALUE = 300;
+    //private int MIN_WRIST_ADJUST_VALUE = 20;
+    //private int MAX_WRIST_POS = 5000;
+    //private int MIN_WRIST_POS = -5000;
 
 
     private int LiftPosLimit(int pos)
     {
         if (pos > MAX_LIFT_POS)
             return MAX_LIFT_POS;
+        if ((lift.getCurrentPosition() > 10) && (pos < 100))
+            return 100;
         if (pos < MIN_LIFT_POS)
             return MIN_LIFT_POS;
         return pos;
