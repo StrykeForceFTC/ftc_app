@@ -92,7 +92,7 @@ public abstract class Tele_Op_Base extends OpMode
         robotLeftRight = JoystickUtilities.ShapeCubePlusInputWeighted( gamepad1.left_stick_x, ROBOT_LEFT_RIGHT_WEIGHTING );
         robotRotate = JoystickUtilities.ShapeCubePlusInputWeighted( gamepad1.right_stick_x, ROBOT_ROTATE_WEIGHTING );
 
-       if( ( Math.abs(robotForwardBack) > 0.1 ) || ( Math.abs(robotLeftRight) > 0.1 ))
+       if( ( Math.abs(robotForwardBack) > 0.05 ) || ( Math.abs(robotLeftRight) > 0.05 ))
        {
            robotRotate = robotRotate * 0.5;
        }
@@ -114,6 +114,32 @@ public abstract class Tele_Op_Base extends OpMode
             loader.teleopstop();
         }
     }
+
+    public void ProcessRaiseArm()
+    {
+        if (gamepad2.dpad_up)
+        {
+                    arm.position_lift(Arm.lift_pos.fullup, 9);
+        }
+        else if (gamepad2.dpad_down)
+        {
+            arm.position_lift(Arm.lift_pos.fulldown, 9);
+        }
+
+
+        if (gamepad2.left_stick_y <= -0.1)
+        {
+            arm.adjust_lift(Arm.lift_dir.down, gamepad2.left_stick_y * -1.0, 9);
+        }
+        else if (gamepad2.left_stick_y >= 0.1)
+        {
+            arm.adjust_lift(Arm.lift_dir.up, gamepad2.left_stick_y * 1, 9);
+        }
+
+
+    }
+
+
 
 
 
