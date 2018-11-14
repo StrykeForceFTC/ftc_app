@@ -119,7 +119,7 @@ public abstract class Tele_Op_Base extends OpMode
     {
         if (gamepad2.dpad_up)
         {
-                    arm.position_lift(Arm.lift_pos.fullup, 9);
+            arm.position_lift(Arm.lift_pos.fullup, 9);
         }
         else if (gamepad2.dpad_down)
         {
@@ -129,11 +129,11 @@ public abstract class Tele_Op_Base extends OpMode
 
         if (gamepad2.left_stick_y <= -0.1)
         {
-            arm.adjust_lift(Arm.lift_dir.down, gamepad2.left_stick_y * -1.0, 9);
+            arm.adjust_lift( Arm.lift_dir.down, gamepad2.left_stick_y * -1.0, 6 );
         }
         else if (gamepad2.left_stick_y >= 0.1)
         {
-            arm.adjust_lift(Arm.lift_dir.up, gamepad2.left_stick_y * 1, 9);
+            arm.adjust_lift( Arm.lift_dir.up, gamepad2.left_stick_y * 1, 6 );
         }
 
 
