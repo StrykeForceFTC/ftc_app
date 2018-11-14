@@ -60,12 +60,11 @@ public class Tele_Op_2018 extends Tele_Op_Base
         // shape joystick inputs
         ProcessGamepad1Joysticks();
         ProcessLoadingInput();
+        ProcessRaiseArm();
         go.MoveSimple( robotLeftRight, robotForwardBack, robotRotate );
 
         //Processes joystick and button values to raise or lower the arm.
         ProcessRaiseArm();
-
-
 
         //! @todo Add Arm controls in
 

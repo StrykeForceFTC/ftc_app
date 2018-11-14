@@ -89,7 +89,7 @@ public abstract class AutonLinearBase extends LinearOpMode
         TeamId = robotDetector.TeamId;
         go = new Drive( hardwareMap );
         loader = new Loader( hardwareMap );
-        arm = new Arm( hardwareMap );
+        arm = new Arm( hardwareMap, true );
 
         /*
          ** Rest of this method is about starting up a Gold detector from

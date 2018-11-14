@@ -117,13 +117,28 @@ public abstract class Tele_Op_Base extends OpMode
 
     public void ProcessRaiseArm()
     {
-        if (gamepad2.dpad_up)
+        if ( gamepad2.dpad_up )    // Gamepad2, DPAD Up is for unload position
         {
-            arm.position_lift(Arm.lift_pos.fullup, 9);
+            arm.position_lift( Arm.lift_pos.fullup, 9 );
+            arm.position_wrist( Arm.WRIST_POS.UNLOAD, 9 );
         }
-        else if (gamepad2.dpad_down)
+        else if ( gamepad2.dpad_down )
         {
-            arm.position_lift(Arm.lift_pos.fulldown, 9);
+            // Gamepad2, DPAD down is for load position
+            arm.position_lift( Arm.lift_pos.fulldown, 9 );
+            arm.position_wrist( Arm.WRIST_POS.LOAD, 9 );
+        }
+        else if ( gamepad2.dpad_right )
+        {
+            // Gamepad2, DPAD right is for travel position
+            arm.position_lift( Arm.lift_pos.fulldown, 9 );
+            arm.position_wrist( Arm.WRIST_POS.MOVE, 9 );
+        }
+        else if ( gamepad2.dpad_left )
+        {
+            // Gamepad2, DPAD down is for load position
+            arm.position_lift( Arm.lift_pos.fullup, 9 );
+            arm.position_wrist( Arm.WRIST_POS.START, 9 );
         }
 
 
@@ -136,11 +151,16 @@ public abstract class Tele_Op_Base extends OpMode
             arm.adjust_lift( Arm.lift_dir.up, gamepad2.left_stick_y * 1, 6 );
         }
 
+        if ( gamepad2.right_stick_x >= 0.1 )
+        {
+            arm.adjust_wrist( Arm.WRIST_DIR.CLOCKWISE, gamepad2.right_stick_x, 9 );
+        }
+        else if (gamepad2.right_stick_x <= -0.1)
+        {
+            arm.adjust_wrist( Arm.WRIST_DIR.COUNTER_CLOCKWISE, -gamepad2.right_stick_x, 9 );
+        }
 
     }
-
-
-
 
 
     /*
@@ -151,6 +171,9 @@ public abstract class Tele_Op_Base extends OpMode
     @Override
     public void stop()
     {
+        // Stop the arm
+        arm.Stop();
+
         // Turn loader off
         loader.teleopstop();
 
