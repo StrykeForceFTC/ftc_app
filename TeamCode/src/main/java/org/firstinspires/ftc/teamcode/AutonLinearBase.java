@@ -153,12 +153,17 @@ public abstract class AutonLinearBase extends LinearOpMode
     */
     protected void ReleaseLander( )
     {
-        //! @todo Need to implement releasing from lander
+        arm.position_lift(Arm.lift_pos.fullup, 9);
+        telemetry.addLine("LOWERING");
+        arm.WaitForInPos();
+        telemetry.addLine("DONE");
+
         go.AutonMove( Drive.DIRECTION.RIGHT, RELEASE_STRAFE_IN );
         go.AutonMove( Drive.DIRECTION.REVERSE, RELEASE_MOVE_AWAY_IN );
         go.AutonMove( Drive.DIRECTION.LEFT, RELEASE_STRAFE_IN );
         go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, RELEASE_ROTATE_DEG );
         go.AutonMove( Drive.DIRECTION.REVERSE, RELEASE_MOVE_AWAY_IN );
+
     }
 
     // Method to find position of gold mineral.

@@ -19,8 +19,8 @@ public class Auton_Facing_Crater extends AutonLinearBase
     // the facing depot auton, so the values are set up here.
     private final static double DRIVE_DEPOT_TURN_2_WALL_DEG = 75.0;
     private final static double DRIVE_DEPOT_MOVE_2_WALL_IN = 37.0;
-    private final static double DRIVE_DEPOT_ROT_PARALLEL_2_WALL_DEG = 38;
-    private final static double DRIVE_DEPOT_STRAFE_2_WALL_IN = 11.0;
+    private final static double DRIVE_DEPOT_ROT_PARALLEL_2_WALL_DEG = 48;
+    private final static double DRIVE_DEPOT_STRAFE_2_WALL_IN = 12.0;
     private final static double DRIVE_DEPOT_FWD_2_DEPOT = 44;
 
     /*
