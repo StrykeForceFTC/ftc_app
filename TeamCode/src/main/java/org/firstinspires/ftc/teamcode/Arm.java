@@ -162,13 +162,14 @@ public class Arm {
     {
         switch(pos)
         {
-            case START:
+
+            case START:            // Folded down at start or end, offset for some margin
                 return 500;
-            case UNLOAD:
+            case UNLOAD:           // Leaned a little bit forward of vertical
                 return 10000;
-            case MOVE:
+            case MOVE:             // Pointed out to front high enough to not get in way when moving
                 return 15000;
-            case LOAD:
+            case LOAD:             // Pointed towards ground in front of robot
                 return 20000;
             default:
                 return wrist.getCurrentPosition();
