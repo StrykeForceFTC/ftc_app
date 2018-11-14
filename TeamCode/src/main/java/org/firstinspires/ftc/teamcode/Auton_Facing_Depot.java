@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 /**
@@ -10,23 +8,20 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Auton Program mainly here to test Auton Drive and other Functions in
  *
  */
-@Autonomous(name = "Auton_Testcode", group = "Linear Opmode")
+@Autonomous( name = "Facing Depot", group = "Linear Opmode" )
 //@Disabled
-public class Auton_Testcode extends AutonLinearBase
+public class Auton_Facing_Depot extends AutonLinearBase
 {
-    /* Declare OpMode members. */
-    private ElapsedTime runtime = new ElapsedTime();
-
     // Hardware objects are created in AutonLinearBase
-    // Auton steps are enumerated in AutonLinerBase
+    // Enumeration for auton steps is in AutonLinearBase
 
     // Constants for drive to depot. These are not common with
     // the facing depot auton, so the values are set up here.
-    private final static double DRIVE_DEPOT_TURN_2_WALL_DEG = 75.0;
-    private final static double DRIVE_DEPOT_MOVE_2_WALL_IN = 37.0;
-    private final static double DRIVE_DEPOT_ROT_PARALLEL_2_WALL_DEG = 27.5;
-    private final static double DRIVE_DEPOT_STRAFE_2_WALL_IN = 11.0;
-    private final static double DRIVE_DEPOT_FWD_2_DEPOT = 32.5;
+    private final static double DRIVE_DEPOT_TURN_2_WALL_DEG = 95.0;
+    private final static double DRIVE_DEPOT_MOVE_2_WALL_IN = 35.0;
+    private final static double DRIVE_DEPOT_ROT_PARALLEL_2_WALL_DEG = 44;
+    private final static double DRIVE_DEPOT_STRAFE_2_WALL_IN = 13.0;
+    private final static double DRIVE_DEPOT_FWD_2_DEPOT = 37;
 
     /*
      * There is only runOpMode for linear op modes
@@ -34,22 +29,35 @@ public class Auton_Testcode extends AutonLinearBase
     @Override
     public void runOpMode()
     {
-        /* Initialize the hardware variables.
+        /*
+         * Initialize the hardware variables.
          */
         InitHardware();
+
+        // Override values for various auton movements - if you want
+        // to change from values in AutonLinearBase, then delete the "//"
+        // and set to the desired value.
+        // RELEASE_STRAFE_IN = 4.0;
+        // RELEASE_MOVE_AWAY_IN = 6.0;
+        // RELEASE_ROTATE_DEG = 180.0;
+        // FIND_GOLD_INITIAL_CW_ROT_DEG = 135.0;
+        // FIND_GOLD_ROTATE_4_SAMPLE_IN = 45.0;
+        // GO_TO_GOLD_FWD_IN = 8.0;
+        // GO_TO_GOLD_SIDEWAYS_IN = 8.0;
+        // LOAD_GOLD_FWD_IN = 4.0;
+        PARK_DISTANCE_IN = 84.0;
 
         // Wait hit till start button pressed
         waitForStart();
         runtime.reset();
 
-        // Set state you want to start in here
-        step = AUTON_STEPS.RELEASE_LANDER;
+        // Start at move to mineral, for now
+        //step = AUTON_STEPS.MOVE_TO_MINERAL;
 
         // Loop until stop or forced to end
-        while ( opModeIsActive( ) )
+        while ( opModeIsActive() )
         {
-
-            //Auton steps
+            // Auton steps
             switch( step )
             {
                 case RELEASE_LANDER:
@@ -57,7 +65,7 @@ public class Auton_Testcode extends AutonLinearBase
                     // Run common method from AutonLinearBase and
                     // go to next step
                     ReleaseLander();
-                    step = AUTON_STEPS.STOP;
+                    step = AUTON_STEPS.MOVE_TO_MINERAL;
                     break;
                 }
 
@@ -101,14 +109,14 @@ public class Auton_Testcode extends AutonLinearBase
                 {
                     // Drop marker and gold sample
                     UnloadGoldAndMarker();
-                    step = AUTON_STEPS.PARK;
+                    step = step.Next();
                     break;
                 }
 
                 case PARK:
                 {
                     ParkTheRobot();
-                    step = AUTON_STEPS.STOP;
+                    step = step.Next();
                     break;
                 }
 
@@ -117,6 +125,7 @@ public class Auton_Testcode extends AutonLinearBase
                     StopActions();
                     break;
                 }
+
             }
 
             telemetry.addData("IsAligned", GoldAligned()); // Is the bot aligned with the gold mineral
@@ -131,6 +140,8 @@ public class Auton_Testcode extends AutonLinearBase
                     .addData("Team", TeamId.name());
 
             telemetry.update();
+
+            idle();
         }
 
     }
@@ -139,12 +150,12 @@ public class Auton_Testcode extends AutonLinearBase
     protected void DriveToDepot( )
     {
         // To go to the depot, rotate the robot to drive towards the wall, drive
-        // to close to the wall, rotate to make robot parallel to the wall, and
-        // then strafe to wall and finally go forward to crater.
-        go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, DRIVE_DEPOT_TURN_2_WALL_DEG );
-        go.AutonMove( Drive.DIRECTION.FORWARD, DRIVE_DEPOT_MOVE_2_WALL_IN );
+        // close to the wall, rotate to make robot parallel to the wall,
+        // then strafe to wall and finally go forward to depot.
+        go.AutonMoveRotate( Drive.ROTATION.CLOCKWISE, DRIVE_DEPOT_TURN_2_WALL_DEG );
+        go.AutonMove( Drive.DIRECTION.REVERSE, DRIVE_DEPOT_MOVE_2_WALL_IN );
         go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, DRIVE_DEPOT_ROT_PARALLEL_2_WALL_DEG );
-        go.AutonMove( Drive.DIRECTION.RIGHT, DRIVE_DEPOT_STRAFE_2_WALL_IN );
+        go.AutonMove( Drive.DIRECTION.LEFT, DRIVE_DEPOT_STRAFE_2_WALL_IN );
         go.AutonMove( Drive.DIRECTION.FORWARD, DRIVE_DEPOT_FWD_2_DEPOT );
 
     }
