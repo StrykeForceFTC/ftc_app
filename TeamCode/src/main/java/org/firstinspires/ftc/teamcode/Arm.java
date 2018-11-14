@@ -148,7 +148,7 @@ public class Arm {
             case fulldown:
                 return 200;
             case fullup:
-                return 4500;
+                return 4400;
             case mid1:
                 return 2000;
             case mid2:
