@@ -129,9 +129,9 @@ public class Arm {
         switch(pos)
         {
             case fulldown:
-                return 5000;
+                return 100;
             case fullup:
-                return 3000;
+                return 4400;
             case mid1:
                 return 2000;
             case mid2:
