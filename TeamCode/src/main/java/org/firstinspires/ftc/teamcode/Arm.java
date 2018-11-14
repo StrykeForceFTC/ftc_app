@@ -164,13 +164,13 @@ public class Arm {
         {
 
             case START:            // Folded down at start or end, offset for some margin
-                return 500;
+                return 200;
             case UNLOAD:           // Leaned a little bit forward of vertical
-                return 10000;
+                return 2700;
             case MOVE:             // Pointed out to front high enough to not get in way when moving
-                return 15000;
+                return 3700;
             case LOAD:             // Pointed towards ground in front of robot
-                return 20000;
+                return 4850;
             default:
                 return wrist.getCurrentPosition();
         }
@@ -181,9 +181,9 @@ public class Arm {
     private int MAX_LIFT_POS = 5000;
     private int MIN_LIFT_POS = 50;
 
-    private int MAX_WRIST_ADJUST_VALUE = 1000;
-    private int MIN_WRIST_ADJUST_VALUE = 600;
-    private int MAX_WRIST_POS = 250000;
+    private int MAX_WRIST_ADJUST_VALUE = 300;
+    private int MIN_WRIST_ADJUST_VALUE = 20;
+    private int MAX_WRIST_POS = 5200;
     private int MIN_WRIST_POS = 100;
 
 
