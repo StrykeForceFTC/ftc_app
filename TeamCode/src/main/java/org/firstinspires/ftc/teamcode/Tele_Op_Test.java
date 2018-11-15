@@ -95,9 +95,9 @@ public class Tele_Op_Test extends Tele_Op_Base
         go.MoveSimple( robotLeftRight, robotForwardBack, robotRotate );
 
         if (gamepad2.left_stick_y <= -.1)
-            arm.adjust_lift(Arm.lift_dir.down, gamepad2.left_stick_y * -1, 10 );
+            arm.adjust_lift(Arm.lift_dir.up, gamepad2.left_stick_y * -1, 10 );
         else if (gamepad2.left_stick_y >= .1)
-            arm.adjust_lift(Arm.lift_dir.up, gamepad2.left_stick_y * 1, 10 );
+            arm.adjust_lift(Arm.lift_dir.down, gamepad2.left_stick_y * 1, 10 );
 
         if ( gamepad2.right_stick_x >= 0.1 )
         {
