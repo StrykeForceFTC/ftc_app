@@ -12,7 +12,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class Arm {
 
-    // TODO: declare motors
     private DcMotor lift;
     private DcMotor wrist;
 
@@ -53,7 +52,7 @@ public class Arm {
     }
 
     public enum lift_pos {
-        fulldown, fullup, mid1, mid2
+        fulldown, fullup, hook_lander, mid2
     }
 
     public enum WRIST_POS {
@@ -93,15 +92,11 @@ public class Arm {
     {
         if(lift.isBusy())
             return (false);
-        return (true);
-    }
-
-    public boolean wristIsInPos()
-    {
         if(wrist.isBusy())
             return (false);
         return (true);
     }
+
 
     private static double MAX_WAIT_TIME = 2.0;
 
@@ -117,6 +112,7 @@ public class Arm {
         }
 
         lift.setTargetPosition(lift.getCurrentPosition());
+        wrist.setTargetPosition(wrist.getCurrentPosition());
     }
 
 
@@ -146,11 +142,11 @@ public class Arm {
         switch(pos)
         {
             case fulldown:
-                return 200;
+                return 100;
             case fullup:
+                return 4800;
+            case hook_lander:
                 return 4400;
-            case mid1:
-                return 2000;
             case mid2:
                 return 4000;
             default:
@@ -176,23 +172,29 @@ public class Arm {
         }
     }
 
-    private int MAX_LIFT_ADJUST_VALUE = 300;
-    private int MIN_LIFT_ADJUST_VALUE = 20;
-    private int MAX_LIFT_POS = 5000;
-    private int MIN_LIFT_POS = 50;
+    private static int MAX_LIFT_ADJUST_VALUE = 300;
+    private static int MIN_LIFT_ADJUST_VALUE = 20;
 
-    private int MAX_WRIST_ADJUST_VALUE = 300;
-    private int MIN_WRIST_ADJUST_VALUE = 20;
-    private int MAX_WRIST_POS = 5200;
-    private int MIN_WRIST_POS = 100;
+    private static int MAX_LIFT_POS = 4850;             // Absolute maximum for lift pos
+    private static int MIN_LIFT_STICK_POS = 100;        // Minimum pos allowed for stick pos if not adjusting zero
+    private static int MIN_LIFT_POS = -5000;            // Absolute minumum for lift pos
+    private static int ALLOW_NEG_LIFT_POS_TEST = 5;     // Only allow movement to negative positions if starting less than this pos
+
+    private static int MAX_WRIST_ADJUST_VALUE = 100;
+    private static int MIN_WRIST_ADJUST_VALUE = 5;
+
+    private static int MAX_WRIST_POS = 5200;            // Absolute maximum for lift pos
+    private static int MIN_WRIST_STICK_POS = 100;       // Minimum pos allowed for stick pos if not adjusting zero
+    private static int MIN_WRIST_POS = -5400;           // Absolute minumum for lift pos
+    private static int ALLOW_NEG_WRIST_POS_TEST = 10;   // Only allow movement to negative positions if starting less than this pos
 
 
     private int LiftPosLimit(int pos)
     {
         if (pos > MAX_LIFT_POS)
             return MAX_LIFT_POS;
-        if ((lift.getCurrentPosition() > 10) && (pos < 100))
-            return 100;
+        if ((lift.getCurrentPosition() > ALLOW_NEG_LIFT_POS_TEST) && (pos < MIN_LIFT_STICK_POS))
+            return MIN_LIFT_STICK_POS;
         if (pos < MIN_LIFT_POS)
             return MIN_LIFT_POS;
         return pos;
@@ -202,8 +204,8 @@ public class Arm {
     {
         if (pos > MAX_WRIST_POS)
             return MAX_WRIST_POS;
-        if ((wrist.getCurrentPosition() > 10) && (pos < 100))
-            return 100;
+        if ((wrist.getCurrentPosition() > ALLOW_NEG_WRIST_POS_TEST) && (pos < MIN_WRIST_STICK_POS))
+            return MIN_WRIST_STICK_POS;
         if (pos < MIN_WRIST_POS)
             return MIN_WRIST_POS;
         return pos;
@@ -242,7 +244,7 @@ public class Arm {
 
         int offset = (int) (adjustrate * MAX_WRIST_ADJUST_VALUE +.5);
 
-        if (wrist.getCurrentPosition() < 1000 )
+        if (wrist.getCurrentPosition() < 10 )
             offset = MIN_WRIST_ADJUST_VALUE;
 
         switch(dir)
