@@ -197,7 +197,7 @@ public class Arm {
     {
         if (pos > MAX_LIFT_POS)
             return MAX_LIFT_POS;
-        if ((!allow_neg_lift) && (pos < MIN_LIFT_STICK_POS))
+        if ((allow_neg_lift == false) && (pos < MIN_LIFT_STICK_POS))
             return MIN_LIFT_STICK_POS;
         if (pos < MIN_LIFT_POS)
             return MIN_LIFT_POS;
@@ -208,7 +208,7 @@ public class Arm {
     {
         if (pos > MAX_WRIST_POS)
             return MAX_WRIST_POS;
-        if ((!allow_neg_wrist) && (pos < MIN_WRIST_STICK_POS))
+        if ((allow_neg_wrist == false) && (pos < MIN_WRIST_STICK_POS))
             return MIN_WRIST_STICK_POS;
         if (pos < MIN_WRIST_POS)
             return MIN_WRIST_POS;
