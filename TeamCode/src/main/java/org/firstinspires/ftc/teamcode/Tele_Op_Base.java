@@ -119,7 +119,7 @@ public abstract class Tele_Op_Base extends OpMode
     {
         if ( gamepad2.dpad_up )    // Gamepad2, DPAD Up is for unload position
         {
-            arm.position_lift( Arm.lift_pos.fullup, 9 );
+            arm.position_lift( Arm.lift_pos.hook_lander, 9 );
             arm.position_wrist( Arm.WRIST_POS.UNLOAD, 9 );
         }
         else if ( gamepad2.dpad_down )
@@ -137,7 +137,7 @@ public abstract class Tele_Op_Base extends OpMode
         else if ( gamepad2.dpad_left )
         {
             // Gamepad2, DPAD down is for load position
-            arm.position_lift( Arm.lift_pos.fullup, 9 );
+            arm.position_lift( Arm.lift_pos.hook_lander, 9 );
             arm.position_wrist( Arm.WRIST_POS.START, 9 );
         }
 

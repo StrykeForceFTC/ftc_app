@@ -155,7 +155,7 @@ public abstract class AutonLinearBase extends LinearOpMode
     */
     protected void ReleaseLander( )
     {
-        arm.position_lift(Arm.lift_pos.fullup, 9);
+        arm.position_lift(Arm.lift_pos.hook_lander, 9);
         telemetry.addLine("LOWERING");
         arm.WaitForInPos();
         telemetry.addLine("DONE");
