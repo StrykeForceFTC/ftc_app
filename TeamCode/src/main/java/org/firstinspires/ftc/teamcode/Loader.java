@@ -14,8 +14,8 @@ public class Loader {
     private DcMotor loadmotor = null;
 
     // Constants for speed
-    private static final double LOAD_POWER = 1.0;
-    private static final double UNLOAD_POWER = -1.0;
+    private static final double LOAD_POWER = 0.5;
+    private static final double UNLOAD_POWER = -0.5;
     private static final double LOAD_MS = 500;
     private static final double UNLOAD_MS = 500;
 
@@ -30,7 +30,7 @@ public class Loader {
 
         loadmotor = ahwMap.dcMotor.get("loader");
 
-        loadmotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        loadmotor.setDirection(DcMotorSimple.Direction.REVERSE);
         loadmotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
     }
