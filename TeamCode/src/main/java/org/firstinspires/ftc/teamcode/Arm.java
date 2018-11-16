@@ -104,7 +104,7 @@ public class Arm {
     }
 
 
-    private static double MAX_WAIT_TIME = 2.0;
+    private static double MAX_WAIT_TIME = 5.0;
 
     public void WaitForInPos()
     {   ElapsedTime limitTimer = new ElapsedTime();

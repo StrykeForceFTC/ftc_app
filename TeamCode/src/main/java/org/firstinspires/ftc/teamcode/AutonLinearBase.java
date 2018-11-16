@@ -270,7 +270,7 @@ public abstract class AutonLinearBase extends LinearOpMode
     protected void UnloadGoldAndMarker( )
     {
         //! @todo Need method / object to drop marker
-        arm.position_wrist(Arm.WRIST_POS.UNLOAD, 8);
+        arm.position_wrist(Arm.WRIST_POS.LOAD, 8);
         arm.WaitForInPos();
 
         // Delay to give time for marker to drop - 0.5s delay

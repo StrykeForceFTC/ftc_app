@@ -117,6 +117,7 @@ public abstract class Tele_Op_Base extends OpMode
 
     public void ProcessRaiseArm()
     {
+        /* DISABLE DPAD BASED CONTROLS
         if ( gamepad2.dpad_up )    // Gamepad2, DPAD Up is for unload position
         {
             arm.position_lift( Arm.lift_pos.hook_lander, 9 );
@@ -140,7 +141,7 @@ public abstract class Tele_Op_Base extends OpMode
             arm.position_lift( Arm.lift_pos.hook_lander, 9 );
             arm.position_wrist( Arm.WRIST_POS.START, 9 );
         }
-
+        */
 
         if (gamepad2.left_stick_y <= -0.1)
         {

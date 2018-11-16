@@ -93,22 +93,9 @@ public class Tele_Op_Test extends Tele_Op_Base
         // shape joystick inputs
         ProcessGamepad1Joysticks();
         go.MoveSimple( robotLeftRight, robotForwardBack, robotRotate );
-
-        if (gamepad2.left_stick_y <= -.1)
-            arm.adjust_lift(Arm.lift_dir.up, gamepad2.left_stick_y * -1, 10 );
-        else if (gamepad2.left_stick_y >= .1)
-            arm.adjust_lift(Arm.lift_dir.down, gamepad2.left_stick_y * 1, 10 );
-
-        if ( gamepad2.right_stick_x >= 0.1 )
-        {
-            arm.adjust_wrist( Arm.WRIST_DIR.FORWARD, gamepad2.right_stick_x, 9 );
-        }
-        else if (gamepad2.right_stick_x <= -0.1)
-        {
-            arm.adjust_wrist( Arm.WRIST_DIR.BACKWARD, -gamepad2.right_stick_x, 9 );
-        }
-
+        ProcessRaiseArm( );
         ProcessLoadingInput();
+
         telemetry.addLine("Encoders ")
                 .addData("FL ", go.GetEncoderFrontLeft() )
                 .addData("FR ", go.GetEncoderFrontRight() )

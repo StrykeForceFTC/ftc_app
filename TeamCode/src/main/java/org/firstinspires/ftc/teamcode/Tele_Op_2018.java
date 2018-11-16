@@ -66,8 +66,6 @@ public class Tele_Op_2018 extends Tele_Op_Base
         //Processes joystick and button values to raise or lower the arm.
         ProcessRaiseArm();
 
-        //! @todo Add Arm controls in
-
         telemetry.addLine("Encoders ")
                 .addData("FL ", go.GetEncoderFrontLeft() )
                 .addData("FR ", go.GetEncoderFrontRight() )
