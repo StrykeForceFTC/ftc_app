@@ -15,6 +15,9 @@ public class Arm {
     private DcMotor lift;
     private DcMotor wrist;
 
+    private boolean allow_neg_lift;
+    private boolean allow_neg_wrist;
+
 
     // Constructor - doesn't zero encoders
     public Arm( HardwareMap ahwMap ) {
@@ -27,6 +30,9 @@ public class Arm {
 
         lift = ahwMap.dcMotor.get("arm_lift_motor");
         wrist = ahwMap.dcMotor.get("arm_wrist_motor");
+
+        allow_neg_lift = true;
+        allow_neg_wrist = true;
 
         // Setup motors (set direction, run mode, use encoder, etc.)
         lift.setDirection(DcMotor.Direction.FORWARD);
@@ -62,12 +68,14 @@ public class Arm {
     public void position_lift(lift_pos pos, int speed) {
         lift.setPower(TranslateLiftSpeed(speed));
         lift.setTargetPosition(TranslateLiftPos(pos));
+        allow_neg_lift = false;
     }
 
     public void position_wrist(WRIST_POS pos, int speed) {
 
         wrist.setPower(TranslateWristSpeed(speed));
         wrist.setTargetPosition(TranslateWristPos(pos));
+        allow_neg_lift = false;
     }
 
     public enum lift_dir {
@@ -75,7 +83,7 @@ public class Arm {
     }
 
     public enum WRIST_DIR {
-        CLOCKWISE, COUNTER_CLOCKWISE
+        FORWARD, BACKWARD
     }
 
     public void adjust_lift(lift_dir dir, double adjustrate, int speed) {
@@ -90,9 +98,7 @@ public class Arm {
 
     public boolean isInPos()
     {
-        if(lift.isBusy())
-            return (false);
-        if(wrist.isBusy())
+        if(lift.isBusy() || wrist.isBusy())
             return (false);
         return (true);
     }
@@ -178,7 +184,6 @@ public class Arm {
     private static int MAX_LIFT_POS = 4850;             // Absolute maximum for lift pos
     private static int MIN_LIFT_STICK_POS = 100;        // Minimum pos allowed for stick pos if not adjusting zero
     private static int MIN_LIFT_POS = -5000;            // Absolute minumum for lift pos
-    private static int ALLOW_NEG_LIFT_POS_TEST = 5;     // Only allow movement to negative positions if starting less than this pos
 
     private static int MAX_WRIST_ADJUST_VALUE = 100;
     private static int MIN_WRIST_ADJUST_VALUE = 5;
@@ -186,14 +191,13 @@ public class Arm {
     private static int MAX_WRIST_POS = 5200;            // Absolute maximum for lift pos
     private static int MIN_WRIST_STICK_POS = 100;       // Minimum pos allowed for stick pos if not adjusting zero
     private static int MIN_WRIST_POS = -5400;           // Absolute minumum for lift pos
-    private static int ALLOW_NEG_WRIST_POS_TEST = 10;   // Only allow movement to negative positions if starting less than this pos
 
 
     private int LiftPosLimit(int pos)
     {
         if (pos > MAX_LIFT_POS)
             return MAX_LIFT_POS;
-        if ((lift.getCurrentPosition() > ALLOW_NEG_LIFT_POS_TEST) && (pos < MIN_LIFT_STICK_POS))
+        if ((allow_neg_lift == false) && (pos < MIN_LIFT_STICK_POS))
             return MIN_LIFT_STICK_POS;
         if (pos < MIN_LIFT_POS)
             return MIN_LIFT_POS;
@@ -204,7 +208,7 @@ public class Arm {
     {
         if (pos > MAX_WRIST_POS)
             return MAX_WRIST_POS;
-        if ((wrist.getCurrentPosition() > ALLOW_NEG_WRIST_POS_TEST) && (pos < MIN_WRIST_STICK_POS))
+        if ((allow_neg_wrist == false) && (pos < MIN_WRIST_STICK_POS))
             return MIN_WRIST_STICK_POS;
         if (pos < MIN_WRIST_POS)
             return MIN_WRIST_POS;
@@ -225,9 +229,11 @@ public class Arm {
 
         switch(dir)
         {
-            case up:
-                return LiftPosLimit(lift.getCurrentPosition() - offset);
             case down:
+                return LiftPosLimit(lift.getCurrentPosition() - offset);
+            case up:
+                if (lift.getCurrentPosition() >= 0)
+                    allow_neg_lift = false;
                 return LiftPosLimit(lift.getCurrentPosition() + offset);
             default:
                 return lift.getCurrentPosition();
@@ -249,9 +255,11 @@ public class Arm {
 
         switch(dir)
         {
-            case CLOCKWISE:
+            case FORWARD:
+                if (wrist.getCurrentPosition() >= 0)
+                    allow_neg_wrist = false;
                 return WristPosLimit(wrist.getCurrentPosition() + offset);
-            case COUNTER_CLOCKWISE:
+            case BACKWARD:
                 return WristPosLimit(wrist.getCurrentPosition() - offset);
             default:
                 return wrist.getCurrentPosition();
