@@ -72,7 +72,10 @@ public class Tele_Op_2018 extends Tele_Op_Base
                 .addData("FL ", go.GetEncoderFrontLeft() )
                 .addData("FR ", go.GetEncoderFrontRight() )
                 .addData("RL ", go.GetEncoderRearLeft() )
-                .addData("RR ", go.GetEncoderRearRight() );
+                .addData("RR ", go.GetEncoderRearRight() )
+                .addData ("Lift ", arm.LiftEncoderValue() )
+                .addData( "Wrist ", arm.WristEncoderValue() );
+
         telemetry.addLine("Team Id"  )
                 .addData("team", TeamId.name());
 

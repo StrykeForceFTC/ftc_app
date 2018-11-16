@@ -14,10 +14,10 @@ public class Loader {
     private DcMotor loadmotor = null;
 
     // Constants for speed
-    private static final double LOAD_POWER = 0.5;
-    private static final double UNLOAD_POWER = -0.5;
-    private static final double LOAD_MS = 500;
-    private static final double UNLOAD_MS = 500;
+    private static final double LOAD_POWER = 0.9;
+    private static final double UNLOAD_POWER = -0.9;
+    private static final double LOAD_MS = 900;
+    private static final double UNLOAD_MS = 900;
 
     // timer for auton
 

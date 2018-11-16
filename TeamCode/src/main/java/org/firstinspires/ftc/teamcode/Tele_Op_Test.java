@@ -108,7 +108,7 @@ public class Tele_Op_Test extends Tele_Op_Base
             arm.adjust_wrist( Arm.WRIST_DIR.COUNTER_CLOCKWISE, -gamepad2.right_stick_x, 9 );
         }
 
-
+        ProcessLoadingInput();
         telemetry.addLine("Encoders ")
                 .addData("FL ", go.GetEncoderFrontLeft() )
                 .addData("FR ", go.GetEncoderFrontRight() )
