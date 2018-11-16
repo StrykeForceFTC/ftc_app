@@ -83,7 +83,7 @@ public class Arm {
     }
 
     public enum WRIST_DIR {
-        CLOCKWISE, COUNTER_CLOCKWISE
+        FORWARD, BACKWARD
     }
 
     public void adjust_lift(lift_dir dir, double adjustrate, int speed) {
@@ -255,11 +255,11 @@ public class Arm {
 
         switch(dir)
         {
-            case CLOCKWISE:
+            case FORWARD:
                 if (wrist.getCurrentPosition() >= 0)
                     allow_neg_wrist = false;
                 return WristPosLimit(wrist.getCurrentPosition() + offset);
-            case COUNTER_CLOCKWISE:
+            case BACKWARD:
                 return WristPosLimit(wrist.getCurrentPosition() - offset);
             default:
                 return wrist.getCurrentPosition();

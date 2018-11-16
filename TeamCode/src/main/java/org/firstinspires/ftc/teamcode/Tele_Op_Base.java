@@ -153,11 +153,11 @@ public abstract class Tele_Op_Base extends OpMode
 
         if ( gamepad2.right_stick_x >= 0.1 )
         {
-            arm.adjust_wrist( Arm.WRIST_DIR.CLOCKWISE, gamepad2.right_stick_x, 9 );
+            arm.adjust_wrist( Arm.WRIST_DIR.FORWARD, gamepad2.right_stick_x, 9 );
         }
         else if (gamepad2.right_stick_x <= -0.1)
         {
-            arm.adjust_wrist( Arm.WRIST_DIR.COUNTER_CLOCKWISE, -gamepad2.right_stick_x, 9 );
+            arm.adjust_wrist( Arm.WRIST_DIR.BACKWARD, -gamepad2.right_stick_x, 9 );
         }
 
     }
