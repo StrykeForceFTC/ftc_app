@@ -21,7 +21,7 @@ public class Auton_Facing_Depot extends AutonLinearBase
     private final static double DRIVE_DEPOT_MOVE_2_WALL_IN = 35.0;
     private final static double DRIVE_DEPOT_ROT_PARALLEL_2_WALL_DEG = 44;
     private final static double DRIVE_DEPOT_STRAFE_2_WALL_IN = 13.0;
-    private final static double DRIVE_DEPOT_FWD_2_DEPOT = 37;
+    private double DRIVE_DEPOT_FWD_2_DEPOT = 37;
 
     /*
      * There is only runOpMode for linear op modes
@@ -46,6 +46,27 @@ public class Auton_Facing_Depot extends AutonLinearBase
         // GO_TO_GOLD_SIDEWAYS_IN = 8.0;
         // LOAD_GOLD_FWD_IN = 4.0;
         PARK_DISTANCE_IN = 84.0;
+
+        switch ( TeamId )
+        {
+            case team7228:
+            {
+                DRIVE_DEPOT_FWD_2_DEPOT = 31 ;
+                break;
+            }
+
+            case team8553:
+            {
+                break;
+            }
+
+            case team15106:
+            {
+                break;
+            }
+        }
+
+
 
         // Wait hit till start button pressed
         waitForStart();

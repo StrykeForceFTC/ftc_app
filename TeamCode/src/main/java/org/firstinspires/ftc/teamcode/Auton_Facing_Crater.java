@@ -21,7 +21,7 @@ public class Auton_Facing_Crater extends AutonLinearBase
     private final static double DRIVE_DEPOT_MOVE_2_WALL_IN = 37.0;
     private final static double DRIVE_DEPOT_ROT_PARALLEL_2_WALL_DEG = 48;
     private final static double DRIVE_DEPOT_STRAFE_2_WALL_IN = 12.0;
-    private final static double DRIVE_DEPOT_FWD_2_DEPOT = 44;
+    private double DRIVE_DEPOT_FWD_2_DEPOT = 44;
 
     /*
      * There is only runOpMode for linear op modes
@@ -44,8 +44,27 @@ public class Auton_Facing_Crater extends AutonLinearBase
         // FIND_GOLD_ROTATE_4_SAMPLE_IN = 45.0;
         // GO_TO_GOLD_FWD_IN = 8.0;
         // GO_TO_GOLD_SIDEWAYS_IN = 8.0;
-        // LOAD_GOLD_FWD_IN = 4.0;
+        // LOAD_GOLD_FWD_IN = 4.0
         // PARK_DISTANCE_IN = 75.0;
+
+        switch ( TeamId )
+        {
+            case team7228:
+            {
+                DRIVE_DEPOT_FWD_2_DEPOT = 39;
+                break;
+            }
+
+            case team8553:
+            {
+                break;
+            }
+
+            case team15106:
+            {
+                break;
+            }
+        }
 
         // Wait hit till start button pressed
         waitForStart();
