@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -14,10 +15,7 @@ public class Drive
     //                                  LEFT   RIGHT
     private DcMotor[ ][ ] motors = { {  null,  null },    // FRONT_AXLE
                                      {  null,  null } };  // REAR_AXLE
-    /*private DcMotor frontLeft = null;
-    private DcMotor frontRight = null;
-    private DcMotor rearLeft = null;
-    private DcMotor rearRight = null;*/
+
 
     // Limit timer
     private ElapsedTime limitTimer;
@@ -33,26 +31,23 @@ public class Drive
     final private static double TICKS_PER_REV = 1120.0;
     final private static double TICKS_PER_IN = TICKS_PER_REV / WHEEL_CIRCUM_IN;
 
+    final private static double ROBOT_LENGTH = 13.75;
+    final private static double ROBOT_WIDTH = 16;
+
     // Constants for rotating robot a certain number of degrees. The robot wheels are
     // set at the corners of a 14" square, so this is used to calculate the circumference of
     // the circle that the robot wheels rotatate about. This is used to determine a number of
     // ticks per degree.
     final private static double ROBOT_LENGTH_IN = 21.85;
-    final private static double ROBOT_DIAM_IN = Math.sqrt( 2.0 * ( ROBOT_LENGTH_IN * ROBOT_LENGTH_IN ) ) ;
+    final private static double ROBOT_DIAM_IN = Math.sqrt((ROBOT_WIDTH *ROBOT_WIDTH ) + ( ROBOT_LENGTH * ROBOT_LENGTH));
     final private static double ROBOT_CIRCUM_IN = ROBOT_DIAM_IN * Math.PI;
     final private static double IN_PER_DEGREE = ROBOT_CIRCUM_IN / 360.0;
     final private static double TIX_PER_DEGREE = IN_PER_DEGREE * TICKS_PER_IN;
     final private static double MAX_SECONDS = 4.5;
-    final private static double AUTON_MEDIUM_DISTANCE_IN = 15.0;
-    final private static double AUTON_SHORT_DISTANCE_IN = 8.0;
-    final private static double TARGET_POWER_LONG = 0.4;
-    final private static double TARGET_POWER_MEDIUM = 0.15;
-    final private static double TARGET_POWER_SHORT = 0.075;
-    final private static double INCREASING_FK = 0.3;                  // Increasing power filter constant
-    final private static double DECREASING_FK = 0.8;                   // Decreasing power filter constant
-    final private static int MOMENTUM_BUFFER_TICKS = 80;              // Stop ~1.5cm early to account for momentum
     final private static double AUTON_POWER = 0.5;
 
+    //these are enums that are to be given numerical values later so that we don't have to write in the matrices all the time.
+    //These enums are also easier to change for debugging (The values assigned to them.)
     public enum DIRECTION { FORWARD, REVERSE, RIGHT, LEFT }
     public enum ROTATION { CLOCKWISE, COUNTERCLOCKWISE }
 
@@ -63,6 +58,10 @@ public class Drive
     final private static int LEFT = 0;
     final private static int RIGHT = 1;
     final private static int NUM_SIDES = 2;
+
+    // adjustment for moving left and right in auton
+    final private static double LEFT_RIGHT_ADJUSTMENT = 1.2;
+    final private static double ROTATE_ADJUSTMENT = 1.46;
 
     // Array for zero power
     final private static double[][] ZERO_POWER = { { 0, 0 }, { 0, 0 } };
@@ -79,11 +78,11 @@ public class Drive
 
     // Matrix for moving right; to get left, multiply by -1.0
     //                                                    LEFT   RIGHT
-    final private static double[ ][ ] RIGHT_MATRIX = { { -1.0,   1.0 },    // FRONT_AXLE
-                                                       {  1.0,  -1.0 } };  // REAR_AXLE
+    final private static double[ ][ ] RIGHT_MATRIX = { { 1.0,   -1.0 },    // FRONT_AXLE
+                                                       {  -1.0,  1.0 } };  // REAR_AXLE
 
-    final private static double[ ][ ] LEFT_MATRIX =  { { 1.0,   -1.0 },
-                                                        {-1.0,   1.0 } };
+    final private static double[ ][ ] LEFT_MATRIX =  { { -1.0,   1.0 },
+                                                        {1.0,   -1.0 } };
 
     // Matrix for rotating clockwise; to get CCW, multiply by -1.0
     //                                                       LEFT   RIGHT
@@ -109,8 +108,8 @@ public class Drive
         // they spin counter-clockwise to move the robot forward.
         for ( int axle = 0; axle < NUM_AXLES; axle++ )
         {
-            motors[ axle ][ LEFT ].setDirection( DcMotor.Direction.FORWARD );
-            motors[ axle ][ RIGHT ].setDirection( DcMotor.Direction.REVERSE );
+            motors[ axle ][ LEFT ].setDirection( DcMotor.Direction.REVERSE );
+            motors[ axle ][ RIGHT ].setDirection( DcMotor.Direction.FORWARD );
         }
 
 
@@ -179,6 +178,7 @@ public class Drive
 
     }
 
+    // These are doubles used for methods that ask for the wheel powers of the motors.
     public double GetWheelPowerFrontLeft( )
     {
         return motors[ FRONT_AXLE ][ LEFT ].getPower();
@@ -234,13 +234,17 @@ public class Drive
     }
 
 
-
-
+    // Method to set encoder targets for auton fwd, rev, left and right
     private void SetEncoderTargets( DIRECTION direction, double distance_in )
     {
         double ticks_2_move = distance_in * TICKS_PER_IN;
-
         double[][] move_matrix = null;
+
+        // Adjust distance for left-right
+        if ( ( direction == DIRECTION.LEFT ) || ( direction == DIRECTION.RIGHT ) )
+        {
+            ticks_2_move = LEFT_RIGHT_ADJUSTMENT * ticks_2_move;
+        }
 
         // Pick the correct direction matrix to multiply distance by
         switch (direction)
@@ -283,9 +287,12 @@ public class Drive
         }
     }
 
+    // this method calculates the main diameter of the robot and multiply the degrees to turn by
+    // based on which direction was chosen when the method was called.
     private void SetEncoderTargetsRotate( ROTATION rotation, double distance_degrees )
     {
-        double ticks_2_move = distance_degrees * TIX_PER_DEGREE;
+        double ticks_2_move = distance_degrees * TIX_PER_DEGREE * ROTATE_ADJUSTMENT;
+
 
         double[][] move_matrix = null;
 
@@ -301,13 +308,13 @@ public class Drive
 
             default:
             {
-                move_matrix = COUNTERCLOCKWISE_MATRIX;
+                move_matrix = CLOCKWISE_MATRIX;
                 break;
             }
         }
 
         // Loop through each wheel and calculate new position and set. Must read current position
-        // and
+        // and add the calculated encoder values.
         for ( int axle = 0; axle < NUM_AXLES; axle++ )
         {
             for ( int side = 0; side < NUM_SIDES; side++ )
@@ -319,7 +326,7 @@ public class Drive
         }
     }
 
-
+    //This method picks a direction set from calling direction.  then, it calculates power and sets the motors.
     private void SetMotorPowersAuton( DIRECTION direction )
     {
         double[][] move_matrix = null;
@@ -366,6 +373,8 @@ public class Drive
             }
         }
     }
+
+    //This method does the same, but with rotate to protect from encoder equation mess-ups.
     private void SetMotorPowersAutonRotate( ROTATION rotation )
     {
         double[][] move_matrix = null;
@@ -404,9 +413,7 @@ public class Drive
     /*
      * Method to move the robot a specified distance in the given direction. For use in auton modes.
      * Parameters are direction and distance to move in inches.
-
      */
-
     public void AutonMove( Drive.DIRECTION direction, double distance_in )
     {
         // Set encoder values
@@ -419,11 +426,11 @@ public class Drive
         // motor powers = desired speed * direction matrix
         SetMotorPowersAuton( direction );
 
-        // Wait for completion
-        //! TODO: TO BE COMPLETED BY MAXWELL
+
         boolean notAtTarget = true;
         limitTimer.reset();
 
+        // Loop while waiting for motors to get to target, and set a timeout
         while ( notAtTarget && ( limitTimer.seconds() < MAX_SECONDS ) )
         {
 
@@ -437,6 +444,8 @@ public class Drive
         SetMotorModes( DcMotor.RunMode.RUN_USING_ENCODER );
     }
 
+    //This method calls set encoder targets rotate and then sets motors to run-to-position.
+    //Then, it sets powers and goes.
     public void AutonMoveRotate( Drive.ROTATION rotation, double distance_degrees )
     {
         // Set encoder values
@@ -450,7 +459,6 @@ public class Drive
         SetMotorPowersAutonRotate( rotation );
 
         // Wait for completion
-        //! TODO: TO BE COMPLETED BY MAXWELL
         boolean notAtTarget = true;
         limitTimer.reset();
 
@@ -484,65 +492,9 @@ public class Drive
     }
 
     /*
-     * Method to move the robot backwards a specified distance. For use in auton modes.
-     * Parameter is distance to move backwards in centimeters.
+     * Method to delay a specified amount of time; not really
+     * needed anymore.
      */
-    public int AutonReverse( double distance_cm )
-    {
-        /*
-         This method just uses MoveDistanceWithRamp to move forward the
-         distance requested.
-         */
-
-        return 0;
-    }
-
-    public int AutonForward( double distance_cm )
-    {
-        /*
-         This method just uses MoveDistanceWithRamp to move forward the
-         distance requested.
-         */
-
-        return 0;
-    }
-
-
-    /*
-     * Method to rotate the robot clockwise a specified number of degrees. For use in auton modes.
-     * Parameter is number of degrees to rotate clockwise.
-     */
-    public int AutonRotateClockwise( double degrees )
-    {
-
-        return 0;
-    }
-
-
-    /*
-    * Method to rotate the robot counterclockwise a specified number of degrees. For use in auton modes.
-    * Parameter is number of degrees to rotate counterclockwise.
-    */
-    public int AutonRotateCounterclockwise( double degrees )
-    {
-        return 0;
-    }
-
-    /*
-     * Method to move the robot right a specified distance. For use in auton modes.
-     * Parameter is distance to move right in centimeters.
-     */
-    public int AutonRight( double distance_cm )
-    {
-        return 0;
-    }
-
-
-    public int AutonLeft( double distance_cm )
-    {
-        return 0;
-    }
-
     private void Delay_ms( double milliseconds )
     {
         try {

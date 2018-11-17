@@ -32,13 +32,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.hardware.Servo;
 
 
 /**
@@ -49,48 +44,32 @@ import com.qualcomm.robotcore.hardware.Servo;
  *
  */
 
-@TeleOp(name="Tele Op Test", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
+@TeleOp(name="Tele Op Test", group="Iterative Opmode")
 // @Disabled
-public class Tele_Op_Test extends OpMode
+public class Tele_Op_Test extends Tele_Op_Base
 {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-
-    HardwareMap robotMap = hardwareMap;
-    private Drive go = null;
-
-    // Joystick input values
-    private double robotLeftRight = 0.0;
-    private double robotForwardBack = 0.0;
-    private double robotRotate = 0.0;
-
-    // Constants for joystick shaping
-    private static final double ROBOT_LEFT_RIGHT_WEIGHTING = 0.5;
-    private static final double ROBOT_FWD_BACK_WEIGHTING = 0.5;
-    private static final double ROBOT_ROTATE_WEIGHTING = 0.5;
+    private Arm arm = null;
 
     /*
      * Code to run ONCE when the driver hits INIT
      */
     @Override
-    public void init() {
-        telemetry.addData("Status", "Initializing");
-
-        /* eg: Initialize the hardware variables. Note that the strings used here as parameters
-         * to 'get' must correspond to the names assigned during the robot configuration
-         * step (using the FTC Robot Controller app on the phone).
-         */
-        go = new Drive( hardwareMap );
-
-        telemetry.addData("Status", "Initialized");
+    public void init()
+    {
+        // Use base class to init HW
+        HwInit();
+        arm = new Arm( hardwareMap );
     }
 
     /*
      * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
      */
     @Override
-    public void init_loop() {
+    public void init_loop()
+    {
     }
 
     /*
@@ -106,37 +85,29 @@ public class Tele_Op_Test extends OpMode
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
     @Override
-    public void loop() {
-        telemetry.addData("Status", "Running: " + runtime.toString());
-
-        // Show joystick information as some other illustrative data
-        telemetry.addLine("left joystick | ")
-                .addData("x", gamepad1. left_stick_x)
-                .addData("y", gamepad1.left_stick_y);
+    public void loop()
+    {
+        telemetry.addData("Status ", "Running: " + runtime.toString());
 
         // Move robot based on joystick inputs from gamepad 1 / driver 1
         // shape joystick inputs
-        robotForwardBack = JoystickUtilities.ShapeCubePlusInputWeighted( -gamepad1.left_stick_y, ROBOT_FWD_BACK_WEIGHTING );
-        robotLeftRight = JoystickUtilities.ShapeCubePlusInputWeighted( gamepad1.left_stick_x, ROBOT_LEFT_RIGHT_WEIGHTING );
-        robotRotate = JoystickUtilities.ShapeCubePlusInputWeighted( gamepad1.right_stick_x, ROBOT_ROTATE_WEIGHTING );
+        ProcessGamepad1Joysticks();
         go.MoveSimple( robotLeftRight, robotForwardBack, robotRotate );
+        ProcessRaiseArm( );
+        ProcessLoadingInput();
 
         telemetry.addLine("Encoders ")
+                .addData("FL ", go.GetEncoderFrontLeft() )
+                .addData("FR ", go.GetEncoderFrontRight() )
                 .addData("RL ", go.GetEncoderRearLeft() )
-                .addData("RR ", go.GetEncoderRearRight() );
+                .addData("RR ", go.GetEncoderRearRight() )
+                .addData("stick ", gamepad2.left_stick_y)
+                .addData("Lift ", arm.LiftEncoderValue())
+                .addData( "Wrist ", arm.WristEncoderValue() );
+        telemetry.addLine("Team Id"  )
+                .addData("team", TeamId.name());
 
         telemetry.update();
-    }
-
-
-    /*
-     * Code to run ONCE after the driver hits STOP
-     */
-    @Override
-    public void stop()
-    {
-        // Make sure Robot stops
-        go.MoveSimple( 0.0, 0.0, 0.0 );
     }
 
 }
