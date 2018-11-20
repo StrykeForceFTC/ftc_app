@@ -79,8 +79,8 @@ public abstract class AutonLinearBase extends LinearOpMode
     protected double GO_TO_GOLD_SIDEWAYS_IN = 8.0;
     protected double LOAD_GOLD_FWD_IN = 4.0;
     protected double PARK_DISTANCE_IN = 54.0;
-
-
+    protected int    LIFT_SPEED = 10;
+    protected int    WRIST_SPEED = 10;
 
 
     // Method to initialize any connected hardware
@@ -155,15 +155,15 @@ public abstract class AutonLinearBase extends LinearOpMode
     */
     protected void ReleaseLander( )
     {
-        arm.position_lift( Arm.lift_pos.hook_lander, 10 );
+        arm.position_lift( Arm.lift_pos.hook_lander, LIFT_SPEED );
         telemetry.addLine("LOWERING");
         arm.WaitForInPos();
         telemetry.addLine("DONE");
 
         go.AutonMove( Drive.DIRECTION.RIGHT, RELEASE_STRAFE_IN );
         go.AutonMove( Drive.DIRECTION.REVERSE, RELEASE_MOVE_AWAY_IN );
-        arm.position_lift( Arm.lift_pos.fulldown, 10 );
-        arm.position_wrist( Arm.WRIST_POS.MOVE, 10 );
+        arm.position_lift( Arm.lift_pos.fulldown, LIFT_SPEED );
+        arm.position_wrist( Arm.WRIST_POS.MOVE, WRIST_SPEED );
         go.AutonMove( Drive.DIRECTION.LEFT, RELEASE_STRAFE_IN );
         go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, RELEASE_ROTATE_DEG );
         arm.WaitForInPos();
