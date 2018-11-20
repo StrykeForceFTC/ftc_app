@@ -58,11 +58,11 @@ public class Arm {
     }
 
     public enum lift_pos {
-        fulldown, fullup, hook_lander, mid2
+        ZERO, fulldown, fullup, hook_lander, mid2
     }
 
     public enum WRIST_POS {
-        START, UNLOAD, MOVE, LOAD
+        ZERO, START, UNLOAD, MOVE, LOAD
     }
 
     public void position_lift(lift_pos pos, int speed) {
@@ -98,7 +98,8 @@ public class Arm {
 
     public boolean isInPos()
     {
-        if(lift.isBusy() || wrist.isBusy())
+        if((lift.isBusy() && (Math.abs(lift.getTargetPosition() - lift.getCurrentPosition()) > 25)) ||
+                (wrist.isBusy() && (Math.abs(wrist.getTargetPosition() - wrist.getCurrentPosition()) > 25)))
             return (false);
         return (true);
     }
@@ -147,6 +148,8 @@ public class Arm {
     {
         switch(pos)
         {
+            case ZERO:
+                return 0;
             case fulldown:
                 return 100;
             case fullup:
@@ -164,7 +167,8 @@ public class Arm {
     {
         switch(pos)
         {
-
+            case ZERO:
+                return 0;
             case START:            // Folded down at start or end, offset for some margin
                 return 200;
             case UNLOAD:           // Leaned a little bit forward of vertical
@@ -182,14 +186,14 @@ public class Arm {
     private static int MIN_LIFT_ADJUST_VALUE = 20;
 
     private static int MAX_LIFT_POS = 4850;             // Absolute maximum for lift pos
-    private static int MIN_LIFT_STICK_POS = 100;        // Minimum pos allowed for stick pos if not adjusting zero
+    private static int MIN_LIFT_STICK_POS = 0;        // Minimum pos allowed for stick pos if not adjusting zero
     private static int MIN_LIFT_POS = -5000;            // Absolute minumum for lift pos
 
     private static int MAX_WRIST_ADJUST_VALUE = 100;
     private static int MIN_WRIST_ADJUST_VALUE = 5;
 
     private static int MAX_WRIST_POS = 5200;            // Absolute maximum for lift pos
-    private static int MIN_WRIST_STICK_POS = 100;       // Minimum pos allowed for stick pos if not adjusting zero
+    private static int MIN_WRIST_STICK_POS = 0;       // Minimum pos allowed for stick pos if not adjusting zero
     private static int MIN_WRIST_POS = -5400;           // Absolute minumum for lift pos
 
 
@@ -224,7 +228,7 @@ public class Arm {
 
         int offset = (int) (adjustrate * MAX_LIFT_ADJUST_VALUE +.5);
 
-        if (lift.getCurrentPosition() < 5 )
+        if ((lift.getCurrentPosition() < 20 ) && (dir == lift_dir.down))
             offset = MIN_LIFT_ADJUST_VALUE;
 
         switch(dir)
@@ -250,7 +254,7 @@ public class Arm {
 
         int offset = (int) (adjustrate * MAX_WRIST_ADJUST_VALUE +.5);
 
-        if (wrist.getCurrentPosition() < 10 )
+        if ((wrist.getCurrentPosition() < 20 ) && (dir == WRIST_DIR.BACKWARD))
             offset = MIN_WRIST_ADJUST_VALUE;
 
         switch(dir)
