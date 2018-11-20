@@ -84,7 +84,7 @@ public class Auton_Facing_Crater extends AutonLinearBase
                     // Run common method from AutonLinearBase and
                     // go to next step
                     ReleaseLander();
-                    step = AUTON_STEPS.MOVE_TO_MINERAL;
+                    step = AUTON_STEPS.DRIVE_DEPOT;
                     break;
                 }
 

@@ -71,7 +71,7 @@ public abstract class AutonLinearBase extends LinearOpMode
 
     // Values for distances to move, degrees to rotate, etc.
     protected double RELEASE_STRAFE_IN = 4.0;
-    protected double RELEASE_MOVE_AWAY_IN = 6.0;
+    protected double RELEASE_MOVE_AWAY_IN = 10.0;
     protected double RELEASE_ROTATE_DEG = 180.0;
     protected double FIND_GOLD_INITIAL_CW_ROT_DEG = 135.0;
     protected double FIND_GOLD_ROTATE_4_SAMPLE_IN = 45.0;
@@ -155,17 +155,18 @@ public abstract class AutonLinearBase extends LinearOpMode
     */
     protected void ReleaseLander( )
     {
-        arm.position_lift(Arm.lift_pos.hook_lander, 9);
+        arm.position_lift( Arm.lift_pos.hook_lander, 10 );
         telemetry.addLine("LOWERING");
         arm.WaitForInPos();
         telemetry.addLine("DONE");
 
         go.AutonMove( Drive.DIRECTION.RIGHT, RELEASE_STRAFE_IN );
         go.AutonMove( Drive.DIRECTION.REVERSE, RELEASE_MOVE_AWAY_IN );
+        arm.position_lift( Arm.lift_pos.fulldown, 10 );
+        arm.position_wrist( Arm.WRIST_POS.MOVE, 10 );
         go.AutonMove( Drive.DIRECTION.LEFT, RELEASE_STRAFE_IN );
         go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, RELEASE_ROTATE_DEG );
-        go.AutonMove( Drive.DIRECTION.REVERSE, RELEASE_MOVE_AWAY_IN );
-
+        arm.WaitForInPos();
     }
 
     // Method to find position of gold mineral.
@@ -210,8 +211,6 @@ public abstract class AutonLinearBase extends LinearOpMode
     // Method to move to gold mineral position
     protected void GoToGold( )
     {
-        go.AutonMove( Drive.DIRECTION.FORWARD, GO_TO_GOLD_FWD_IN );
-
         switch ( gold )
         {
             case LEFT_POS:
@@ -269,9 +268,7 @@ public abstract class AutonLinearBase extends LinearOpMode
     // Common method to unload marker and gold sample
     protected void UnloadGoldAndMarker( )
     {
-        //! @todo Need method / object to drop marker
-        arm.position_wrist(Arm.WRIST_POS.LOAD, 10);
-        arm.WaitForInPos();
+        // arm should already be in correct position
 
         // Unload gold sample
         loader.AutonUnload();

@@ -43,8 +43,8 @@ public class Drive
     final private static double ROBOT_CIRCUM_IN = ROBOT_DIAM_IN * Math.PI;
     final private static double IN_PER_DEGREE = ROBOT_CIRCUM_IN / 360.0;
     final private static double TIX_PER_DEGREE = IN_PER_DEGREE * TICKS_PER_IN;
-    final private static double MAX_SECONDS = 4.5;
-    final private static double AUTON_POWER = 0.5;
+    final private static double MAX_SECONDS = 6.0;
+    final private static double AUTON_POWER = 0.9;
 
     //these are enums that are to be given numerical values later so that we don't have to write in the matrices all the time.
     //These enums are also easier to change for debugging (The values assigned to them.)
