@@ -17,11 +17,11 @@ public class Auton_Facing_Crater extends AutonLinearBase
 
     // Constants for drive to depot. These are not common with
     // the facing depot auton, so the values are set up here.
-    private final static double DRIVE_DEPOT_TURN_2_WALL_DEG = 120.0;
-    private final static double DRIVE_DEPOT_MOVE_2_WALL_IN = 46.0;
+    private final static double DRIVE_DEPOT_TURN_2_WALL_DEG = 111.0;
+    private final static double DRIVE_DEPOT_MOVE_2_WALL_IN = 43.5;
     private final static double DRIVE_DEPOT_ROT_PARALLEL_2_WALL_DEG = 43;
     private final static double DRIVE_DEPOT_STRAFE_2_WALL_IN = 12.0;
-    private double DRIVE_DEPOT_FWD_2_DEPOT = 21;
+    private double DRIVE_DEPOT_FWD_2_DEPOT = 23;
 
     /*
      * There is only runOpMode for linear op modes
@@ -51,7 +51,7 @@ public class Auton_Facing_Crater extends AutonLinearBase
         {
             case team7228:
             {
-                DRIVE_DEPOT_FWD_2_DEPOT = 39;
+                
                 break;
             }
 
