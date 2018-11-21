@@ -17,11 +17,12 @@ public class Auton_Facing_Crater extends AutonLinearBase
 
     // Constants for drive to depot. These are not common with
     // the facing depot auton, so the values are set up here.
-    private final static double DRIVE_DEPOT_TURN_2_WALL_DEG = 111.0;
-    private final static double DRIVE_DEPOT_MOVE_2_WALL_IN = 43.5;
-    private final static double DRIVE_DEPOT_ROT_PARALLEL_2_WALL_DEG = 43;
-    private final static double DRIVE_DEPOT_STRAFE_2_WALL_IN = 12.0;
+    private double DRIVE_DEPOT_TURN_2_WALL_DEG = 111.0;
+    private double DRIVE_DEPOT_MOVE_2_WALL_IN = 43.5;
+    private double DRIVE_DEPOT_ROT_PARALLEL_2_WALL_DEG = 43;
+    private double DRIVE_DEPOT_STRAFE_2_WALL_IN = 12.0;
     private double DRIVE_DEPOT_FWD_2_DEPOT = 23;
+    private double ROTATE_AFTER_DROP = 8;
 
     /*
      * There is only runOpMode for linear op modes
@@ -51,7 +52,10 @@ public class Auton_Facing_Crater extends AutonLinearBase
         {
             case team7228:
             {
-                
+                RELEASE_ROTATE_DEG = 161;
+                DRIVE_DEPOT_TURN_2_WALL_DEG = 106;
+                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_DEG = 28;
+                ROTATE_AFTER_DROP = 5;
                 break;
             }
 
@@ -179,6 +183,16 @@ public class Auton_Facing_Crater extends AutonLinearBase
         go.AutonMove( Drive.DIRECTION.FORWARD, DRIVE_DEPOT_FWD_2_DEPOT );
 
 
+    }
+
+    @Override
+    protected void UnloadGoldAndMarker( )
+    {
+        // arm should already be in correct position
+
+        // Unload gold sample
+        loader.AutonUnload();
+        go.AutonMoveRotate(Drive.ROTATION.COUNTERCLOCKWISE, ROTATE_AFTER_DROP );
     }
 
 }

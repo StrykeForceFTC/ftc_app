@@ -17,11 +17,12 @@ public class Auton_Facing_Depot extends AutonLinearBase
 
     // Constants for drive to depot. These are not common with
     // the facing depot auton, so the values are set up here.
-    private final static double DRIVE_DEPOT_TURN_2_WALL_DEG = 95.0;
-    private final static double DRIVE_DEPOT_MOVE_2_WALL_IN = 35.0;
-    private final static double DRIVE_DEPOT_ROT_PARALLEL_2_WALL_DEG = 44;
-    private final static double DRIVE_DEPOT_STRAFE_2_WALL_IN = 13.0;
-    private double DRIVE_DEPOT_FWD_2_DEPOT = 37;
+    private double DRIVE_DEPOT_TURN_2_WALL_DEG = 65.0;
+    private double DRIVE_DEPOT_MOVE_2_WALL_IN = 40.0;
+    private double DRIVE_DEPOT_ROT_PARALLEL_2_WALL_DEG = 60;
+    private double DRIVE_DEPOT_STRAFE_2_WALL_IN = 13.0;
+    private double DRIVE_DEPOT_FWD_2_DEPOT = 33;
+    private double ROTATE_AFTER_DROP = 6;
 
     /*
      * There is only runOpMode for linear op modes
@@ -45,13 +46,12 @@ public class Auton_Facing_Depot extends AutonLinearBase
         // GO_TO_GOLD_FWD_IN = 8.0;
         // GO_TO_GOLD_SIDEWAYS_IN = 8.0;
         // LOAD_GOLD_FWD_IN = 4.0;
-        PARK_DISTANCE_IN = 84.0;
+        PARK_DISTANCE_IN = 45;
 
         switch ( TeamId )
         {
             case team7228:
             {
-                DRIVE_DEPOT_FWD_2_DEPOT = 31 ;
                 break;
             }
 
@@ -176,10 +176,21 @@ public class Auton_Facing_Depot extends AutonLinearBase
         go.AutonMoveRotate( Drive.ROTATION.CLOCKWISE, DRIVE_DEPOT_TURN_2_WALL_DEG );
         go.AutonMove( Drive.DIRECTION.REVERSE, DRIVE_DEPOT_MOVE_2_WALL_IN );
         go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, DRIVE_DEPOT_ROT_PARALLEL_2_WALL_DEG );
-        go.AutonMove( Drive.DIRECTION.LEFT, DRIVE_DEPOT_STRAFE_2_WALL_IN );
+        arm.position_wrist( Arm.WRIST_POS.MOVE, WRIST_SPEED );
         go.AutonMove( Drive.DIRECTION.FORWARD, DRIVE_DEPOT_FWD_2_DEPOT );
 
     }
+
+    @Override
+    protected void UnloadGoldAndMarker( )
+    {
+        // arm should already be in correct position
+
+        // Unload gold sample
+        loader.AutonUnload();
+        go.AutonMoveRotate(Drive.ROTATION.CLOCKWISE, ROTATE_AFTER_DROP );
+    }
+
 
 }
 
