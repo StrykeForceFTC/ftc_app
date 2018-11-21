@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -58,7 +57,7 @@ public class Arm {
     }
 
     public enum lift_pos {
-        ZERO, fulldown, fullup, hook_lander, mid2
+        ZERO, fulldown, fullup, hook_lander, sampling
     }
 
     public enum WRIST_POS {
@@ -156,8 +155,8 @@ public class Arm {
                 return 4800;
             case hook_lander:
                 return 4400;
-            case mid2:
-                return 4000;
+            case sampling:
+                return 1400;
             default:
                 return lift.getCurrentPosition();
         }

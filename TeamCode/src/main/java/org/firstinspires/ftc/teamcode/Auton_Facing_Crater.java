@@ -17,11 +17,11 @@ public class Auton_Facing_Crater extends AutonLinearBase
 
     // Constants for drive to depot. These are not common with
     // the facing depot auton, so the values are set up here.
-    private final static double DRIVE_DEPOT_TURN_2_WALL_DEG = 75.0;
-    private final static double DRIVE_DEPOT_MOVE_2_WALL_IN = 37.0;
-    private final static double DRIVE_DEPOT_ROT_PARALLEL_2_WALL_DEG = 48;
+    private final static double DRIVE_DEPOT_TURN_2_WALL_DEG = 120.0;
+    private final static double DRIVE_DEPOT_MOVE_2_WALL_IN = 46.0;
+    private final static double DRIVE_DEPOT_ROT_PARALLEL_2_WALL_DEG = 43;
     private final static double DRIVE_DEPOT_STRAFE_2_WALL_IN = 12.0;
-    private double DRIVE_DEPOT_FWD_2_DEPOT = 44;
+    private double DRIVE_DEPOT_FWD_2_DEPOT = 21;
 
     /*
      * There is only runOpMode for linear op modes
@@ -84,7 +84,7 @@ public class Auton_Facing_Crater extends AutonLinearBase
                     // Run common method from AutonLinearBase and
                     // go to next step
                     ReleaseLander();
-                    step = AUTON_STEPS.DRIVE_DEPOT;
+                    step = AUTON_STEPS.MOVE_TO_MINERAL;
                     break;
                 }
 
@@ -106,7 +106,7 @@ public class Auton_Facing_Crater extends AutonLinearBase
                 {
                     // Move in front of gold mineral
                     GoToGold();
-                    step = step.Next();
+                    step = step.DRIVE_DEPOT;
                     break;
                 }
 
@@ -171,11 +171,13 @@ public class Auton_Facing_Crater extends AutonLinearBase
         // To go to the depot, rotate the robot to drive towards the wall, drive
         // close to the wall, rotate to make robot parallel to the wall,
         // then strafe to wall and finally go forward to depot.
+
         go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, DRIVE_DEPOT_TURN_2_WALL_DEG );
         go.AutonMove( Drive.DIRECTION.FORWARD, DRIVE_DEPOT_MOVE_2_WALL_IN );
         go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, DRIVE_DEPOT_ROT_PARALLEL_2_WALL_DEG );
-        go.AutonMove( Drive.DIRECTION.RIGHT, DRIVE_DEPOT_STRAFE_2_WALL_IN );
+        arm.position_wrist( Arm.WRIST_POS.MOVE, WRIST_SPEED );
         go.AutonMove( Drive.DIRECTION.FORWARD, DRIVE_DEPOT_FWD_2_DEPOT );
+
 
     }
 

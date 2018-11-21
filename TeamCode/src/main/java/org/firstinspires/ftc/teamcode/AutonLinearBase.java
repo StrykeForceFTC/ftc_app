@@ -71,8 +71,8 @@ public abstract class AutonLinearBase extends LinearOpMode
 
     // Values for distances to move, degrees to rotate, etc.
     protected double RELEASE_STRAFE_IN = 4.0;
-    protected double RELEASE_MOVE_AWAY_IN = 10.0;
-    protected double RELEASE_ROTATE_DEG = 180.0;
+    protected double RELEASE_MOVE_AWAY_IN = 9.0;
+    protected double RELEASE_ROTATE_DEG = 172.0;
     protected double FIND_GOLD_INITIAL_CW_ROT_DEG = 135.0;
     protected double FIND_GOLD_ROTATE_4_SAMPLE_IN = 45.0;
     protected double GO_TO_GOLD_FWD_IN = 10.0;
@@ -162,10 +162,11 @@ public abstract class AutonLinearBase extends LinearOpMode
 
         go.AutonMove( Drive.DIRECTION.RIGHT, RELEASE_STRAFE_IN );
         go.AutonMove( Drive.DIRECTION.REVERSE, RELEASE_MOVE_AWAY_IN );
-        arm.position_lift( Arm.lift_pos.fulldown, LIFT_SPEED );
-        arm.position_wrist( Arm.WRIST_POS.MOVE, WRIST_SPEED );
+        arm.position_lift( Arm.lift_pos.sampling, LIFT_SPEED );
+        arm.position_wrist( Arm.WRIST_POS.UNLOAD, WRIST_SPEED );
         go.AutonMove( Drive.DIRECTION.LEFT, RELEASE_STRAFE_IN );
         go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, RELEASE_ROTATE_DEG );
+        arm.position_wrist( Arm.WRIST_POS.LOAD, WRIST_SPEED );
         arm.WaitForInPos();
     }
 
@@ -211,7 +212,7 @@ public abstract class AutonLinearBase extends LinearOpMode
     // Method to move to gold mineral position
     protected void GoToGold( )
     {
-        switch ( gold )
+        /*switch ( gold )
         {
             case LEFT_POS:
                 go.AutonMove( Drive.DIRECTION.LEFT, GO_TO_GOLD_SIDEWAYS_IN );
@@ -227,6 +228,11 @@ public abstract class AutonLinearBase extends LinearOpMode
             case UNKNOWN_POS:
                 break;
         }
+        */
+
+        go.AutonMove( Drive.DIRECTION.FORWARD, 2 );
+        go.AutonMoveRotate( Drive.ROTATION.CLOCKWISE, 30 );
+        arm.position_wrist( Arm.WRIST_POS.UNLOAD, WRIST_SPEED );
     }
 
 
@@ -279,6 +285,7 @@ public abstract class AutonLinearBase extends LinearOpMode
     {
         // Raise arm to move position?
         go.AutonMove( Drive.DIRECTION.REVERSE, PARK_DISTANCE_IN );
+
     }
 
 }
