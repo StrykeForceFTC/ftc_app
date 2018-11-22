@@ -21,7 +21,7 @@ public class Auton_Facing_Depot extends AutonLinearBase
     private double DRIVE_DEPOT_MOVE_2_WALL_IN = 40.0;
     private double DRIVE_DEPOT_ROT_PARALLEL_2_WALL_DEG = 60;
     private double DRIVE_DEPOT_STRAFE_2_WALL_IN = 13.0;
-    private double DRIVE_DEPOT_FWD_2_DEPOT = 33;
+    private double DRIVE_DEPOT_FWD_2_DEPOT = 26;    // 33
     private double ROTATE_AFTER_DROP = 6;
 
     /*

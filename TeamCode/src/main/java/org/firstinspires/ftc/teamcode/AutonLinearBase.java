@@ -75,10 +75,10 @@ public abstract class AutonLinearBase extends LinearOpMode
     protected double RELEASE_ROTATE_DEG = 172.0;
     protected double FIND_GOLD_INITIAL_CW_ROT_DEG = 135.0;
     protected double FIND_GOLD_ROTATE_4_SAMPLE_IN = 45.0;
-    protected double GO_TO_GOLD_FWD_IN = 10.0;
+    protected double GO_TO_GOLD_FWD_IN = 4.25;
     protected double GO_TO_GOLD_SIDEWAYS_IN = 8.0;
     protected double LOAD_GOLD_FWD_IN = 4.0;
-    protected double PARK_DISTANCE_IN = 42.0;
+    protected double PARK_DISTANCE_IN = 44.0;
     protected int    LIFT_SPEED = 10;
     protected int    WRIST_SPEED = 10;
 
@@ -115,6 +115,25 @@ public abstract class AutonLinearBase extends LinearOpMode
         detector.ratioScorer.perfectRatio = 1.0;
 
         detector.enable();
+
+        switch (TeamId)
+        {
+            case team7228: {
+                //RELEASE_MOVE_AWAY_IN = 9.0;
+                GO_TO_GOLD_FWD_IN = 6.0;
+                break;
+            }
+
+            case team8553:
+            {
+                break;
+            }
+
+            case team15106:
+            {
+                break;
+            }
+        }
     }
 
 
@@ -230,7 +249,7 @@ public abstract class AutonLinearBase extends LinearOpMode
         }
         */
 
-        go.AutonMove( Drive.DIRECTION.FORWARD, 4.25 );
+        go.AutonMove( Drive.DIRECTION.FORWARD, GO_TO_GOLD_FWD_IN );
         go.AutonMoveRotate( Drive.ROTATION.CLOCKWISE, 30 );
         arm.position_wrist( Arm.WRIST_POS.UNLOAD, WRIST_SPEED );
     }
