@@ -12,16 +12,14 @@
 apply from: '../build.common.gradle'
 android {
     defaultConfig {
-        resValue "string", "gitBranch", gitBranch()
+        resValue "string", "TeamCode_BuildID", buildID()
     }
-    buildTypes {
-        release{
-            buildConfigField "java.util.Date", "BUILD_TIME", "new java.util.Date(" + System.currentTimeMillis() + "L)"
-        }
-        debug {
-            buildConfigField "java.util.Date", "BUILD_TIME", "new java.util.Date(" + System.currentTimeMillis() + "L)"
-        }
-    }
+}
+
+def buildID() {
+    def date = new Date()
+    def buildID = gitBranch() + "_" + date.format("yyyyMMdd_HHmmss")
+    buildID
 }
 
 def gitBranch() {

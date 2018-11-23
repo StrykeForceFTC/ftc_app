@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import java.util.Date;
-
 import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.DogeCV;
 import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
@@ -140,8 +138,7 @@ public abstract class AutonLinearBase extends LinearOpMode
             }
         }
 
-        Date buildDate = BuildConfig.BUILD_TIME;
-        swBuildID = hardwareMap.appContext.getString(R.string.gitBranch) + " @ " + buildDate.toString();
+        swBuildID = hardwareMap.appContext.getString(R.string.TeamCode_BuildID);
 
         AddStdAutonTelemetry(false);
         telemetry.update();
@@ -163,8 +160,7 @@ public abstract class AutonLinearBase extends LinearOpMode
 
         telemetry.addLine("Robot Id: " + TeamId.name());
 
-        telemetry.addLine("TeamCode Build ID: ");
-        telemetry.addLine("   " + swBuildID);
+        telemetry.addLine("TeamCode Build ID: " + swBuildID);
     }
 
     // Method to determined if aligned on gold block
