@@ -37,6 +37,8 @@ public class Tele_Op_2018 extends Tele_Op_Base
     @Override
     public void init_loop()
     {
+        AddStdTeleOpTelemetry();
+        telemetry.update();
     }
 
     /*
@@ -66,20 +68,7 @@ public class Tele_Op_2018 extends Tele_Op_Base
         //Processes joystick and button values to raise or lower the arm.
         ProcessRaiseArm();
 
-        telemetry.addLine("Encoders ")
-                .addData("FL ", go.GetEncoderFrontLeft() )
-                .addData("FR ", go.GetEncoderFrontRight() )
-                .addData("RL ", go.GetEncoderRearLeft() )
-                .addData("RR ", go.GetEncoderRearRight() )
-                .addData ("Lift ", arm.LiftEncoderValue() )
-                .addData( "Wrist ", arm.WristEncoderValue() );
-
-        telemetry.addLine("Team Id"  )
-                .addData("team", TeamId.name());
-
-        telemetry.addLine("TeamCode Build ID: ");
-        telemetry.addLine("   " + swBuildId);
-
+        AddStdTeleOpTelemetry();
         telemetry.update();
     }
 

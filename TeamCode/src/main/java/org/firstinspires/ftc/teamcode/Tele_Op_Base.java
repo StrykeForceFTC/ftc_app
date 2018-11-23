@@ -70,7 +70,7 @@ public abstract class Tele_Op_Base extends OpMode
     public Auto_Robot_Detect.teamId TeamId = Auto_Robot_Detect.teamId.teamUnknown;
 
     // TeamCode BuildID
-    public String swBuildId = "";
+    public String swBuildID = "";
 
     /*
      * HW initialization code
@@ -87,11 +87,28 @@ public abstract class Tele_Op_Base extends OpMode
         arm = new Arm( hardwareMap );
 
         Date buildDate = BuildConfig.BUILD_TIME;
-        swBuildId = hardwareMap.appContext.getString(R.string.gitBranch) + " @ " + buildDate.toString();
+        swBuildID = hardwareMap.appContext.getString(R.string.gitBranch) + " @ " + buildDate.toString();
+
+        AddStdTeleOpTelemetry();
+        telemetry.update();
+    }
+
+    protected void AddStdTeleOpTelemetry()
+    {
+        telemetry.addLine("Drive Encoders: ")
+                .addData("FL ", go.GetEncoderFrontLeft() )
+                .addData("FR ", go.GetEncoderFrontRight() )
+                .addData("RL ", go.GetEncoderRearLeft() )
+                .addData("RR ", go.GetEncoderRearRight() );
+
+        telemetry.addLine("Arm Pos: ")
+                .addData ("Lift ", arm.LiftEncoderValue() )
+                .addData( "Wrist ", arm.WristEncoderValue() );
+
+        telemetry.addLine("Robot ID: " + TeamId.name());
 
         telemetry.addLine("TeamCode Build ID: ");
-        telemetry.addLine("   " + swBuildId);
-        telemetry.update();
+        telemetry.addLine("   " + swBuildID);
     }
 
 

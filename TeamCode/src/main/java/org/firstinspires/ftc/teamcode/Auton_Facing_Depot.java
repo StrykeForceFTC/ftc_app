@@ -152,14 +152,7 @@ public class Auton_Facing_Depot extends AutonLinearBase
             telemetry.addData("IsAligned", GoldAligned()); // Is the bot aligned with the gold mineral
             telemetry.addData("X Pos", GoldXPosition());    // Gold X pos.
 
-            telemetry.addLine("Encoders ")
-                    .addData("FL ", go.GetEncoderFrontLeft())
-                    .addData("FR ", go.GetEncoderFrontRight())
-                    .addData("RL ", go.GetEncoderRearLeft())
-                    .addData("RR ", go.GetEncoderRearRight());
-            telemetry.addLine("TeamId")
-                    .addData("Team", TeamId.name());
-
+            AddStdAutonTelemetry(true);
             telemetry.update();
 
             idle();

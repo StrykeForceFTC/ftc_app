@@ -101,20 +101,11 @@ public class Tele_Op_Test extends Tele_Op_Base
         ProcessRaiseArm( );
         ProcessLoadingInput();
 
-        telemetry.addLine("Encoders ")
-                .addData("FL ", go.GetEncoderFrontLeft() )
-                .addData("FR ", go.GetEncoderFrontRight() )
-                .addData("RL ", go.GetEncoderRearLeft() )
-                .addData("RR ", go.GetEncoderRearRight() )
-                .addData("stick ", gamepad2.left_stick_y)
-                .addData("Lift ", arm.LiftEncoderValue())
-                .addData( "Wrist ", arm.WristEncoderValue() );
-        telemetry.addLine("Team Id"  )
-                .addData("team", TeamId.name());
-        telemetry.addLine("Digital IO ")
-                .addData("io1: ", io1.getState())
-                .addData("io2: ", io2.getState());
+        telemetry.addLine("Digital IO: ")
+                .addData("io1", io1.getState())
+                .addData("io2", io2.getState());
 
+        AddStdTeleOpTelemetry();
         telemetry.update();
     }
 

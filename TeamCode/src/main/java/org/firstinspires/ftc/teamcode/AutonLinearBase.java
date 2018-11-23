@@ -33,7 +33,7 @@ public abstract class AutonLinearBase extends LinearOpMode
     public Auto_Robot_Detect.teamId TeamId = Auto_Robot_Detect.teamId.teamUnknown;
 
     // TeamCode BuildID
-    public String swBuildId = "";
+    public String swBuildID = "";
 
     // Auton steps
     // Enumeration for auton steps allowing move to next step
@@ -141,13 +141,31 @@ public abstract class AutonLinearBase extends LinearOpMode
         }
 
         Date buildDate = BuildConfig.BUILD_TIME;
-        swBuildId = hardwareMap.appContext.getString(R.string.gitBranch) + " @ " + buildDate.toString();
+        swBuildID = hardwareMap.appContext.getString(R.string.gitBranch) + " @ " + buildDate.toString();
 
-        telemetry.addLine("TeamCode Build ID: ");
-        telemetry.addLine("   " + swBuildId);
+        AddStdAutonTelemetry(false);
         telemetry.update();
     }
 
+    protected void AddStdAutonTelemetry(boolean tfShowEncoderValues)
+    {
+        if (tfShowEncoderValues) {
+            telemetry.addLine("Drive Encoders: ")
+                    .addData("FL ", go.GetEncoderFrontLeft())
+                    .addData("FR ", go.GetEncoderFrontRight())
+                    .addData("RL ", go.GetEncoderRearLeft())
+                    .addData("RR ", go.GetEncoderRearRight());
+
+            telemetry.addLine("Arm Pos: ")
+                    .addData("Lift ", arm.LiftEncoderValue())
+                    .addData("Wrist ", arm.WristEncoderValue());
+        }
+
+        telemetry.addLine("Robot Id: " + TeamId.name());
+
+        telemetry.addLine("TeamCode Build ID: ");
+        telemetry.addLine("   " + swBuildID);
+    }
 
     // Method to determined if aligned on gold block
     public boolean GoldAligned( )
@@ -187,9 +205,16 @@ public abstract class AutonLinearBase extends LinearOpMode
     protected void ReleaseLander( )
     {
         arm.position_lift( Arm.lift_pos.hook_lander, LIFT_SPEED );
+
         telemetry.addLine("LOWERING");
+        AddStdAutonTelemetry(true);
+        telemetry.update();
+
         arm.WaitForInPos();
+
         telemetry.addLine("DONE");
+        AddStdAutonTelemetry(true);
+        telemetry.update();
 
         go.AutonMove( Drive.DIRECTION.RIGHT, RELEASE_STRAFE_IN );
         go.AutonMove( Drive.DIRECTION.REVERSE, RELEASE_MOVE_AWAY_IN );
