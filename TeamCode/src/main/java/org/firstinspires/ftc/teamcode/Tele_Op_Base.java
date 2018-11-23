@@ -36,6 +36,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import java.util.Date;
+
 
 /**
  * This file contains an iterative (Non-Linear) "OpMode".
@@ -66,6 +68,10 @@ public abstract class Tele_Op_Base extends OpMode
     private static final double ROBOT_ROTATE_WEIGHTING = 0.5;
 
     public Auto_Robot_Detect.teamId TeamId = Auto_Robot_Detect.teamId.teamUnknown;
+
+    // TeamCode BuildID
+    public String swBuildId = "";
+
     /*
      * HW initialization code
      */
@@ -79,6 +85,13 @@ public abstract class Tele_Op_Base extends OpMode
         go = new Drive( hardwareMap );
         loader = new Loader( hardwareMap );
         arm = new Arm( hardwareMap );
+
+        Date buildDate = BuildConfig.BUILD_TIME;
+        swBuildId = hardwareMap.appContext.getString(R.string.gitBranch) + " @ " + buildDate.toString();
+
+        telemetry.addLine("TeamCode Build ID: ");
+        telemetry.addLine("   " + swBuildId);
+        telemetry.update();
     }
 
 

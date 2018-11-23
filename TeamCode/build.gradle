@@ -10,6 +10,29 @@
 // Custom definitions may go here
 // Include common definitions from above.
 apply from: '../build.common.gradle'
+android {
+    defaultConfig {
+        resValue "string", "gitBranch", gitBranch()
+    }
+    buildTypes {
+        release{
+            buildConfigField "java.util.Date", "BUILD_TIME", "new java.util.Date(" + System.currentTimeMillis() + "L)"
+        }
+        debug {
+            buildConfigField "java.util.Date", "BUILD_TIME", "new java.util.Date(" + System.currentTimeMillis() + "L)"
+        }
+    }
+}
+
+def gitBranch() {
+    def branch = ""
+    def proc = "git rev-parse --abbrev-ref HEAD".execute()
+    proc.in.eachLine{ line -> branch = line }
+    proc.err.eachLine { line -> println line }
+    proc.waitFor()
+    branch
+}
+
 dependencies {
     implementation project(':openCVLibrary3')
     implementation project(':dogecv')

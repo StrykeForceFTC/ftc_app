@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import java.util.Date;
+
 import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.DogeCV;
 import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
@@ -29,6 +31,9 @@ public abstract class AutonLinearBase extends LinearOpMode
 
     // Team ID
     public Auto_Robot_Detect.teamId TeamId = Auto_Robot_Detect.teamId.teamUnknown;
+
+    // TeamCode BuildID
+    public String swBuildId = "";
 
     // Auton steps
     // Enumeration for auton steps allowing move to next step
@@ -134,6 +139,13 @@ public abstract class AutonLinearBase extends LinearOpMode
                 break;
             }
         }
+
+        Date buildDate = BuildConfig.BUILD_TIME;
+        swBuildId = hardwareMap.appContext.getString(R.string.gitBranch) + " @ " + buildDate.toString();
+
+        telemetry.addLine("TeamCode Build ID: ");
+        telemetry.addLine("   " + swBuildId);
+        telemetry.update();
     }
 
 

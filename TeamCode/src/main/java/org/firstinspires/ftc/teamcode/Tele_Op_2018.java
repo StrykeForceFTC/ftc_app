@@ -77,6 +77,9 @@ public class Tele_Op_2018 extends Tele_Op_Base
         telemetry.addLine("Team Id"  )
                 .addData("team", TeamId.name());
 
+        telemetry.addLine("TeamCode Build ID: ");
+        telemetry.addLine("   " + swBuildId);
+
         telemetry.update();
     }
 
