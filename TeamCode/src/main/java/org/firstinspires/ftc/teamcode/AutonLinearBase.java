@@ -119,6 +119,7 @@ public abstract class AutonLinearBase extends LinearOpMode
 
         detector.enable();
 
+        // Robot-specific overrides
         switch (TeamId)
         {
             case team7228: {
@@ -138,8 +139,10 @@ public abstract class AutonLinearBase extends LinearOpMode
             }
         }
 
+        // Get the TeamCode build ID from the resources
         swBuildID = hardwareMap.appContext.getString(R.string.TeamCode_BuildID);
 
+        // Send initial telemetry data
         AddStdAutonTelemetry(false);
         telemetry.update();
     }
@@ -176,6 +179,7 @@ public abstract class AutonLinearBase extends LinearOpMode
         return detector.getXPosition( );
     }
 
+
     // Method to run for stop step of auton - ensures all HW left in
     // known and safe state
     protected void StopActions( )
@@ -200,24 +204,31 @@ public abstract class AutonLinearBase extends LinearOpMode
     */
     protected void ReleaseLander( )
     {
+        // Raise lift to drop the robot to the ground & update telemetry
         arm.position_lift( Arm.lift_pos.hook_lander, LIFT_SPEED );
-
         telemetry.addLine("LOWERING");
         AddStdAutonTelemetry(true);
         telemetry.update();
 
+        // Wait for the lift to be raised to position then update telemetry
         arm.WaitForInPos();
-
         telemetry.addLine("DONE");
         AddStdAutonTelemetry(true);
         telemetry.update();
 
+        // Strafe robot hook off of lander & back away from lander
         go.AutonMove( Drive.DIRECTION.RIGHT, RELEASE_STRAFE_IN );
         go.AutonMove( Drive.DIRECTION.REVERSE, RELEASE_MOVE_AWAY_IN );
+
+        // Start raising the arm to a near vertical position and strafe back to near center on the lander side
         arm.position_lift( Arm.lift_pos.sampling, LIFT_SPEED );
         arm.position_wrist( Arm.WRIST_POS.UNLOAD, WRIST_SPEED );
         go.AutonMove( Drive.DIRECTION.LEFT, RELEASE_STRAFE_IN );
+
+        // Rotate to face the minerals
         go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, RELEASE_ROTATE_DEG );
+
+        // Position the arm to prepare for pushing the gold mineral
         arm.position_wrist( Arm.WRIST_POS.LOAD, WRIST_SPEED );
         arm.WaitForInPos();
     }
@@ -261,30 +272,41 @@ public abstract class AutonLinearBase extends LinearOpMode
         }
     }
 
+
     // Method to move to gold mineral position
     protected void GoToGold( )
     {
-        /*switch ( gold )
+        switch ( gold )
         {
+            // Not defined yet
             case LEFT_POS:
-                go.AutonMove( Drive.DIRECTION.LEFT, GO_TO_GOLD_SIDEWAYS_IN );
+                //go.AutonMove( Drive.DIRECTION.LEFT, GO_TO_GOLD_SIDEWAYS_IN );
                 break;
+
 
             case MID_POS:
+                // Move into mineral
+                go.AutonMove( Drive.DIRECTION.FORWARD, GO_TO_GOLD_FWD_IN );
+
+                // Swipe to the right to sweep mineral out of position
+                go.AutonMoveRotate( Drive.ROTATION.CLOCKWISE, 30 );
+
+                // Raise the arm to be clear of minerals
+                arm.position_wrist( Arm.WRIST_POS.UNLOAD, WRIST_SPEED );
                 break;
 
+
+            // Not defined yet
             case RIGHT_POS:
-                go.AutonMove( Drive.DIRECTION.RIGHT, GO_TO_GOLD_SIDEWAYS_IN );
+                //go.AutonMove( Drive.DIRECTION.RIGHT, GO_TO_GOLD_SIDEWAYS_IN );
                 break;
 
+
+            // Shouldn't be used
             case UNKNOWN_POS:
                 break;
         }
-        */
 
-        go.AutonMove( Drive.DIRECTION.FORWARD, GO_TO_GOLD_FWD_IN );
-        go.AutonMoveRotate( Drive.ROTATION.CLOCKWISE, 30 );
-        arm.position_wrist( Arm.WRIST_POS.UNLOAD, WRIST_SPEED );
     }
 
 
@@ -319,19 +341,22 @@ public abstract class AutonLinearBase extends LinearOpMode
         }
     }
 
+
     // The drive to depot method is expected to be different for each
     // position, so each auton routine must override it.
     abstract protected void DriveToDepot( );
+
 
     // Common method to unload marker and gold sample
     protected void UnloadGoldAndMarker( )
     {
         // arm should already be in correct position
 
-        // Unload gold sample
+        // Unload gold sample and adjust robot rotation for backing into crater.
         loader.AutonUnload();
         go.AutonMoveRotate(Drive.ROTATION.COUNTERCLOCKWISE, 8);
     }
+
 
     // Method to get to park position
     protected void ParkTheRobot( )

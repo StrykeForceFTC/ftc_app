@@ -30,6 +30,9 @@ public class Auton_Facing_Crater extends AutonLinearBase
     @Override
     public void runOpMode()
     {
+        // This line to disables gold mineral position detection - assuming middle
+        gold = GOLD_POSITIONS.MID_POS;
+
         /*
          * Initialize the hardware variables.
          */
@@ -48,6 +51,7 @@ public class Auton_Facing_Crater extends AutonLinearBase
         // LOAD_GOLD_FWD_IN = 4.0
         // PARK_DISTANCE_IN = 75.0;
 
+        // Robot-specific overrides
         switch ( TeamId )
         {
             case team7228:
@@ -87,16 +91,18 @@ public class Auton_Facing_Crater extends AutonLinearBase
                 {
                     // Run common method from AutonLinearBase and
                     // go to next step
+                    // Release from lander and rotate to face minerals with arm positioned to sample
                     ReleaseLander();
-                    step = AUTON_STEPS.MOVE_TO_MINERAL;
+                    step = step.Next();
                     break;
                 }
 
                 case FIND_GOLD:
                 {
-                    // Use common method to find gold, commented out until
-                    // it can be fully developed / tuned.
-                    // FindGold();
+                    // Use common method to find gold
+                    // if gold position is already set, skip detection
+                    if (gold == GOLD_POSITIONS.UNKNOWN_POS)
+                        FindGold();
 
                     // Display mineral position on phone
                     telemetry.addLine().addData( "GP: ", gold.toString() );
@@ -108,21 +114,23 @@ public class Auton_Facing_Crater extends AutonLinearBase
 
                 case MOVE_TO_MINERAL:
                 {
-                    // Move in front of gold mineral
+                    // Sample gold mineral
                     GoToGold();
-                    step = step.DRIVE_DEPOT;
+                    step = step.Next();
                     break;
                 }
 
                 case LOAD_GOLD:
                 {
-                    LoadGold();
+                    // Can't load gold at this time
+                    //LoadGold();
                     step = step.Next();
                     break;
                 }
 
                 case DRIVE_DEPOT:
                 {
+                    // Move from completion of sampling to Depot
                     DriveToDepot( );
                     step = step.Next();
                     break;
@@ -138,6 +146,7 @@ public class Auton_Facing_Crater extends AutonLinearBase
 
                 case PARK:
                 {
+                    // Back-up from the depot into the crater.
                     ParkTheRobot();
                     step = step.Next();
                     break;
@@ -145,6 +154,7 @@ public class Auton_Facing_Crater extends AutonLinearBase
 
                 case STOP:
                 {
+                    // Auton is complete.
                     StopActions();
                     break;
                 }
@@ -169,12 +179,36 @@ public class Auton_Facing_Crater extends AutonLinearBase
         // close to the wall, rotate to make robot parallel to the wall,
         // then strafe to wall and finally go forward to depot.
 
-        go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, DRIVE_DEPOT_TURN_2_WALL_DEG );
-        go.AutonMove( Drive.DIRECTION.FORWARD, DRIVE_DEPOT_MOVE_2_WALL_IN );
-        go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, DRIVE_DEPOT_ROT_PARALLEL_2_WALL_DEG );
-        arm.position_wrist( Arm.WRIST_POS.MOVE, WRIST_SPEED );
-        go.AutonMove( Drive.DIRECTION.FORWARD, DRIVE_DEPOT_FWD_2_DEPOT );
+        switch(gold)
+        {   // Not defined yet
+            case LEFT_POS:
+                break;
 
+
+            case MID_POS:
+                // Turn away from minerals to face the wall between the alliance crater and depot
+                go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, DRIVE_DEPOT_TURN_2_WALL_DEG );
+
+                // Drive to near the wall, then rotate to face the depot
+                go.AutonMove( Drive.DIRECTION.FORWARD, DRIVE_DEPOT_MOVE_2_WALL_IN );
+                go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, DRIVE_DEPOT_ROT_PARALLEL_2_WALL_DEG );
+
+                // start positioning the arm for dropping the team marker and drive forward to
+                // the depot, ready to unload the marker.
+                arm.position_wrist( Arm.WRIST_POS.MOVE, WRIST_SPEED );
+                go.AutonMove( Drive.DIRECTION.FORWARD, DRIVE_DEPOT_FWD_2_DEPOT );
+                break;
+
+
+            // Not defined yet
+            case RIGHT_POS:
+                break;
+
+
+            // Shouldn't be used
+            case UNKNOWN_POS:
+                break;
+        }
 
     }
 
@@ -183,7 +217,7 @@ public class Auton_Facing_Crater extends AutonLinearBase
     {
         // arm should already be in correct position
 
-        // Unload gold sample
+        // Unload gold sample and adjust robot rotation for backing into crater.
         loader.AutonUnload();
         go.AutonMoveRotate(Drive.ROTATION.COUNTERCLOCKWISE, ROTATE_AFTER_DROP );
     }
