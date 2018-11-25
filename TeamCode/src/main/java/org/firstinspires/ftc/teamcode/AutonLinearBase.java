@@ -328,7 +328,7 @@ public abstract class AutonLinearBase extends LinearOpMode
     abstract protected void DriveToDepot( );
 
     // Common method to unload marker and gold sample
-Ma    abstract protected void UnloadGoldAndMarker( );
+    abstract protected void UnloadGoldAndMarker( );
 
     // Method to get to park position
     protected void ParkTheRobot( )
