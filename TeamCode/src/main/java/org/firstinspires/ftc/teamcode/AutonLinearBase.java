@@ -328,14 +328,7 @@ public abstract class AutonLinearBase extends LinearOpMode
     abstract protected void DriveToDepot( );
 
     // Common method to unload marker and gold sample
-    protected void UnloadGoldAndMarker( )
-    {
-        // arm should already be in correct position
-
-        // Unload gold sample
-        loader.AutonUnload();
-        go.AutonMoveRotate(Drive.ROTATION.COUNTERCLOCKWISE, 8);
-    }
+Ma    abstract protected void UnloadGoldAndMarker( );
 
     // Method to get to park position
     protected void ParkTheRobot( )
