@@ -61,11 +61,11 @@ public class Auton_Facing_Crater extends AutonLinearBase
         {
             case team7228:
             {
-                RELEASE_ROTATE_DEG = 161;
-                DRIVE_DEPOT_TURN_2_WALL_MID_DEG = 106;
-                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_MID_DEG = 28;
+                DRIVE_DEPOT_TURN_2_WALL_MID_DEG = 90;
+                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_MID_DEG = 53;
                 ROTATE_AFTER_DROP_DEG = 5;
-                GO_TO_GOLD_FWD_IN = 6.0;
+                DRIVE_DEPOT_MOVE_2_WALL_MID_IN = 41.5;
+                DRIVE_DEPOT_FWD_2_DEPOT_MID_IN = 28;
                 break;
             }
 

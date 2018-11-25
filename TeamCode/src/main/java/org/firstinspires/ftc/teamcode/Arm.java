@@ -16,17 +16,18 @@ public class Arm {
 
     private boolean allow_neg_lift;
     private boolean allow_neg_wrist;
-
+    private Auto_Robot_Detect.teamId TeamId = Auto_Robot_Detect.teamId.teamUnknown;
 
     // Constructor - doesn't zero encoders
     public Arm( HardwareMap ahwMap ) {
-        this( ahwMap, false );
+        this( ahwMap, false, Auto_Robot_Detect.teamId.teamUnknown );
     }
 
     // Constructor
     // Initialize HardWare and variables
-    public Arm(HardwareMap ahwMap, boolean resetEncoders ) {
+    public Arm(HardwareMap ahwMap, boolean resetEncoders, Auto_Robot_Detect.teamId id ) {
 
+        TeamId = id;
         lift = ahwMap.dcMotor.get("arm_lift_motor");
         wrist = ahwMap.dcMotor.get("arm_wrist_motor");
 
@@ -156,7 +157,12 @@ public class Arm {
             case hook_lander:
                 return 4400;
             case sampling:
-                return 1200;    // 1400
+            {
+                if ( TeamId == Auto_Robot_Detect.teamId.team7228 ) {
+                    return 1400;
+                }
+                else return 1200;    // 1400
+            }
             default:
                 return lift.getCurrentPosition();
         }

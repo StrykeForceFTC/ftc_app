@@ -92,6 +92,7 @@ public abstract class AutonLinearBase extends LinearOpMode
     protected int    LIFT_SPEED = 10;
     protected int    WRIST_SPEED = 10;
 
+    protected double ROTATE_TO_KNOCK_OFF_SAMPLE = 30;
 
     // Method to initialize any connected hardware
     public void InitHardware( )
@@ -101,7 +102,7 @@ public abstract class AutonLinearBase extends LinearOpMode
         TeamId = robotDetector.TeamId;
         go = new Drive( hardwareMap );
         loader = new Loader( hardwareMap );
-        arm = new Arm( hardwareMap, true );
+        arm = new Arm( hardwareMap, true, TeamId );
 
         /*
          ** Rest of this method is about starting up a Gold detector from
@@ -129,9 +130,10 @@ public abstract class AutonLinearBase extends LinearOpMode
         // Robot-specific overrides
         switch (TeamId)
         {
-            case team7228: {
-                //RELEASE_MOVE_AWAY_IN = 9.0;
-                //GO_TO_GOLD_FWD_IN = 6.0;
+            case team7228:
+            {
+                RELEASE_ROTATE_DEG = 176;
+                GO_TO_GOLD_FWD_MID_IN = 6.0;
                 break;
             }
 
@@ -318,7 +320,7 @@ public abstract class AutonLinearBase extends LinearOpMode
         // Movements common to all sampling positions
 
         // Swipe to the right to sweep mineral out of position
-        go.AutonMoveRotate( Drive.ROTATION.CLOCKWISE, 30 );
+        go.AutonMoveRotate( Drive.ROTATION.CLOCKWISE, ROTATE_TO_KNOCK_OFF_SAMPLE );
 
         // Raise the arm to be clear of minerals
         arm.position_wrist( Arm.WRIST_POS.UNLOAD, WRIST_SPEED );
