@@ -156,7 +156,7 @@ public class Arm {
             case hook_lander:
                 return 4400;
             case sampling:
-                return 1400;
+                return 1200;    // 1400
             default:
                 return lift.getCurrentPosition();
         }
@@ -173,7 +173,7 @@ public class Arm {
             case UNLOAD:           // Leaned a little bit forward of vertical
                 return 2550;
             case MOVE:             // Pointed out to front high enough to not get in way when moving
-                return 4000;
+                return 4250;       // 4000
             case LOAD:             // Pointed towards ground in front of robot
                 return 4875;
             default:
