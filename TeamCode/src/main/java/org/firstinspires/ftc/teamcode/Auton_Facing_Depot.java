@@ -17,12 +17,26 @@ public class Auton_Facing_Depot extends AutonLinearBase
 
     // Constants for drive to depot. These are not common with
     // the facing depot auton, so the values are set up here.
-    private double DRIVE_DEPOT_TURN_2_WALL_DEG = 65.0;
-    private double DRIVE_DEPOT_MOVE_2_WALL_IN = 40.0;
-    private double DRIVE_DEPOT_ROT_PARALLEL_2_WALL_DEG = 60;
-    private double DRIVE_DEPOT_STRAFE_2_WALL_IN = 13.0;
-    private double DRIVE_DEPOT_FWD_2_DEPOT = 26;    // 33
-    private double ROTATE_AFTER_DROP = 6;
+    private double DRIVE_DEPOT_TURN_2_WALL_LEFT_DEG = 100.0;
+    private double DRIVE_DEPOT_TURN_2_WALL_MID_DEG = 65.0;
+    private double DRIVE_DEPOT_TURN_2_WALL_RIGHT_DEG = 55.0;
+
+    private double DRIVE_DEPOT_MOVE_2_WALL_LEFT_IN = 30.0;
+    private double DRIVE_DEPOT_MOVE_2_WALL_MID_IN = 40.0;
+    private double DRIVE_DEPOT_MOVE_2_WALL_RIGHT_IN = 53.0;
+
+    private double DRIVE_DEPOT_ROT_PARALLEL_2_WALL_LEFT_DEG = 75;
+    private double DRIVE_DEPOT_ROT_PARALLEL_2_WALL_MID_DEG = 60;
+    private double DRIVE_DEPOT_ROT_PARALLEL_2_WALL_RIGHT_DEG = 55;
+
+    private double DRIVE_DEPOT_FWD_2_DEPOT_LEFT_IN = 26;
+    private double DRIVE_DEPOT_FWD_2_DEPOT_MID_IN = 26;    // 33
+    private double DRIVE_DEPOT_FWD_2_DEPOT_RIGHT_IN = 26;
+
+    //private double DRIVE_DEPOT_STRAFE_2_WALL_IN = 13.0;
+
+
+    private double ROTATE_AFTER_DROP_DEG = 6;
 
     /*
      * There is only runOpMode for linear op modes
@@ -30,8 +44,11 @@ public class Auton_Facing_Depot extends AutonLinearBase
     @Override
     public void runOpMode()
     {
-        // This line to disables gold mineral position detection - assuming middle
-        gold = GOLD_POSITIONS.MID_POS;
+        // If gold is set to a non unknown position, disable gold mineral position detection and assume the position is as set
+//        gold = GOLD_POSITIONS.UNKNOWN_POS;
+//        gold = GOLD_POSITIONS.LEFT_POS;
+//        gold = GOLD_POSITIONS.MID_POS;
+        gold = GOLD_POSITIONS.RIGHT_POS;
 
         /*
          * Initialize the hardware variables.
@@ -56,6 +73,11 @@ public class Auton_Facing_Depot extends AutonLinearBase
         {
             case team7228:
             {
+                DRIVE_DEPOT_TURN_2_WALL_MID_DEG = 55;
+                DRIVE_DEPOT_MOVE_2_WALL_MID_IN = 35;
+                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_MID_DEG = 65;
+                ROTATE_AFTER_DROP_DEG = 4;
+                PARK_DISTANCE_IN = 47;
                 break;
             }
 
@@ -178,31 +200,49 @@ public class Auton_Facing_Depot extends AutonLinearBase
         switch (gold)
         {   // Not defined yet
             case LEFT_POS:
-                break;
-
-
-            case MID_POS:
                 // Turn away from minerals to face the wall between the opposing alliance crater and depot
-                go.AutonMoveRotate(Drive.ROTATION.CLOCKWISE, DRIVE_DEPOT_TURN_2_WALL_DEG);
+                go.AutonMoveRotate(Drive.ROTATION.CLOCKWISE, DRIVE_DEPOT_TURN_2_WALL_LEFT_DEG);
 
                 // Drive to near the wall, then rotate to face the depot
-                go.AutonMove(Drive.DIRECTION.REVERSE, DRIVE_DEPOT_MOVE_2_WALL_IN);
-                go.AutonMoveRotate(Drive.ROTATION.COUNTERCLOCKWISE, DRIVE_DEPOT_ROT_PARALLEL_2_WALL_DEG);
+                go.AutonMove(Drive.DIRECTION.REVERSE, DRIVE_DEPOT_MOVE_2_WALL_LEFT_IN);
+                go.AutonMoveRotate(Drive.ROTATION.COUNTERCLOCKWISE, DRIVE_DEPOT_ROT_PARALLEL_2_WALL_LEFT_DEG);
 
                 // start positioning the arm for dropping the team marker and drive forward to
                 // the depot, ready to unload the marker.
                 arm.position_wrist(Arm.WRIST_POS.MOVE, WRIST_SPEED);
-                go.AutonMove(Drive.DIRECTION.FORWARD, DRIVE_DEPOT_FWD_2_DEPOT);
+                go.AutonMove(Drive.DIRECTION.FORWARD, DRIVE_DEPOT_FWD_2_DEPOT_LEFT_IN);
+                break;
+
+
+            case MID_POS:
+            case UNKNOWN_POS:   // for unknown gold mineral position, assume middle
+                // Turn away from minerals to face the wall between the opposing alliance crater and depot
+                go.AutonMoveRotate(Drive.ROTATION.CLOCKWISE, DRIVE_DEPOT_TURN_2_WALL_MID_DEG);
+
+                // Drive to near the wall, then rotate to face the depot
+                go.AutonMove(Drive.DIRECTION.REVERSE, DRIVE_DEPOT_MOVE_2_WALL_MID_IN);
+                go.AutonMoveRotate(Drive.ROTATION.COUNTERCLOCKWISE, DRIVE_DEPOT_ROT_PARALLEL_2_WALL_MID_DEG);
+
+                // start positioning the arm for dropping the team marker and drive forward to
+                // the depot, ready to unload the marker.
+                arm.position_wrist(Arm.WRIST_POS.MOVE, WRIST_SPEED);
+                go.AutonMove(Drive.DIRECTION.FORWARD, DRIVE_DEPOT_FWD_2_DEPOT_MID_IN);
                 break;
 
 
             // Not defined yet
             case RIGHT_POS:
-                break;
+                // Turn away from minerals to face the wall between the opposing alliance crater and depot
+                go.AutonMoveRotate(Drive.ROTATION.CLOCKWISE, DRIVE_DEPOT_TURN_2_WALL_RIGHT_DEG);
 
+                // Drive to near the wall, then rotate to face the depot
+                go.AutonMove(Drive.DIRECTION.REVERSE, DRIVE_DEPOT_MOVE_2_WALL_RIGHT_IN);
+                go.AutonMoveRotate(Drive.ROTATION.COUNTERCLOCKWISE, DRIVE_DEPOT_ROT_PARALLEL_2_WALL_RIGHT_DEG);
 
-            // Shouldn't be used
-            case UNKNOWN_POS:
+                // start positioning the arm for dropping the team marker and drive forward to
+                // the depot, ready to unload the marker.
+                arm.position_wrist(Arm.WRIST_POS.MOVE, WRIST_SPEED);
+                go.AutonMove(Drive.DIRECTION.FORWARD, DRIVE_DEPOT_FWD_2_DEPOT_RIGHT_IN);
                 break;
         }
     }
@@ -214,7 +254,7 @@ public class Auton_Facing_Depot extends AutonLinearBase
 
         // Unload gold sample and adjust robot rotation for backing into crater.
         loader.AutonUnload();
-        go.AutonMoveRotate(Drive.ROTATION.CLOCKWISE, ROTATE_AFTER_DROP );
+        go.AutonMoveRotate(Drive.ROTATION.CLOCKWISE, ROTATE_AFTER_DROP_DEG );
     }
 
 

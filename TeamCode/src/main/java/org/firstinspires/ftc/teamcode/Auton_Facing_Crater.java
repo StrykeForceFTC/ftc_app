@@ -17,12 +17,25 @@ public class Auton_Facing_Crater extends AutonLinearBase
 
     // Constants for drive to depot. These are not common with
     // the facing depot auton, so the values are set up here.
-    private double DRIVE_DEPOT_TURN_2_WALL_DEG = 111.0;
-    private double DRIVE_DEPOT_MOVE_2_WALL_IN = 43.5;
-    private double DRIVE_DEPOT_ROT_PARALLEL_2_WALL_DEG = 43;
+    private double DRIVE_DEPOT_TURN_2_WALL_LEFT_DEG = 111.0;
+    private double DRIVE_DEPOT_TURN_2_WALL_MID_DEG = 111.0;
+    private double DRIVE_DEPOT_TURN_2_WALL_RIGHT_DEG = 111.0;
+
+    private double DRIVE_DEPOT_MOVE_2_WALL_LEFT_IN = 43.5;
+    private double DRIVE_DEPOT_MOVE_2_WALL_MID_IN = 43.5;
+    private double DRIVE_DEPOT_MOVE_2_WALL_RIGHT_IN = 43.5;
+
+    private double DRIVE_DEPOT_ROT_PARALLEL_2_WALL_LEFT_DEG = 43;
+    private double DRIVE_DEPOT_ROT_PARALLEL_2_WALL_MID_DEG = 43;
+    private double DRIVE_DEPOT_ROT_PARALLEL_2_WALL_RIGHT_DEG = 43;
+
+    private double DRIVE_DEPOT_FWD_2_DEPOT_LEFT_IN = 23;
+    private double DRIVE_DEPOT_FWD_2_DEPOT_MID_IN = 23;
+    private double DRIVE_DEPOT_FWD_2_DEPOT_RIGHT_IN = 23;
+
     private double DRIVE_DEPOT_STRAFE_2_WALL_IN = 12.0;
-    private double DRIVE_DEPOT_FWD_2_DEPOT = 23;
-    private double ROTATE_AFTER_DROP = 8;
+
+    private double ROTATE_AFTER_DROP_DEG = 8;
 
     /*
      * There is only runOpMode for linear op modes
@@ -57,9 +70,10 @@ public class Auton_Facing_Crater extends AutonLinearBase
             case team7228:
             {
                 RELEASE_ROTATE_DEG = 161;
-                DRIVE_DEPOT_TURN_2_WALL_DEG = 106;
-                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_DEG = 28;
-                ROTATE_AFTER_DROP = 5;
+                DRIVE_DEPOT_TURN_2_WALL_MID_DEG = 106;
+                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_MID_DEG = 28;
+                ROTATE_AFTER_DROP_DEG = 5;
+                GO_TO_GOLD_FWD_IN = 6.0;
                 break;
             }
 
@@ -187,16 +201,16 @@ public class Auton_Facing_Crater extends AutonLinearBase
 
             case MID_POS:
                 // Turn away from minerals to face the wall between the alliance crater and depot
-                go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, DRIVE_DEPOT_TURN_2_WALL_DEG );
+                go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, DRIVE_DEPOT_TURN_2_WALL_MID_DEG);
 
                 // Drive to near the wall, then rotate to face the depot
-                go.AutonMove( Drive.DIRECTION.FORWARD, DRIVE_DEPOT_MOVE_2_WALL_IN );
-                go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, DRIVE_DEPOT_ROT_PARALLEL_2_WALL_DEG );
+                go.AutonMove( Drive.DIRECTION.FORWARD, DRIVE_DEPOT_MOVE_2_WALL_MID_IN );
+                go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, DRIVE_DEPOT_ROT_PARALLEL_2_WALL_MID_DEG );
 
                 // start positioning the arm for dropping the team marker and drive forward to
                 // the depot, ready to unload the marker.
                 arm.position_wrist( Arm.WRIST_POS.MOVE, WRIST_SPEED );
-                go.AutonMove( Drive.DIRECTION.FORWARD, DRIVE_DEPOT_FWD_2_DEPOT );
+                go.AutonMove( Drive.DIRECTION.FORWARD, DRIVE_DEPOT_FWD_2_DEPOT_MID_IN );
                 break;
 
 
@@ -219,7 +233,7 @@ public class Auton_Facing_Crater extends AutonLinearBase
 
         // Unload gold sample and adjust robot rotation for backing into crater.
         loader.AutonUnload();
-        go.AutonMoveRotate(Drive.ROTATION.COUNTERCLOCKWISE, ROTATE_AFTER_DROP );
+        go.AutonMoveRotate(Drive.ROTATION.COUNTERCLOCKWISE, ROTATE_AFTER_DROP_DEG );
     }
 
 }

@@ -78,8 +78,15 @@ public abstract class AutonLinearBase extends LinearOpMode
     protected double RELEASE_ROTATE_DEG = 172.0;
     protected double FIND_GOLD_INITIAL_CW_ROT_DEG = 135.0;
     protected double FIND_GOLD_ROTATE_4_SAMPLE_IN = 45.0;
+
+    // GoToGold() Default Positioning Values
     protected double GO_TO_GOLD_FWD_IN = 4.25;
-    protected double GO_TO_GOLD_SIDEWAYS_IN = 8.0;
+    protected double GO_TO_GOLD_FWD_LEFT_IN = 2.25;
+    protected double GO_TO_GOLD_FWD_MID_IN = 4.25;
+    protected double GO_TO_GOLD_FWD_RIGHT_IN = 10.25;
+    protected double GO_TO_GOLD_SIDEWAYS_LEFT_IN = 14.0;
+    protected double GO_TO_GOLD_SIDEWAYS_RIGHT_IN = 14.0;
+
     protected double LOAD_GOLD_FWD_IN = 4.0;
     protected double PARK_DISTANCE_IN = 44.0;
     protected int    LIFT_SPEED = 10;
@@ -124,7 +131,7 @@ public abstract class AutonLinearBase extends LinearOpMode
         {
             case team7228: {
                 //RELEASE_MOVE_AWAY_IN = 9.0;
-                GO_TO_GOLD_FWD_IN = 6.0;
+                //GO_TO_GOLD_FWD_IN = 6.0;
                 break;
             }
 
@@ -276,36 +283,45 @@ public abstract class AutonLinearBase extends LinearOpMode
     // Method to move to gold mineral position
     protected void GoToGold( )
     {
+        // Movements specific to mineral sampling position
+
         switch ( gold )
         {
-            // Not defined yet
             case LEFT_POS:
-                //go.AutonMove( Drive.DIRECTION.LEFT, GO_TO_GOLD_SIDEWAYS_IN );
-                break;
+                // Strafe Left & rotate slightly to line up with left side of left mineral
+                go.AutonMove( Drive.DIRECTION.LEFT, GO_TO_GOLD_SIDEWAYS_LEFT_IN );
+                go.AutonMoveRotate(Drive.ROTATION.COUNTERCLOCKWISE, 10);
 
+                // Move into mineral
+                go.AutonMove( Drive.DIRECTION.FORWARD, GO_TO_GOLD_FWD_LEFT_IN );
+
+                break;
 
             case MID_POS:
+            case UNKNOWN_POS:   // for unknown gold mineral position, assume middle
                 // Move into mineral
-                go.AutonMove( Drive.DIRECTION.FORWARD, GO_TO_GOLD_FWD_IN );
+                go.AutonMove( Drive.DIRECTION.FORWARD, GO_TO_GOLD_FWD_MID_IN );
 
-                // Swipe to the right to sweep mineral out of position
-                go.AutonMoveRotate( Drive.ROTATION.CLOCKWISE, 30 );
-
-                // Raise the arm to be clear of minerals
-                arm.position_wrist( Arm.WRIST_POS.UNLOAD, WRIST_SPEED );
                 break;
 
-
-            // Not defined yet
             case RIGHT_POS:
-                //go.AutonMove( Drive.DIRECTION.RIGHT, GO_TO_GOLD_SIDEWAYS_IN );
-                break;
+                // Strafe Right & rotate slightly to line up with left side of right mineral
+                go.AutonMove( Drive.DIRECTION.RIGHT, GO_TO_GOLD_SIDEWAYS_RIGHT_IN );
+                go.AutonMoveRotate(Drive.ROTATION.COUNTERCLOCKWISE, 10);
 
+                // Move into mineral
+                go.AutonMove( Drive.DIRECTION.FORWARD, GO_TO_GOLD_FWD_RIGHT_IN );
 
-            // Shouldn't be used
-            case UNKNOWN_POS:
                 break;
         }
+
+        // Movements common to all sampling positions
+
+        // Swipe to the right to sweep mineral out of position
+        go.AutonMoveRotate( Drive.ROTATION.CLOCKWISE, 30 );
+
+        // Raise the arm to be clear of minerals
+        arm.position_wrist( Arm.WRIST_POS.UNLOAD, WRIST_SPEED );
 
     }
 
@@ -328,14 +344,14 @@ public abstract class AutonLinearBase extends LinearOpMode
             switch ( gold )
             {
                 case LEFT_POS:
-                    go.AutonMove( Drive.DIRECTION.RIGHT, GO_TO_GOLD_SIDEWAYS_IN );
+                    //go.AutonMove( Drive.DIRECTION.RIGHT, GO_TO_GOLD_SIDEWAYS_IN );
                     break;
 
                 case MID_POS:
                     break;
 
                 case RIGHT_POS:
-                    go.AutonMove( Drive.DIRECTION.LEFT, GO_TO_GOLD_SIDEWAYS_IN );
+                    //go.AutonMove( Drive.DIRECTION.LEFT, GO_TO_GOLD_SIDEWAYS_IN );
                     break;
             }
         }
