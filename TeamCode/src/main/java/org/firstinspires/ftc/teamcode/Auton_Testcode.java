@@ -90,57 +90,19 @@ public class Auton_Testcode extends AutonLinearBase
 
                     // Display mineral position on phone
                     telemetry.addLine().addData( "GP: ", gold.toString() );
+                    telemetry.addData("IsAligned", GoldAligned()); // Is the bot aligned with the gold mineral
+                    telemetry.addData("X Pos", GoldXPosition());    // Gold X pos.
 
                     // Move to next step
                     step = step.Next();
                     break;
                 }
 
-                case MOVE_TO_MINERAL:
-                {
-                    // Move in front of gold mineral
-                    GoToGold();
-                    step = step.Next();
-                    break;
-                }
 
-                case LOAD_GOLD:
-                {
-                    LoadGold();
-                    step = step.Next();
-                    break;
-                }
 
-                case DRIVE_DEPOT:
-                {
-                    DriveToDepot( );
-                    step = step.Next();
-                    break;
-                }
-
-                case UNLOAD:
-                {
-                    // Drop marker and gold sample
-                    UnloadGoldAndMarker();
-                    step = AUTON_STEPS.PARK;
-                    break;
-                }
-
-                case PARK:
-                {
-                    ParkTheRobot();
-                    step = AUTON_STEPS.STOP;
-                    break;
-                }
-
-                case STOP:
-                {
-                    StopActions();
-                    break;
-                }
             }
 
-            telemetry.addData("IsAligned", GoldAligned()); // Is the bot aligned with the gold mineral
+            /*telemetry.addData("IsAligned", GoldAligned()); // Is the bot aligned with the gold mineral
             telemetry.addData("X Pos", GoldXPosition());    // Gold X pos.
 
             telemetry.addLine("Encoders ")
@@ -152,6 +114,7 @@ public class Auton_Testcode extends AutonLinearBase
                     .addData("Team", TeamId.name());
 
             telemetry.update();
+            */
         }
 
     }
