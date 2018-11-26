@@ -48,7 +48,7 @@ public class Auton_Facing_Depot extends AutonLinearBase
 //        gold = GOLD_POSITIONS.UNKNOWN_POS;
 //        gold = GOLD_POSITIONS.LEFT_POS;
 //        gold = GOLD_POSITIONS.MID_POS;
-        gold = GOLD_POSITIONS.RIGHT_POS;
+        gold = GOLD_POSITIONS.MID_POS;
 
         /*
          * Initialize the hardware variables.
@@ -58,15 +58,7 @@ public class Auton_Facing_Depot extends AutonLinearBase
         // Override values for various auton movements - if you want
         // to change from values in AutonLinearBase, then delete the "//"
         // and set to the desired value.
-        // RELEASE_STRAFE_IN = 4.0;
-        // RELEASE_MOVE_AWAY_IN = 6.0;
-        // RELEASE_ROTATE_DEG = 180.0;
-        // FIND_GOLD_INITIAL_CW_ROT_DEG = 135.0;
-        // FIND_GOLD_ROTATE_4_SAMPLE_IN = 45.0;
-        // GO_TO_GOLD_FWD_IN = 8.0;
-        // GO_TO_GOLD_SIDEWAYS_IN = 8.0;
-        // LOAD_GOLD_FWD_IN = 4.0;
-        PARK_DISTANCE_IN = 45;
+        PARK_DISTANCE_IN = 49;
 
         // Robot-specific overrides
         switch ( TeamId )
@@ -74,10 +66,10 @@ public class Auton_Facing_Depot extends AutonLinearBase
             case team7228:
             {
                 DRIVE_DEPOT_TURN_2_WALL_MID_DEG = 55;
-                DRIVE_DEPOT_MOVE_2_WALL_MID_IN = 35;
-                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_MID_DEG = 65;
-                ROTATE_AFTER_DROP_DEG = 4;
-                PARK_DISTANCE_IN = 47;
+                DRIVE_DEPOT_MOVE_2_WALL_MID_IN = 36.5;
+                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_MID_DEG = 55;
+                ROTATE_AFTER_DROP_DEG = 6;
+                // PARK_DISTANCE_IN = 47;
                 break;
             }
 
