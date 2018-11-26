@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
 <Robot type="FirstInspires-FTC">
-    <LynxUsbDevice name="Expansion Hub Portal 1" serialNumber="DQ1NBY8J" parentModuleAddress="1">
+    <LynxUsbDevice name="Expansion Hub Portal 1" serialNumber="DQ1685BR" parentModuleAddress="2">
         <LynxModule name="Expansion Hub 1" port="1">
             <NeveRest40Gearmotor name="front_left" port="0" />
             <NeveRest40Gearmotor name="front_right" port="1" />
