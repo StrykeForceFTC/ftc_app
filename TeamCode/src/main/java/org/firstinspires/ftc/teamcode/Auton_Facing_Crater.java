@@ -44,7 +44,7 @@ public class Auton_Facing_Crater extends AutonLinearBase
     public void runOpMode()
     {
         // This line to disables gold mineral position detection - assuming middle
-        gold = GOLD_POSITIONS.MID_POS;
+        gold = GOLD_POSITIONS.UNKNOWN_POS;
 
         /*
          * Initialize the hardware variables.
@@ -63,7 +63,7 @@ public class Auton_Facing_Crater extends AutonLinearBase
             {
                 DRIVE_DEPOT_TURN_2_WALL_MID_DEG = 90;
                 DRIVE_DEPOT_ROT_PARALLEL_2_WALL_MID_DEG = 20;
-                ROTATE_AFTER_DROP_DEG = 5;
+                ROTATE_AFTER_DROP_DEG = 7;
                 DRIVE_DEPOT_MOVE_2_WALL_MID_IN = 45;
                 DRIVE_DEPOT_FWD_2_DEPOT_MID_IN = 26;
                 break;
@@ -107,8 +107,10 @@ public class Auton_Facing_Crater extends AutonLinearBase
                 {
                     // Use common method to find gold
                     // if gold position is already set, skip detection
-                    if (gold == GOLD_POSITIONS.UNKNOWN_POS)
-                        FindGold();
+                    if ( gold == GOLD_POSITIONS.UNKNOWN_POS )
+                    {
+                        FindGold( );
+                    }
 
                     // Display mineral position on phone
                     telemetry.addLine().addData( "GP: ", gold.toString() );
@@ -167,8 +169,8 @@ public class Auton_Facing_Crater extends AutonLinearBase
 
             }
 
-            telemetry.addData("IsAligned", GoldAligned()); // Is the bot aligned with the gold mineral
-            telemetry.addData("X Pos", GoldXPosition());    // Gold X pos.
+            telemetry.addData("Is Found", GoldIsFound());   // Is there a gold block in view
+            telemetry.addData("Y Pos", GoldYPosition());    // Gold Y pos.
 
             AddStdAutonTelemetry(true);
             telemetry.update();

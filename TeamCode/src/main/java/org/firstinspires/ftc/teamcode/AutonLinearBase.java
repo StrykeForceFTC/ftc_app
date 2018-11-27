@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.DogeCV;
-import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
+import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetectorVertical;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -25,7 +25,7 @@ public abstract class AutonLinearBase extends LinearOpMode
     public Arm arm = null;
 
     // Detectors
-    private GoldAlignDetector detector;
+    private GoldAlignDetectorVertical detector;
 
     // Team ID
     public Auto_Robot_Detect.teamId TeamId = Auto_Robot_Detect.teamId.teamUnknown;
@@ -75,15 +75,21 @@ public abstract class AutonLinearBase extends LinearOpMode
     // Values for distances to move, degrees to rotate, etc.
     protected double RELEASE_STRAFE_IN = 4.0;
     protected double RELEASE_MOVE_AWAY_IN = 7.0;
-    protected double  RELEASE_ROTATE_DEG = 172.0;
+    protected double RELEASE_ROTATE_DEG = 142.0;                // Reduced by 30 for gold detection
     protected double FIND_GOLD_INITIAL_CW_ROT_DEG = 135.0;
     protected double FIND_GOLD_ROTATE_4_SAMPLE_IN = 45.0;
 
+    // FindGold constants
+    protected double UPPER_Y_LIMIT_FOR_RIGHT = 200;             // When Y value is <= this, assume gold is in right position
+
+
     // GoToGold() Default Positioning Values
-    protected double GO_TO_GOLD_FWD_IN = 4.25;
-    protected double GO_TO_GOLD_FWD_LEFT_IN = 2.25;
+    protected double GO_TO_GOLD_ROTATE_TO_RIGHT_DEG = 15;           // Clockwise! to get to right
+    protected double GO_TO_GOLD_ROTATE_TO_MID_DEG = 30;             // Counter clockwise
+    protected double GO_TO_GOLD_ROTATE_TO_LEFT_DEG = 60;            // Mid rotate plus extra to get to left, CCW
+    protected double GO_TO_GOLD_FWD_LEFT_IN = 6.25;
     protected double GO_TO_GOLD_FWD_MID_IN = 4.25;
-    protected double GO_TO_GOLD_FWD_RIGHT_IN = 10.25;
+    protected double GO_TO_GOLD_FWD_RIGHT_IN = 6.25;
     protected double GO_TO_GOLD_SIDEWAYS_LEFT_IN = 14.0;
     protected double GO_TO_GOLD_SIDEWAYS_RIGHT_IN = 14.0;
 
@@ -92,7 +98,7 @@ public abstract class AutonLinearBase extends LinearOpMode
     protected int    LIFT_SPEED = 10;
     protected int    WRIST_SPEED = 10;
 
-    protected double ROTATE_TO_KNOCK_OFF_SAMPLE = 30;
+    protected double ROTATE_TO_KNOCK_OFF_SAMPLE_DEG = 30;
 
     // Method to initialize any connected hardware
     public void InitHardware( )
@@ -109,7 +115,7 @@ public abstract class AutonLinearBase extends LinearOpMode
          ** DogeCV.
          */
         // Initialize
-        detector = new GoldAlignDetector();
+        detector = new GoldAlignDetectorVertical();
         detector.init( hardwareMap.appContext, CameraViewDisplay.getInstance( ) );
         detector.useDefaults();
 
@@ -132,8 +138,11 @@ public abstract class AutonLinearBase extends LinearOpMode
         {
             case team7228:
             {
-                RELEASE_ROTATE_DEG = 166;
+                RELEASE_ROTATE_DEG = 136;              // Reduced by 30deg for gold detection
                 GO_TO_GOLD_FWD_MID_IN = 6.0;
+                GO_TO_GOLD_FWD_LEFT_IN = 8.0;
+                GO_TO_GOLD_FWD_RIGHT_IN = 8.0;
+                ROTATE_TO_KNOCK_OFF_SAMPLE_DEG = 20;
                 break;
             }
 
@@ -175,17 +184,17 @@ public abstract class AutonLinearBase extends LinearOpMode
         telemetry.addLine("TeamCode Build ID: " + swBuildID);
     }
 
-    // Method to determined if aligned on gold block
-    public boolean GoldAligned( )
+    // Method to determined if gold block is found
+    public boolean GoldIsFound( )
     {
-        return detector.getAligned();
+        return detector.isFound();
     }
 
 
-    // Method to determine X offset of gold block
-    public double GoldXPosition( )
+    // Method to determine Y offset of gold block
+    public double GoldYPosition( )
     {
-        return detector.getXPosition( );
+        return detector.getYPosition( );
     }
 
 
@@ -237,47 +246,58 @@ public abstract class AutonLinearBase extends LinearOpMode
         // Rotate to face the minerals
         go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, RELEASE_ROTATE_DEG );
 
-        // Position the arm to prepare for pushing the gold mineral
-        arm.position_wrist( Arm.WRIST_POS.LOAD, WRIST_SPEED );
-        arm.WaitForInPos();
+        // Wrist is now left in unload position while finding gold position
     }
 
     // Method to find position of gold mineral.
     protected void FindGold( )
     {
-        // Initial rotation to align with sample on left when facing crater or depot
-        go.AutonMoveRotate( Drive.ROTATION.CLOCKWISE, FIND_GOLD_INITIAL_CW_ROT_DEG );
-
-        if ( GoldAligned() )
+        // Should already be aligned so pointing at middle and right position
+        int attempts = 0;
+        int position_counter[] = new int[ GOLD_POSITIONS.values().length ];
+        for ( int index = 0; index < position_counter.length; index++ )
         {
-            gold = GOLD_POSITIONS.LEFT_POS;
-            go.AutonMoveRotate(Drive.ROTATION.CLOCKWISE, FIND_GOLD_ROTATE_4_SAMPLE_IN );
-
+            position_counter[ index ] = 0;
         }
-        else
-        {
-            go.AutonMoveRotate( Drive.ROTATION.CLOCKWISE, FIND_GOLD_ROTATE_4_SAMPLE_IN );
-            if ( GoldAligned() )
-            {
-                gold = GOLD_POSITIONS.MID_POS;
 
-            }
-            else
+        while ( attempts < 4 )
+        {
+            if ( GoldIsFound() )
             {
-                go.AutonMoveRotate(Drive.ROTATION.CLOCKWISE, FIND_GOLD_ROTATE_4_SAMPLE_IN );
-                if ( GoldAligned() )
+                // When gold is found, it indicates the gold mineral is in the right
+                // or middle position. Pick right or middle based on Y value.
+                if ( GoldYPosition() <= UPPER_Y_LIMIT_FOR_RIGHT )
                 {
-                    gold = GOLD_POSITIONS.RIGHT_POS;
-                    go.AutonMoveRotate(Drive.ROTATION.COUNTERCLOCKWISE, FIND_GOLD_ROTATE_4_SAMPLE_IN );
+                    position_counter[ GOLD_POSITIONS.RIGHT_POS.ordinal() ]++;
+                    if ( position_counter[ GOLD_POSITIONS.RIGHT_POS.ordinal() ] >= 2 )
+                    {
+                        gold = GOLD_POSITIONS.RIGHT_POS;
+                        break;
+                    }
                 }
                 else
                 {
-                    gold = GOLD_POSITIONS.UNKNOWN_POS;
-                    go.AutonMoveRotate(Drive.ROTATION.COUNTERCLOCKWISE, FIND_GOLD_ROTATE_4_SAMPLE_IN );
-
+                    position_counter[ GOLD_POSITIONS.MID_POS.ordinal() ]++;
+                    if ( position_counter[ GOLD_POSITIONS.MID_POS.ordinal() ] >= 2 )
+                    {
+                        gold = GOLD_POSITIONS.MID_POS;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                // Gold was not found, so assume Left position (not in phone's field of view)
+                position_counter[ GOLD_POSITIONS.LEFT_POS.ordinal() ]++;
+                if ( position_counter[ GOLD_POSITIONS.LEFT_POS.ordinal() ] >= 2 )
+                {
+                    gold = GOLD_POSITIONS.LEFT_POS;
+                    break;
                 }
             }
 
+            sleep( 100 );
+            attempts++;
         }
     }
 
@@ -285,14 +305,22 @@ public abstract class AutonLinearBase extends LinearOpMode
     // Method to move to gold mineral position
     protected void GoToGold( )
     {
-        // Movements specific to mineral sampling position
+        // Position the arm to prepare for pushing the gold mineral
+        arm.position_wrist( Arm.WRIST_POS.LOAD, WRIST_SPEED );
+        // Not waiting for wrist movement; can move while rotating to mineral below
 
+        // If using strafe, then uncomment and face straight to mid here
+        // go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, GO_TO_GOLD_ROTATE_TO_MID );
+
+        // Movements specific to mineral sampling position
         switch ( gold )
         {
             case LEFT_POS:
-                // Strafe Left & rotate slightly to line up with left side of left mineral
-                go.AutonMove( Drive.DIRECTION.LEFT, GO_TO_GOLD_SIDEWAYS_LEFT_IN );
-                go.AutonMoveRotate(Drive.ROTATION.COUNTERCLOCKWISE, 10);
+                // First rotate to face left
+                go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, GO_TO_GOLD_ROTATE_TO_LEFT_DEG );
+
+                // Alternative to use strafe, if angles are an issue
+                // go.AutonMove( Drive.DIRECTION.LEFT, GO_TO_GOLD_SIDEWAYS_LEFT_IN );
 
                 // Move into mineral
                 go.AutonMove( Drive.DIRECTION.FORWARD, GO_TO_GOLD_FWD_LEFT_IN );
@@ -301,15 +329,23 @@ public abstract class AutonLinearBase extends LinearOpMode
 
             case MID_POS:
             case UNKNOWN_POS:   // for unknown gold mineral position, assume middle
+                // First rotate to face middle
+                go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, GO_TO_GOLD_ROTATE_TO_MID_DEG );
+
+                // Alternative to use strafe, if angles are an issue
+                // Don't need to strafe for middle
+
                 // Move into mineral
                 go.AutonMove( Drive.DIRECTION.FORWARD, GO_TO_GOLD_FWD_MID_IN );
 
                 break;
 
             case RIGHT_POS:
-                // Strafe Right & rotate slightly to line up with left side of right mineral
-                go.AutonMove( Drive.DIRECTION.RIGHT, GO_TO_GOLD_SIDEWAYS_RIGHT_IN );
-                go.AutonMoveRotate(Drive.ROTATION.COUNTERCLOCKWISE, 10);
+                // First rotate to face left
+                go.AutonMoveRotate( Drive.ROTATION.CLOCKWISE, GO_TO_GOLD_ROTATE_TO_RIGHT_DEG );
+
+                // Alternative to use strafe, if angles are an issue
+                // go.AutonMove( Drive.DIRECTION.RIGHT, GO_TO_GOLD_SIDEWAYS_RIGHT_IN );
 
                 // Move into mineral
                 go.AutonMove( Drive.DIRECTION.FORWARD, GO_TO_GOLD_FWD_RIGHT_IN );
@@ -320,7 +356,7 @@ public abstract class AutonLinearBase extends LinearOpMode
         // Movements common to all sampling positions
 
         // Swipe to the right to sweep mineral out of position
-        go.AutonMoveRotate( Drive.ROTATION.CLOCKWISE, ROTATE_TO_KNOCK_OFF_SAMPLE );
+        go.AutonMoveRotate( Drive.ROTATION.CLOCKWISE, ROTATE_TO_KNOCK_OFF_SAMPLE_DEG );
 
         // Raise the arm to be clear of minerals
         arm.position_wrist( Arm.WRIST_POS.UNLOAD, WRIST_SPEED );
