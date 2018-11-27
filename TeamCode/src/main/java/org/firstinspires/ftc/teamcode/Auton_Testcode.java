@@ -44,7 +44,7 @@ public class Auton_Testcode extends AutonLinearBase
         {
             case team7228:
             {
-                DRIVE_DEPOT_FWD_2_DEPOT = 39;
+                RELEASE_ROTATE_DEG = 168;
                 break;
             }
 
@@ -89,55 +89,14 @@ public class Auton_Testcode extends AutonLinearBase
                     // FindGold();
 
                     // Display mineral position on phone
-                    telemetry.addLine().addData( "GP: ", gold.toString() );
 
                     // Move to next step
-                    step = step.Next();
+                    //step = step.Next();
                     break;
                 }
 
-                case MOVE_TO_MINERAL:
-                {
-                    // Move in front of gold mineral
-                    GoToGold();
-                    step = step.Next();
-                    break;
-                }
 
-                case LOAD_GOLD:
-                {
-                    LoadGold();
-                    step = step.Next();
-                    break;
-                }
 
-                case DRIVE_DEPOT:
-                {
-                    DriveToDepot( );
-                    step = step.Next();
-                    break;
-                }
-
-                case UNLOAD:
-                {
-                    // Drop marker and gold sample
-                    UnloadGoldAndMarker();
-                    step = AUTON_STEPS.PARK;
-                    break;
-                }
-
-                case PARK:
-                {
-                    ParkTheRobot();
-                    step = AUTON_STEPS.STOP;
-                    break;
-                }
-
-                case STOP:
-                {
-                    StopActions();
-                    break;
-                }
             }
 
             telemetry.addData("IsAligned", GoldAligned()); // Is the bot aligned with the gold mineral
@@ -152,6 +111,7 @@ public class Auton_Testcode extends AutonLinearBase
                     .addData("Team", TeamId.name());
 
             telemetry.update();
+
         }
 
     }
