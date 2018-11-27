@@ -48,7 +48,7 @@ public class Auton_Facing_Depot extends AutonLinearBase
 //        gold = GOLD_POSITIONS.UNKNOWN_POS;
 //        gold = GOLD_POSITIONS.LEFT_POS;
 //        gold = GOLD_POSITIONS.MID_POS;
-        gold = GOLD_POSITIONS.MID_POS;
+        gold = GOLD_POSITIONS.UNKNOWN_POS;
 
         /*
          * Initialize the hardware variables.
@@ -88,9 +88,6 @@ public class Auton_Facing_Depot extends AutonLinearBase
         waitForStart();
         runtime.reset();
 
-        // Start at move to mineral, for now
-        //step = AUTON_STEPS.MOVE_TO_MINERAL;
-
         // Loop until stop or forced to end
         while ( opModeIsActive() )
         {
@@ -111,8 +108,10 @@ public class Auton_Facing_Depot extends AutonLinearBase
                 {
                     // Use common method to find gold
                     // if gold position is already set, skip detection
-                    if (gold == GOLD_POSITIONS.UNKNOWN_POS)
-                        FindGold();
+                    if ( gold == GOLD_POSITIONS.UNKNOWN_POS )
+                    {
+                        FindGold( );
+                    }
 
                     // Display mineral position on phone
                     telemetry.addLine().addData( "GP: ", gold.toString() );
@@ -171,8 +170,8 @@ public class Auton_Facing_Depot extends AutonLinearBase
 
             }
 
-            telemetry.addData("IsAligned", GoldAligned()); // Is the bot aligned with the gold mineral
-            telemetry.addData("X Pos", GoldXPosition());    // Gold X pos.
+            telemetry.addData("Is Found", GoldIsFound() );  // Is there a gold in view
+            telemetry.addData("Y Pos", GoldYPosition());    // Gold Y pos.
 
             AddStdAutonTelemetry(true);
             telemetry.update();
