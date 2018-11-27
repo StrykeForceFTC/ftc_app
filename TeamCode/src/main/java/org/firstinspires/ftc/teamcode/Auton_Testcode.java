@@ -44,7 +44,7 @@ public class Auton_Testcode extends AutonLinearBase
         {
             case team7228:
             {
-                DRIVE_DEPOT_FWD_2_DEPOT = 39;
+                RELEASE_ROTATE_DEG = 168;
                 break;
             }
 
@@ -89,12 +89,9 @@ public class Auton_Testcode extends AutonLinearBase
                     // FindGold();
 
                     // Display mineral position on phone
-                    telemetry.addLine().addData( "GP: ", gold.toString() );
-                    telemetry.addData("IsAligned", GoldAligned()); // Is the bot aligned with the gold mineral
-                    telemetry.addData("X Pos", GoldXPosition());    // Gold X pos.
 
                     // Move to next step
-                    step = step.Next();
+                    //step = step.Next();
                     break;
                 }
 
@@ -102,7 +99,7 @@ public class Auton_Testcode extends AutonLinearBase
 
             }
 
-            /*telemetry.addData("IsAligned", GoldAligned()); // Is the bot aligned with the gold mineral
+            telemetry.addData("IsAligned", GoldAligned()); // Is the bot aligned with the gold mineral
             telemetry.addData("X Pos", GoldXPosition());    // Gold X pos.
 
             telemetry.addLine("Encoders ")
@@ -114,7 +111,7 @@ public class Auton_Testcode extends AutonLinearBase
                     .addData("Team", TeamId.name());
 
             telemetry.update();
-            */
+
         }
 
     }
