@@ -158,10 +158,16 @@ public class Arm {
                 return 4400;
             case sampling:
             {
-                if ( TeamId == Auto_Robot_Detect.teamId.team7228 ) {
-                    return 1400;
+                switch (TeamId)
+                {
+                    case team7228:
+                        return 1400;
+                    case team8553:
+                        return 1200;
+                    case team15106:
+                        return 600;
                 }
-                else return 1200;    // 1400
+                return 1200;
             }
             default:
                 return lift.getCurrentPosition();
