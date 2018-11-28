@@ -197,7 +197,7 @@ public class Arm {
     private static int MAX_WRIST_ADJUST_VALUE = 100;
     private static int MIN_WRIST_ADJUST_VALUE = 5;
 
-    private static int MAX_WRIST_POS = 5200;            // Absolute maximum for lift pos
+    private static int MAX_WRIST_POS = 5500;            // Absolute maximum for lift pos
     private static int MIN_WRIST_STICK_POS = 0;       // Minimum pos allowed for stick pos if not adjusting zero
     private static int MIN_WRIST_POS = -5400;           // Absolute minumum for lift pos
 
