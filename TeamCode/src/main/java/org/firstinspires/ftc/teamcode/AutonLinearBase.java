@@ -311,7 +311,7 @@ public abstract class AutonLinearBase extends LinearOpMode
     {
         // Position the arm to prepare for pushing the gold mineral
         arm.position_wrist( Arm.WRIST_POS.LOAD, WRIST_SPEED );
-        // Not waiting for wrist movement; can move while rotating to mineral below
+        arm.WaitForInPos();
 
         // If using strafe, then uncomment and face straight to mid here
         // go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, GO_TO_GOLD_ROTATE_TO_MID );
