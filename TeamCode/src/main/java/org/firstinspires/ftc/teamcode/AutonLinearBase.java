@@ -138,11 +138,15 @@ public abstract class AutonLinearBase extends LinearOpMode
         {
             case team7228:
             {
-                RELEASE_ROTATE_DEG = 136;              // Reduced by 30deg for gold detection
-                GO_TO_GOLD_FWD_MID_IN = 6.0;
-                GO_TO_GOLD_FWD_LEFT_IN = 8.0;
+                RELEASE_ROTATE_DEG = 163;
+                RELEASE_MOVE_AWAY_IN = 9.0;
+                GO_TO_GOLD_FWD_MID_IN = 4.5;
+                GO_TO_GOLD_ROTATE_TO_MID_DEG = 10;             // Counter clockwise
+                GO_TO_GOLD_FWD_LEFT_IN = 7.0;
+                GO_TO_GOLD_ROTATE_TO_LEFT_DEG = 32 ;            // Mid rotate plus extra to get to left, CCW
                 GO_TO_GOLD_FWD_RIGHT_IN = 8.0;
-                ROTATE_TO_KNOCK_OFF_SAMPLE_DEG = 20;
+                GO_TO_GOLD_ROTATE_TO_RIGHT_DEG = 30 ;           // Clockwise! to get to right
+                ROTATE_TO_KNOCK_OFF_SAMPLE_DEG = 25;
                 break;
             }
 

@@ -43,7 +43,7 @@ public class Auton_Testcode extends AutonLinearBase
         {
             case team7228:
             {
-                RELEASE_ROTATE_DEG = 168;
+
                 break;
             }
 
@@ -81,7 +81,7 @@ public class Auton_Testcode extends AutonLinearBase
                     // Run common method from AutonLinearBase and
                     // go to next step
                     ReleaseLander();
-                    step = AUTON_STEPS.STOP;
+                    step = step.Next();
                     break;
                 }
 
@@ -93,6 +93,7 @@ public class Auton_Testcode extends AutonLinearBase
 
                     // Move to next step
                     //step = step.Next();
+                    step = step.Next();
                     break;
                 }
 
@@ -117,6 +118,7 @@ public class Auton_Testcode extends AutonLinearBase
 
             telemetry.addData("Is Found", GoldIsFound());   // Is the bot aligned with the gold mineral
             telemetry.addData("Y Pos", GoldYPosition());    // Gold Y pos.
+            telemetry.addLine( gold.toString() );
 
             telemetry.addLine("Encoders ")
                     .addData("FL ", go.GetEncoderFrontLeft())
