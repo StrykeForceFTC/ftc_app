@@ -48,6 +48,11 @@ public class Arm {
 
         lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         wrist.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        if ( TeamId == Auto_Robot_Detect.teamId.team7228 )
+        {
+            MIN_WRIST_STICK_POS = -5000;
+        }
     }
 
 
@@ -265,7 +270,7 @@ public class Arm {
 
         int offset = (int) (adjustrate * MAX_WRIST_ADJUST_VALUE +.5);
 
-        if ((wrist.getCurrentPosition() < 20 ) && (dir == WRIST_DIR.BACKWARD))
+        if ((wrist.getCurrentPosition() < 20 ) && (dir == WRIST_DIR.BACKWARD) && ( TeamId != Auto_Robot_Detect.teamId.team7228 ) )
             offset = MIN_WRIST_ADJUST_VALUE;
 
         switch(dir)
