@@ -140,6 +140,9 @@ public abstract class AutonLinearBase extends LinearOpMode
             {
                 RELEASE_ROTATE_DEG = 155;
                 RELEASE_MOVE_AWAY_IN = 7.0;
+                RELEASE_STRAFE_IN = 4.0;
+
+                UPPER_Y_LIMIT_FOR_RIGHT = 200;
 
                 GO_TO_GOLD_FWD_MID_IN = 4.25;
                 GO_TO_GOLD_ROTATE_TO_MID_DEG = 15;             // Counter clockwise

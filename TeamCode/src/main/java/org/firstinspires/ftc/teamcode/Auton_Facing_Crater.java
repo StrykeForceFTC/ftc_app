@@ -152,7 +152,7 @@ public class Auton_Facing_Crater extends AutonLinearBase
                 {
                     // Move from completion of sampling to Depot
                     DriveToDepot( );
-                    step = step.STOP;
+                    step = step.Next();
                     break;
                 }
 
