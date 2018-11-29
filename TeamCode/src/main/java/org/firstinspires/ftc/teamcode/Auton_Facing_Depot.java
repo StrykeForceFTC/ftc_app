@@ -139,7 +139,8 @@ public class Auton_Facing_Depot extends AutonLinearBase
                 {
                     // Sample gold mineral
                     GoToGold();
-                    step = step.Next();
+//                    step = step.Next();
+                    step = AUTON_STEPS.STOP;
                     break;
                 }
 

@@ -164,6 +164,11 @@ public abstract class AutonLinearBase extends LinearOpMode
 
             case team15106:
             {
+                RELEASE_ROTATE_DEG = 172.0;
+                GO_TO_GOLD_ROTATE_TO_LEFT_DEG = 40;
+                GO_TO_GOLD_FWD_LEFT_IN = 8.25;
+                GO_TO_GOLD_ROTATE_TO_MID_DEG = 15;
+                GO_TO_GOLD_FWD_RIGHT_IN = 8.25;
                 break;
             }
         }
@@ -271,6 +276,8 @@ public abstract class AutonLinearBase extends LinearOpMode
             position_counter[ index ] = 0;
         }
 
+        gold = GOLD_POSITIONS.UNKNOWN_POS;
+
         while ( attempts < 4 )
         {
             if ( GoldIsFound() )
@@ -330,6 +337,9 @@ public abstract class AutonLinearBase extends LinearOpMode
                 // First rotate to face left
                 go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, GO_TO_GOLD_ROTATE_TO_LEFT_DEG );
 
+                if (TeamId != Auto_Robot_Detect.teamId.team7228)
+                    arm.WaitForInPos();
+
                 // Alternative to use strafe, if angles are an issue
                 // go.AutonMove( Drive.DIRECTION.LEFT, GO_TO_GOLD_SIDEWAYS_LEFT_IN );
 
@@ -343,6 +353,9 @@ public abstract class AutonLinearBase extends LinearOpMode
                 // First rotate to face middle
                 go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, GO_TO_GOLD_ROTATE_TO_MID_DEG );
 
+                if (TeamId != Auto_Robot_Detect.teamId.team7228)
+                    arm.WaitForInPos();
+
                 // Alternative to use strafe, if angles are an issue
                 // Don't need to strafe for middle
 
@@ -354,6 +367,9 @@ public abstract class AutonLinearBase extends LinearOpMode
             case RIGHT_POS:
                 // First rotate to face left
                 go.AutonMoveRotate( Drive.ROTATION.CLOCKWISE, GO_TO_GOLD_ROTATE_TO_RIGHT_DEG );
+
+                if (TeamId != Auto_Robot_Detect.teamId.team7228)
+                    arm.WaitForInPos();
 
                 // Alternative to use strafe, if angles are an issue
                 // go.AutonMove( Drive.DIRECTION.RIGHT, GO_TO_GOLD_SIDEWAYS_RIGHT_IN );
