@@ -159,6 +159,12 @@ public abstract class AutonLinearBase extends LinearOpMode
 
             case team8553:
             {
+                RELEASE_ROTATE_DEG = 172.0;
+                GO_TO_GOLD_ROTATE_TO_LEFT_DEG = 40;
+                GO_TO_GOLD_FWD_LEFT_IN = 8.25;
+                GO_TO_GOLD_ROTATE_TO_MID_DEG = 15;
+                GO_TO_GOLD_FWD_RIGHT_IN = 8.25;
+                GO_TO_GOLD_ROTATE_TO_RIGHT_DEG = 20;
                 break;
             }
 

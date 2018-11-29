@@ -163,7 +163,7 @@ public class Arm {
                     case team7228:
                         return 1200;
                     case team8553:
-                        return 1200;
+                        return 600;
                     case team15106:
                         return 600;
                 }
