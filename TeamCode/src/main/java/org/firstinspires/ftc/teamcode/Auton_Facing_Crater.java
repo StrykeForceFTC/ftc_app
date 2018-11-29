@@ -61,11 +61,15 @@ public class Auton_Facing_Crater extends AutonLinearBase
         {
             case team7228:
             {
-                DRIVE_DEPOT_TURN_2_WALL_MID_DEG = 90;
+                DRIVE_DEPOT_TURN_2_WALL_LEFT_DEG = 65.0;
+                DRIVE_DEPOT_TURN_2_WALL_RIGHT_DEG = 121.0;
+                DRIVE_DEPOT_TURN_2_WALL_MID_DEG = 79;
                 DRIVE_DEPOT_ROT_PARALLEL_2_WALL_MID_DEG = 20;
+                DRIVE_DEPOT_MOVE_2_WALL_MID_IN = 50;
+                DRIVE_DEPOT_MOVE_2_WALL_LEFT_IN = 38.5;
+                DRIVE_DEPOT_MOVE_2_WALL_RIGHT_IN = 44;
+                DRIVE_DEPOT_FWD_2_DEPOT_MID_IN = 40 ;
                 ROTATE_AFTER_DROP_DEG = 7;
-                DRIVE_DEPOT_MOVE_2_WALL_MID_IN = 45;
-                DRIVE_DEPOT_FWD_2_DEPOT_MID_IN = 26;
                 break;
             }
 
@@ -140,7 +144,7 @@ public class Auton_Facing_Crater extends AutonLinearBase
                 {
                     // Move from completion of sampling to Depot
                     DriveToDepot( );
-                    step = step.Next();
+                    step = step.STOP;
                     break;
                 }
 
@@ -190,32 +194,51 @@ public class Auton_Facing_Crater extends AutonLinearBase
         switch(gold)
         {   // Not defined yet
             case LEFT_POS:
+                // Turn away from minerals to face the wall between the alliance crater and depot
+                go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, DRIVE_DEPOT_TURN_2_WALL_LEFT_DEG);
+
+                // Drive to near the wall, then rotate to face the depot
+                go.AutonMove( Drive.DIRECTION.FORWARD, DRIVE_DEPOT_MOVE_2_WALL_LEFT_IN );
+                //go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, DRIVE_DEPOT_ROT_PARALLEL_2_WALL_LEFT_DEG );
+
+                // start positioning the arm for dropping the team marker and drive forward to
+                // the depot, ready to unload the marker.
+                //arm.position_wrist( Arm.WRIST_POS.MOVE, WRIST_SPEED );
+                //go.AutonMove( Drive.DIRECTION.FORWARD, DRIVE_DEPOT_FWD_2_DEPOT_LEFT_IN );
                 break;
 
 
+            case UNKNOWN_POS:
             case MID_POS:
                 // Turn away from minerals to face the wall between the alliance crater and depot
                 go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, DRIVE_DEPOT_TURN_2_WALL_MID_DEG);
 
                 // Drive to near the wall, then rotate to face the depot
                 go.AutonMove( Drive.DIRECTION.FORWARD, DRIVE_DEPOT_MOVE_2_WALL_MID_IN );
-                go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, DRIVE_DEPOT_ROT_PARALLEL_2_WALL_MID_DEG );
+                //go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, DRIVE_DEPOT_ROT_PARALLEL_2_WALL_MID_DEG );
 
                 // start positioning the arm for dropping the team marker and drive forward to
                 // the depot, ready to unload the marker.
-                arm.position_wrist( Arm.WRIST_POS.MOVE, WRIST_SPEED );
-                go.AutonMove( Drive.DIRECTION.FORWARD, DRIVE_DEPOT_FWD_2_DEPOT_MID_IN );
+                //arm.position_wrist( Arm.WRIST_POS.MOVE, WRIST_SPEED );
+                //go.AutonMove( Drive.DIRECTION.FORWARD, DRIVE_DEPOT_FWD_2_DEPOT_MID_IN );
                 break;
 
 
             // Not defined yet
             case RIGHT_POS:
+                // Turn away from minerals to face the wall between the alliance crater and depot
+                go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, DRIVE_DEPOT_TURN_2_WALL_RIGHT_DEG);
+
+                // Drive to near the wall, then rotate to face the depot
+                 go.AutonMove( Drive.DIRECTION.FORWARD, DRIVE_DEPOT_MOVE_2_WALL_MID_IN );
+                //go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, DRIVE_DEPOT_ROT_PARALLEL_2_WALL_RIGHT_DEG );
+
+                // start positioning the arm for dropping the team marker and drive forward to
+                // the depot, ready to unload the marker.
+                //arm.position_wrist( Arm.WRIST_POS.MOVE, WRIST_SPEED );
+                //go.AutonMove( Drive.DIRECTION.FORWARD, DRIVE_DEPOT_FWD_2_DEPOT_RIGHT_IN );
                 break;
 
-
-            // Shouldn't be used
-            case UNKNOWN_POS:
-                break;
         }
 
     }
