@@ -76,6 +76,20 @@ public class Auton_Facing_Crater extends AutonLinearBase
 
             case team15106:
             {
+                DRIVE_DEPOT_TURN_2_WALL_LEFT_DEG = 66.0;
+                DRIVE_DEPOT_TURN_2_WALL_MID_DEG = 86.0;
+                DRIVE_DEPOT_TURN_2_WALL_RIGHT_DEG = 131.0;
+                DRIVE_DEPOT_MOVE_2_WALL_LEFT_IN = 38.8;
+                DRIVE_DEPOT_MOVE_2_WALL_MID_IN = 41.5;
+                DRIVE_DEPOT_MOVE_2_WALL_RIGHT_IN = 49.5;
+                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_RIGHT_DEG = 50;
+                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_MID_DEG = 64;
+                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_LEFT_DEG = 54;  // 56
+                DRIVE_DEPOT_FWD_2_DEPOT_LEFT_IN = 30;
+                DRIVE_DEPOT_FWD_2_DEPOT_MID_IN = 35;
+                DRIVE_DEPOT_FWD_2_DEPOT_RIGHT_IN = 20;
+
+
                 break;
             }
         }
@@ -194,13 +208,22 @@ public class Auton_Facing_Crater extends AutonLinearBase
                 // Turn away from minerals to face the wall between the alliance crater and depot
                 go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, DRIVE_DEPOT_TURN_2_WALL_LEFT_DEG);
 
+                // Drive to near the wall, then rotate to face the depot
+                go.AutonMove( Drive.DIRECTION.FORWARD, DRIVE_DEPOT_MOVE_2_WALL_LEFT_IN );
+                go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, DRIVE_DEPOT_ROT_PARALLEL_2_WALL_LEFT_DEG );
+
+                // start positioning the arm for dropping the team marker and drive forward to
+                // the depot, ready to unload the marker.
+                arm.position_wrist( Arm.WRIST_POS.MOVE, WRIST_SPEED );
+                go.AutonMove( Drive.DIRECTION.FORWARD, DRIVE_DEPOT_FWD_2_DEPOT_LEFT_IN );
+
                 break;
 
 
             case MID_POS:
                 // Turn away from minerals to face the wall between the alliance crater and depot
                 go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, DRIVE_DEPOT_TURN_2_WALL_MID_DEG);
-/*
+
                 // Drive to near the wall, then rotate to face the depot
                 go.AutonMove( Drive.DIRECTION.FORWARD, DRIVE_DEPOT_MOVE_2_WALL_MID_IN );
                 go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, DRIVE_DEPOT_ROT_PARALLEL_2_WALL_MID_DEG );
@@ -209,13 +232,23 @@ public class Auton_Facing_Crater extends AutonLinearBase
                 // the depot, ready to unload the marker.
                 arm.position_wrist( Arm.WRIST_POS.MOVE, WRIST_SPEED );
                 go.AutonMove( Drive.DIRECTION.FORWARD, DRIVE_DEPOT_FWD_2_DEPOT_MID_IN );
-*/                break;
+
+                break;
 
 
             // Not defined yet
             case RIGHT_POS:
                 // Turn away from minerals to face the wall between the alliance crater and depot
                 go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, DRIVE_DEPOT_TURN_2_WALL_RIGHT_DEG);
+
+                // Drive to near the wall, then rotate to face the depot
+                go.AutonMove( Drive.DIRECTION.FORWARD, DRIVE_DEPOT_MOVE_2_WALL_RIGHT_IN );
+                go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, DRIVE_DEPOT_ROT_PARALLEL_2_WALL_RIGHT_DEG );
+
+                // start positioning the arm for dropping the team marker and drive forward to
+                // the depot, ready to unload the marker.
+                arm.position_wrist( Arm.WRIST_POS.MOVE, WRIST_SPEED );
+                go.AutonMove( Drive.DIRECTION.FORWARD, DRIVE_DEPOT_FWD_2_DEPOT_RIGHT_IN );
 
                 break;
 
