@@ -148,6 +148,12 @@ public abstract class AutonLinearBase extends LinearOpMode
 
             case team8553:
             {
+                RELEASE_ROTATE_DEG = 172.0;
+                GO_TO_GOLD_ROTATE_TO_LEFT_DEG = 40;
+                GO_TO_GOLD_FWD_LEFT_IN = 8.25;
+                GO_TO_GOLD_ROTATE_TO_MID_DEG = 15;
+                GO_TO_GOLD_FWD_RIGHT_IN = 8.25;
+                GO_TO_GOLD_ROTATE_TO_RIGHT_DEG = 20;
                 break;
             }
 
@@ -326,7 +332,7 @@ public abstract class AutonLinearBase extends LinearOpMode
                 // First rotate to face left
                 go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, GO_TO_GOLD_ROTATE_TO_LEFT_DEG );
 
-                if (TeamId <> Auto_Robot_Detect.teamId.team7228)
+                //if (TeamId <> Auto_Robot_Detect.teamId.team7228)
                     arm.WaitForInPos();
 
                 // Alternative to use strafe, if angles are an issue
@@ -342,7 +348,7 @@ public abstract class AutonLinearBase extends LinearOpMode
                 // First rotate to face middle
                 go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, GO_TO_GOLD_ROTATE_TO_MID_DEG );
 
-                if (TeamId <> Auto_Robot_Detect.teamId.team7228)
+                //if (TeamId <> Auto_Robot_Detect.teamId.team7228)
                     arm.WaitForInPos();
 
                 // Alternative to use strafe, if angles are an issue
@@ -357,7 +363,7 @@ public abstract class AutonLinearBase extends LinearOpMode
                 // First rotate to face left
                 go.AutonMoveRotate( Drive.ROTATION.CLOCKWISE, GO_TO_GOLD_ROTATE_TO_RIGHT_DEG );
 
-                if (TeamId <> Auto_Robot_Detect.teamId.team7228)
+                //if (TeamId <> Auto_Robot_Detect.teamId.team7228)
                     arm.WaitForInPos();
 
                 // Alternative to use strafe, if angles are an issue
