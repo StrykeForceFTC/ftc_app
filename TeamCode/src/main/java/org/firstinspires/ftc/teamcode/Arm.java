@@ -159,7 +159,7 @@ public class Arm {
             case sampling:
             {
                 if ( TeamId == Auto_Robot_Detect.teamId.team7228 ) {
-                    return 1400;
+                    return 1200;
                 }
                 else return 1200;    // 1400
             }
