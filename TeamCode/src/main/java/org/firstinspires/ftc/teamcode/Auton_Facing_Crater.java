@@ -61,14 +61,22 @@ public class Auton_Facing_Crater extends AutonLinearBase
         {
             case team7228:
             {
-                DRIVE_DEPOT_TURN_2_WALL_LEFT_DEG = 65.0;
-                DRIVE_DEPOT_TURN_2_WALL_RIGHT_DEG = 121.0;
-                DRIVE_DEPOT_TURN_2_WALL_MID_DEG = 79;
-                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_MID_DEG = 20;
-                DRIVE_DEPOT_MOVE_2_WALL_MID_IN = 50;
-                DRIVE_DEPOT_MOVE_2_WALL_LEFT_IN = 38.5;
+                DRIVE_DEPOT_TURN_2_WALL_LEFT_DEG = 55.0;
+                DRIVE_DEPOT_TURN_2_WALL_RIGHT_DEG = 116.0;
+                DRIVE_DEPOT_TURN_2_WALL_MID_DEG = 82;
+                
+                DRIVE_DEPOT_MOVE_2_WALL_MID_IN = 42;
+                DRIVE_DEPOT_MOVE_2_WALL_LEFT_IN = 36.5;
                 DRIVE_DEPOT_MOVE_2_WALL_RIGHT_IN = 44;
-                DRIVE_DEPOT_FWD_2_DEPOT_MID_IN = 40 ;
+
+                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_LEFT_DEG = 19.5;
+                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_MID_DEG = 26;
+                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_RIGHT_DEG = 33;
+
+                DRIVE_DEPOT_FWD_2_DEPOT_LEFT_IN = 20;
+                DRIVE_DEPOT_FWD_2_DEPOT_MID_IN = 19;
+                DRIVE_DEPOT_FWD_2_DEPOT_RIGHT_IN = 20;
+
                 ROTATE_AFTER_DROP_DEG = 7;
                 break;
             }
@@ -152,7 +160,7 @@ public class Auton_Facing_Crater extends AutonLinearBase
                 {
                     // Drop marker and gold sample
                     UnloadGoldAndMarker();
-                    step = step.Next();
+                    step = step.STOP;
                     break;
                 }
 
@@ -199,12 +207,12 @@ public class Auton_Facing_Crater extends AutonLinearBase
 
                 // Drive to near the wall, then rotate to face the depot
                 go.AutonMove( Drive.DIRECTION.FORWARD, DRIVE_DEPOT_MOVE_2_WALL_LEFT_IN );
-                //go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, DRIVE_DEPOT_ROT_PARALLEL_2_WALL_LEFT_DEG );
+                go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, DRIVE_DEPOT_ROT_PARALLEL_2_WALL_LEFT_DEG );
 
                 // start positioning the arm for dropping the team marker and drive forward to
                 // the depot, ready to unload the marker.
-                //arm.position_wrist( Arm.WRIST_POS.MOVE, WRIST_SPEED );
-                //go.AutonMove( Drive.DIRECTION.FORWARD, DRIVE_DEPOT_FWD_2_DEPOT_LEFT_IN );
+                arm.position_wrist( Arm.WRIST_POS.MOVE, WRIST_SPEED );
+                go.AutonMove( Drive.DIRECTION.FORWARD, DRIVE_DEPOT_FWD_2_DEPOT_LEFT_IN );
                 break;
 
 
@@ -215,12 +223,12 @@ public class Auton_Facing_Crater extends AutonLinearBase
 
                 // Drive to near the wall, then rotate to face the depot
                 go.AutonMove( Drive.DIRECTION.FORWARD, DRIVE_DEPOT_MOVE_2_WALL_MID_IN );
-                //go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, DRIVE_DEPOT_ROT_PARALLEL_2_WALL_MID_DEG );
+                go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, DRIVE_DEPOT_ROT_PARALLEL_2_WALL_MID_DEG );
 
                 // start positioning the arm for dropping the team marker and drive forward to
                 // the depot, ready to unload the marker.
-                //arm.position_wrist( Arm.WRIST_POS.MOVE, WRIST_SPEED );
-                //go.AutonMove( Drive.DIRECTION.FORWARD, DRIVE_DEPOT_FWD_2_DEPOT_MID_IN );
+                arm.position_wrist( Arm.WRIST_POS.MOVE, WRIST_SPEED );
+                go.AutonMove( Drive.DIRECTION.FORWARD, DRIVE_DEPOT_FWD_2_DEPOT_MID_IN );
                 break;
 
 
@@ -230,13 +238,13 @@ public class Auton_Facing_Crater extends AutonLinearBase
                 go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, DRIVE_DEPOT_TURN_2_WALL_RIGHT_DEG);
 
                 // Drive to near the wall, then rotate to face the depot
-                 go.AutonMove( Drive.DIRECTION.FORWARD, DRIVE_DEPOT_MOVE_2_WALL_MID_IN );
-                //go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, DRIVE_DEPOT_ROT_PARALLEL_2_WALL_RIGHT_DEG );
+                 go.AutonMove( Drive.DIRECTION.FORWARD, DRIVE_DEPOT_MOVE_2_WALL_RIGHT_IN );
+                go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, DRIVE_DEPOT_ROT_PARALLEL_2_WALL_RIGHT_DEG );
 
                 // start positioning the arm for dropping the team marker and drive forward to
                 // the depot, ready to unload the marker.
-                //arm.position_wrist( Arm.WRIST_POS.MOVE, WRIST_SPEED );
-                //go.AutonMove( Drive.DIRECTION.FORWARD, DRIVE_DEPOT_FWD_2_DEPOT_RIGHT_IN );
+                arm.position_wrist( Arm.WRIST_POS.MOVE, WRIST_SPEED );
+                go.AutonMove( Drive.DIRECTION.FORWARD, DRIVE_DEPOT_FWD_2_DEPOT_RIGHT_IN );
                 break;
 
         }
