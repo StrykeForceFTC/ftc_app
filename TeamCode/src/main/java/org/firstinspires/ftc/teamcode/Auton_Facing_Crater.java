@@ -71,7 +71,7 @@ public class Auton_Facing_Crater extends AutonLinearBase
 
             case team8553:
             {
-                break;
+                //no break, use 15106 tunings (untested)
             }
 
             case team15106:
