@@ -84,7 +84,7 @@ public abstract class AutonLinearBase extends LinearOpMode
 
 
     // GoToGold() Default Positioning Values
-    protected double GO_TO_GOLD_ROTATE_TO_RIGHT_DEG = 15;           // Clockwise! to get to right
+    protected double GO_TO_GOLD_ROTATE_TO_RIGHT_DEG = 25; // 15          // Clockwise! to get to right
     protected double GO_TO_GOLD_ROTATE_TO_MID_DEG = 30;             // Counter clockwise
     protected double GO_TO_GOLD_ROTATE_TO_LEFT_DEG = 60;            // Mid rotate plus extra to get to left, CCW
     protected double GO_TO_GOLD_FWD_LEFT_IN = 6.25;
@@ -175,6 +175,8 @@ public abstract class AutonLinearBase extends LinearOpMode
                 GO_TO_GOLD_FWD_LEFT_IN = 8.25;
                 GO_TO_GOLD_ROTATE_TO_MID_DEG = 15;
                 GO_TO_GOLD_FWD_RIGHT_IN = 8.25;
+// (DO NOT DELETE) Crater skew adjustment
+//(DO NOT DELETE)              PARK_DISTANCE_IN = 48;
                 break;
             }
         }

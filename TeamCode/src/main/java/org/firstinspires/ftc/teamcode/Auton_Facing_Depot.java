@@ -36,6 +36,7 @@ public class Auton_Facing_Depot extends AutonLinearBase
     //private double DRIVE_DEPOT_STRAFE_2_WALL_IN = 13.0;
 
 
+    private double ROTATE_BEFORE_DROP_DEG = 0;
     private double ROTATE_AFTER_DROP_DEG = 6;
 
     /*
@@ -105,6 +106,24 @@ public class Auton_Facing_Depot extends AutonLinearBase
 
             case team15106:
             {
+                DRIVE_DEPOT_TURN_2_WALL_LEFT_DEG = 113.0;
+                DRIVE_DEPOT_MOVE_2_WALL_LEFT_IN = 37.0;
+                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_LEFT_DEG = 62.0;
+                DRIVE_DEPOT_FWD_2_DEPOT_LEFT_IN = 33.0;
+
+                DRIVE_DEPOT_TURN_2_WALL_MID_DEG = 88.0;
+                DRIVE_DEPOT_MOVE_2_WALL_MID_IN = 40.0;
+                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_MID_DEG = 65.0;
+                DRIVE_DEPOT_FWD_2_DEPOT_MID_IN = 30.0;
+
+                DRIVE_DEPOT_TURN_2_WALL_RIGHT_DEG = 35.0;
+                DRIVE_DEPOT_MOVE_2_WALL_RIGHT_IN = 49.0;
+                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_RIGHT_DEG = 42.0;
+                DRIVE_DEPOT_FWD_2_DEPOT_RIGHT_IN = 50.0;
+
+                ROTATE_BEFORE_DROP_DEG = 7;
+                ROTATE_AFTER_DROP_DEG = 0;
+
                 break;
             }
         }
@@ -269,8 +288,11 @@ public class Auton_Facing_Depot extends AutonLinearBase
         // arm should already be in correct position
 
         // Unload gold sample and adjust robot rotation for backing into crater.
+        if (ROTATE_BEFORE_DROP_DEG != 0)
+            go.AutonMoveRotate(Drive.ROTATION.CLOCKWISE, ROTATE_BEFORE_DROP_DEG );
         loader.AutonUnload();
-        go.AutonMoveRotate(Drive.ROTATION.CLOCKWISE, ROTATE_AFTER_DROP_DEG );
+        if (ROTATE_AFTER_DROP_DEG != 0)
+            go.AutonMoveRotate(Drive.ROTATION.CLOCKWISE, ROTATE_AFTER_DROP_DEG );
     }
 
 

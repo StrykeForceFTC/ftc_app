@@ -190,6 +190,8 @@ public class Arm {
             case UNLOAD:           // Leaned a little bit forward of vertical
                 return 2550;
             case MOVE:             // Pointed out to front high enough to not get in way when moving
+                if (TeamId == Auto_Robot_Detect.teamId.team15106 )
+                    return 4650;
                 return 4250;       // 4000
             case LOAD:             // Pointed towards ground in front of robot
                 return 4875;
