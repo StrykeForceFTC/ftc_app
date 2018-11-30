@@ -70,13 +70,13 @@ public class Auton_Facing_Depot extends AutonLinearBase
                 DRIVE_DEPOT_TURN_2_WALL_MID_DEG = 55;
                 DRIVE_DEPOT_TURN_2_WALL_RIGHT_DEG = 25.0;
 
-                DRIVE_DEPOT_MOVE_2_WALL_LEFT_IN = 31.0;
+                DRIVE_DEPOT_MOVE_2_WALL_LEFT_IN = 29.25;
                 DRIVE_DEPOT_MOVE_2_WALL_MID_IN = 36.5;
-                DRIVE_DEPOT_MOVE_2_WALL_RIGHT_IN = 40.0;
+                DRIVE_DEPOT_MOVE_2_WALL_RIGHT_IN = 41.0;
 
-                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_LEFT_DEG = 55;
-                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_MID_DEG = 55;
-                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_RIGHT_DEG = 55;
+                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_LEFT_DEG = 51;
+                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_MID_DEG = 53;
+                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_RIGHT_DEG = 52;
 
                 DRIVE_DEPOT_FWD_2_DEPOT_LEFT_IN = 26;
                 DRIVE_DEPOT_FWD_2_DEPOT_MID_IN = 26;
@@ -193,7 +193,7 @@ public class Auton_Facing_Depot extends AutonLinearBase
                 {
                     // Move from completion of sampling to Depot
                     DriveToDepot( );
-                    step = step.Next();
+                    step = step.STOP;
                     break;
                 }
 
@@ -252,8 +252,8 @@ public class Auton_Facing_Depot extends AutonLinearBase
 
                 // start positioning the arm for dropping the team marker and drive forward to
                 // the depot, ready to unload the marker.
-                arm.position_wrist(Arm.WRIST_POS.MOVE, WRIST_SPEED);
-                go.AutonMove(Drive.DIRECTION.FORWARD, DRIVE_DEPOT_FWD_2_DEPOT_LEFT_IN);
+                //arm.position_wrist(Arm.WRIST_POS.MOVE, WRIST_SPEED);
+                //go.AutonMove(Drive.DIRECTION.FORWARD, DRIVE_DEPOT_FWD_2_DEPOT_LEFT_IN);
                 break;
 
 
@@ -268,8 +268,8 @@ public class Auton_Facing_Depot extends AutonLinearBase
 
                 // start positioning the arm for dropping the team marker and drive forward to
                 // the depot, ready to unload the marker.
-                arm.position_wrist(Arm.WRIST_POS.MOVE, WRIST_SPEED);
-                go.AutonMove(Drive.DIRECTION.FORWARD, DRIVE_DEPOT_FWD_2_DEPOT_MID_IN);
+                //arm.position_wrist(Arm.WRIST_POS.MOVE, WRIST_SPEED);
+                //go.AutonMove(Drive.DIRECTION.FORWARD, DRIVE_DEPOT_FWD_2_DEPOT_MID_IN);
                 break;
 
 
@@ -284,8 +284,8 @@ public class Auton_Facing_Depot extends AutonLinearBase
 
                 // start positioning the arm for dropping the team marker and drive forward to
                 // the depot, ready to unload the marker.
-                arm.position_wrist(Arm.WRIST_POS.MOVE, WRIST_SPEED);
-                go.AutonMove(Drive.DIRECTION.FORWARD, DRIVE_DEPOT_FWD_2_DEPOT_RIGHT_IN);
+                //arm.position_wrist(Arm.WRIST_POS.MOVE, WRIST_SPEED);
+                // go.AutonMove(Drive.DIRECTION.FORWARD, DRIVE_DEPOT_FWD_2_DEPOT_RIGHT_IN);
                 break;
         }
     }
