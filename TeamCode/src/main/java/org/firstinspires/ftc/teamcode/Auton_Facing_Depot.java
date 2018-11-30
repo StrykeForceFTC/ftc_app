@@ -78,9 +78,9 @@ public class Auton_Facing_Depot extends AutonLinearBase
                 DRIVE_DEPOT_ROT_PARALLEL_2_WALL_MID_DEG = 50;
                 DRIVE_DEPOT_ROT_PARALLEL_2_WALL_RIGHT_DEG = 52;
 
-                DRIVE_DEPOT_FWD_2_DEPOT_LEFT_IN = 29.5;
-                DRIVE_DEPOT_FWD_2_DEPOT_MID_IN = 29.5;
-                DRIVE_DEPOT_FWD_2_DEPOT_RIGHT_IN = 29.5;
+                DRIVE_DEPOT_FWD_2_DEPOT_LEFT_IN = 31.5;
+                DRIVE_DEPOT_FWD_2_DEPOT_MID_IN = 31.5;
+                DRIVE_DEPOT_FWD_2_DEPOT_RIGHT_IN = 31.5;
 
                 ROTATE_BEFORE_DROP_DEG = 0;
                 ROTATE_AFTER_DROP_DEG = 7;
