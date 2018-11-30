@@ -190,7 +190,7 @@ public class Arm {
             case UNLOAD:           // Leaned a little bit forward of vertical
                 return 2550;
             case MOVE:             // Pointed out to front high enough to not get in way when moving
-                if (TeamId == Auto_Robot_Detect.teamId.team15106 )
+                if ( ( TeamId == Auto_Robot_Detect.teamId.team15106 ) || ( TeamId == Auto_Robot_Detect.teamId.team7228 ) )
                     return 4650;
                 return 4250;       // 4000
             case LOAD:             // Pointed towards ground in front of robot
@@ -230,7 +230,7 @@ public class Arm {
     {
         if (pos > MAX_WRIST_POS)
             return MAX_WRIST_POS;
-        if ((allow_neg_wrist == false) && (pos < MIN_WRIST_STICK_POS))
+        if ( (allow_neg_wrist == false) && ( pos < MIN_WRIST_STICK_POS ) && ( TeamId != Auto_Robot_Detect.teamId.team7228 ) )
             return MIN_WRIST_STICK_POS;
         if (pos < MIN_WRIST_POS)
             return MIN_WRIST_POS;
