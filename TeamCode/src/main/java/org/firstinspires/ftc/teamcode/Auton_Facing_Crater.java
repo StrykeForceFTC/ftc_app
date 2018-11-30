@@ -167,7 +167,7 @@ public class Auton_Facing_Crater extends AutonLinearBase
                     // Move from completion of sampling to Depot
                     DriveToDepot( );
 //                    step = step.Next();
-                    step = AUTON_STEPS.STOP;
+                    step = step.Next();
                     break;
                 }
 
@@ -175,7 +175,7 @@ public class Auton_Facing_Crater extends AutonLinearBase
                 {
                     // Drop marker and gold sample
                     UnloadGoldAndMarker();
-                    step = step.STOP;
+                    step = step.Next();
                     break;
                 }
 

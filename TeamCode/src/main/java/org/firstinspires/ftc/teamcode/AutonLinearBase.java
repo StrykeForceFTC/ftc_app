@@ -154,6 +154,8 @@ public abstract class AutonLinearBase extends LinearOpMode
                 GO_TO_GOLD_ROTATE_TO_RIGHT_DEG = 17 ;           // Clockwise! to get to right
 
                 ROTATE_TO_KNOCK_OFF_SAMPLE_DEG = 30;
+
+                PARK_DISTANCE_IN = 44.0;
                 break;
             }
 
