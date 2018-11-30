@@ -148,7 +148,7 @@ public abstract class AutonLinearBase extends LinearOpMode
                 GO_TO_GOLD_ROTATE_TO_MID_DEG = 15;             // Counter clockwise
 
                 GO_TO_GOLD_FWD_LEFT_IN = 9.5;
-                GO_TO_GOLD_ROTATE_TO_LEFT_DEG = 46;            // Mid rotate plus extra to get to left, CCW
+                GO_TO_GOLD_ROTATE_TO_LEFT_DEG = 36;            // Mid rotate plus extra to get to left, CCW
 
                 GO_TO_GOLD_FWD_RIGHT_IN = 9 ;
                 GO_TO_GOLD_ROTATE_TO_RIGHT_DEG = 17 ;           // Clockwise! to get to right
