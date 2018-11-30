@@ -90,15 +90,21 @@ public class Auton_Facing_Depot extends AutonLinearBase
 
             case team8553:
             {
-                DRIVE_DEPOT_TURN_2_WALL_LEFT_DEG = 113.0;
+                GO_TO_GOLD_FWD_RIGHT_IN = 10.0;
+                GO_TO_GOLD_FWD_MID_IN = 4.5;
+
+                DRIVE_DEPOT_TURN_2_WALL_LEFT_DEG = 105.0;
                 DRIVE_DEPOT_TURN_2_WALL_MID_DEG = 88.0;
-                DRIVE_DEPOT_TURN_2_WALL_RIGHT_DEG = 35.0;
+                DRIVE_DEPOT_TURN_2_WALL_RIGHT_DEG = 30.0;
+
                 DRIVE_DEPOT_MOVE_2_WALL_LEFT_IN = 37.0;
-                DRIVE_DEPOT_MOVE_2_WALL_RIGHT_IN = 55.0;
+                DRIVE_DEPOT_MOVE_2_WALL_RIGHT_IN = 45.0;
+
                 DRIVE_DEPOT_ROT_PARALLEL_2_WALL_MID_DEG = 65.0;
-                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_RIGHT_DEG = 42.0;
-                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_LEFT_DEG = 62.0;
-                DRIVE_DEPOT_FWD_2_DEPOT_RIGHT_IN = 50.0;
+                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_RIGHT_DEG = 52.0;
+                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_LEFT_DEG = 64.0;
+
+                DRIVE_DEPOT_FWD_2_DEPOT_RIGHT_IN = 35.0;
                 DRIVE_DEPOT_FWD_2_DEPOT_MID_IN = 30.0;
                 DRIVE_DEPOT_FWD_2_DEPOT_LEFT_IN = 33.0;
                 break;
