@@ -82,7 +82,9 @@ public class Auton_Facing_Depot extends AutonLinearBase
                 DRIVE_DEPOT_FWD_2_DEPOT_MID_IN = 26;
                 DRIVE_DEPOT_FWD_2_DEPOT_RIGHT_IN = 26;
 
-                ROTATE_AFTER_DROP_DEG = 6;
+                ROTATE_BEFORE_DROP_DEG = 0;
+                ROTATE_AFTER_DROP_DEG = 7;
+
                 PARK_DISTANCE_IN = 49;
                 
                 break;
