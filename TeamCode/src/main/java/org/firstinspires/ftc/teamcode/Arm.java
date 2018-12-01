@@ -48,6 +48,11 @@ public class Arm {
 
         lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         wrist.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        if ( TeamId == Auto_Robot_Detect.teamId.team7228 )
+        {
+            MIN_WRIST_STICK_POS = -5000;
+        }
     }
 
 
@@ -158,10 +163,16 @@ public class Arm {
                 return 4400;
             case sampling:
             {
-                if ( TeamId == Auto_Robot_Detect.teamId.team7228 ) {
-                    return 1400;
+                switch (TeamId)
+                {
+                    case team7228:
+                        return 1300;
+                    case team8553:
+                        return 600;
+                    case team15106:
+                        return 600;
                 }
-                else return 1200;    // 1400
+                return 1200;
             }
             default:
                 return lift.getCurrentPosition();
@@ -179,6 +190,8 @@ public class Arm {
             case UNLOAD:           // Leaned a little bit forward of vertical
                 return 2550;
             case MOVE:             // Pointed out to front high enough to not get in way when moving
+                if ( ( TeamId == Auto_Robot_Detect.teamId.team15106 ) || ( TeamId == Auto_Robot_Detect.teamId.team7228 ) )
+                    return 4650;
                 return 4250;       // 4000
             case LOAD:             // Pointed towards ground in front of robot
                 return 4875;
@@ -197,7 +210,7 @@ public class Arm {
     private static int MAX_WRIST_ADJUST_VALUE = 100;
     private static int MIN_WRIST_ADJUST_VALUE = 5;
 
-    private static int MAX_WRIST_POS = 5200;            // Absolute maximum for lift pos
+    private static int MAX_WRIST_POS = 5500;            // Absolute maximum for lift pos
     private static int MIN_WRIST_STICK_POS = 0;       // Minimum pos allowed for stick pos if not adjusting zero
     private static int MIN_WRIST_POS = -5400;           // Absolute minumum for lift pos
 
@@ -217,7 +230,7 @@ public class Arm {
     {
         if (pos > MAX_WRIST_POS)
             return MAX_WRIST_POS;
-        if ((allow_neg_wrist == false) && (pos < MIN_WRIST_STICK_POS))
+        if ( (allow_neg_wrist == false) && ( pos < MIN_WRIST_STICK_POS ) && ( TeamId != Auto_Robot_Detect.teamId.team7228 ) )
             return MIN_WRIST_STICK_POS;
         if (pos < MIN_WRIST_POS)
             return MIN_WRIST_POS;
@@ -259,7 +272,7 @@ public class Arm {
 
         int offset = (int) (adjustrate * MAX_WRIST_ADJUST_VALUE +.5);
 
-        if ((wrist.getCurrentPosition() < 20 ) && (dir == WRIST_DIR.BACKWARD))
+        if ((wrist.getCurrentPosition() < 20 ) && (dir == WRIST_DIR.BACKWARD) && ( TeamId != Auto_Robot_Detect.teamId.team7228 ) )
             offset = MIN_WRIST_ADJUST_VALUE;
 
         switch(dir)

@@ -29,6 +29,18 @@ public class Auton_Facing_Depot extends AutonLinearBase
     private double DRIVE_DEPOT_ROT_PARALLEL_2_WALL_MID_DEG = 60;
     private double DRIVE_DEPOT_ROT_PARALLEL_2_WALL_RIGHT_DEG = 55;
 
+    private double DRIVE_DEPOT_FWD_NEAR_DEPOT_LEFT_IN = 0;
+    private double DRIVE_DEPOT_FWD_NEAR_DEPOT_MID_IN = 0;
+    private double DRIVE_DEPOT_FWD_NEAR_DEPOT_RIGHT_IN = 0;
+
+    private double DRIVE_DEPOT_STRAFE_2_WALL_LEFT_IN = 0;
+    private double DRIVE_DEPOT_STRAFE_2_WALL_MID_IN = 0;
+    private double DRIVE_DEPOT_STRAFE_2_WALL_RIGHT_IN = 0;
+
+    private double DRIVE_DEPOT_STRAFE_AWAY_FROM_WALL_LEFT_IN = 0;
+    private double DRIVE_DEPOT_STRAFE_AWAY_FROM_WALL_MID_IN = 0;
+    private double DRIVE_DEPOT_STRAFE_AWAY_FROM_WALL_RIGHT_IN = 0;
+
     private double DRIVE_DEPOT_FWD_2_DEPOT_LEFT_IN = 26;
     private double DRIVE_DEPOT_FWD_2_DEPOT_MID_IN = 26;    // 33
     private double DRIVE_DEPOT_FWD_2_DEPOT_RIGHT_IN = 26;
@@ -36,6 +48,7 @@ public class Auton_Facing_Depot extends AutonLinearBase
     //private double DRIVE_DEPOT_STRAFE_2_WALL_IN = 13.0;
 
 
+    private double ROTATE_BEFORE_DROP_DEG = 0;
     private double ROTATE_AFTER_DROP_DEG = 6;
 
     /*
@@ -48,7 +61,7 @@ public class Auton_Facing_Depot extends AutonLinearBase
 //        gold = GOLD_POSITIONS.UNKNOWN_POS;
 //        gold = GOLD_POSITIONS.LEFT_POS;
 //        gold = GOLD_POSITIONS.MID_POS;
-        gold = GOLD_POSITIONS.MID_POS;
+        gold = GOLD_POSITIONS.UNKNOWN_POS;
 
         /*
          * Initialize the hardware variables.
@@ -65,21 +78,84 @@ public class Auton_Facing_Depot extends AutonLinearBase
         {
             case team7228:
             {
+                DRIVE_DEPOT_TURN_2_WALL_LEFT_DEG = 82.0;
                 DRIVE_DEPOT_TURN_2_WALL_MID_DEG = 55;
-                DRIVE_DEPOT_MOVE_2_WALL_MID_IN = 36.5;
-                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_MID_DEG = 55;
-                ROTATE_AFTER_DROP_DEG = 6;
-                // PARK_DISTANCE_IN = 47;
+                DRIVE_DEPOT_TURN_2_WALL_RIGHT_DEG = 25.0;
+
+                DRIVE_DEPOT_MOVE_2_WALL_LEFT_IN = 29.25;
+                DRIVE_DEPOT_MOVE_2_WALL_MID_IN = 37.5;
+                DRIVE_DEPOT_MOVE_2_WALL_RIGHT_IN = 41.0;
+
+                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_LEFT_DEG = 51;
+                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_MID_DEG = 50;
+                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_RIGHT_DEG = 52;
+
+                DRIVE_DEPOT_FWD_2_DEPOT_LEFT_IN = 31.5;
+                DRIVE_DEPOT_FWD_2_DEPOT_MID_IN = 31.5;
+                DRIVE_DEPOT_FWD_2_DEPOT_RIGHT_IN = 31.5;
+
+                ROTATE_BEFORE_DROP_DEG = 0;
+                ROTATE_AFTER_DROP_DEG = 7;
+
+                PARK_DISTANCE_IN = 49;
+                
                 break;
             }
 
             case team8553:
             {
+                GO_TO_GOLD_FWD_RIGHT_IN = 10.0;
+                GO_TO_GOLD_FWD_MID_IN = 4.5;
+
+                DRIVE_DEPOT_TURN_2_WALL_LEFT_DEG = 105.0;
+                DRIVE_DEPOT_TURN_2_WALL_MID_DEG = 88.0;
+                DRIVE_DEPOT_TURN_2_WALL_RIGHT_DEG = 30.0;
+
+                DRIVE_DEPOT_MOVE_2_WALL_LEFT_IN = 37.0;
+                DRIVE_DEPOT_MOVE_2_WALL_RIGHT_IN = 45.0;
+
+                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_MID_DEG = 65.0;
+                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_RIGHT_DEG = 52.0;
+                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_LEFT_DEG = 64.0;
+
+                DRIVE_DEPOT_FWD_2_DEPOT_RIGHT_IN = 35.0;
+                DRIVE_DEPOT_FWD_2_DEPOT_MID_IN = 30.0;
+                DRIVE_DEPOT_FWD_2_DEPOT_LEFT_IN = 33.0;
                 break;
             }
 
             case team15106:
             {
+                DRIVE_DEPOT_TURN_2_WALL_LEFT_DEG = 113.0;
+                DRIVE_DEPOT_MOVE_2_WALL_LEFT_IN = 34.0; // 37
+                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_LEFT_DEG = 67.0; // 62
+                DRIVE_DEPOT_FWD_NEAR_DEPOT_LEFT_IN = 0;
+                DRIVE_DEPOT_STRAFE_2_WALL_LEFT_IN = 0;
+                DRIVE_DEPOT_STRAFE_AWAY_FROM_WALL_LEFT_IN = 0;
+                DRIVE_DEPOT_FWD_2_DEPOT_LEFT_IN = 24.0; // 33
+
+                DRIVE_DEPOT_TURN_2_WALL_MID_DEG = 88.0;
+                DRIVE_DEPOT_MOVE_2_WALL_MID_IN = 39.0; // 40
+                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_MID_DEG = 75.0; // 65
+                DRIVE_DEPOT_FWD_NEAR_DEPOT_MID_IN = 0;
+                DRIVE_DEPOT_STRAFE_2_WALL_MID_IN = 0;
+                DRIVE_DEPOT_STRAFE_AWAY_FROM_WALL_MID_IN = 0;
+                DRIVE_DEPOT_FWD_2_DEPOT_MID_IN = 24.0; // 30
+
+                DRIVE_DEPOT_TURN_2_WALL_RIGHT_DEG = 35.0;
+                DRIVE_DEPOT_MOVE_2_WALL_RIGHT_IN = 47.0; // 49
+                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_RIGHT_DEG = 57.0; // 42
+                DRIVE_DEPOT_FWD_NEAR_DEPOT_RIGHT_IN = 0;
+                DRIVE_DEPOT_STRAFE_2_WALL_RIGHT_IN = 0;
+                DRIVE_DEPOT_STRAFE_AWAY_FROM_WALL_RIGHT_IN = 0;
+                DRIVE_DEPOT_FWD_2_DEPOT_RIGHT_IN = 32.0; // 50
+
+                ROTATE_BEFORE_DROP_DEG = 0;
+                if (gold == GOLD_POSITIONS.MID_POS)
+                    ROTATE_BEFORE_DROP_DEG = 7;
+
+                ROTATE_AFTER_DROP_DEG = 0;
+
                 break;
             }
         }
@@ -87,9 +163,6 @@ public class Auton_Facing_Depot extends AutonLinearBase
         // Wait hit till start button pressed
         waitForStart();
         runtime.reset();
-
-        // Start at move to mineral, for now
-        //step = AUTON_STEPS.MOVE_TO_MINERAL;
 
         // Loop until stop or forced to end
         while ( opModeIsActive() )
@@ -111,8 +184,10 @@ public class Auton_Facing_Depot extends AutonLinearBase
                 {
                     // Use common method to find gold
                     // if gold position is already set, skip detection
-                    if (gold == GOLD_POSITIONS.UNKNOWN_POS)
-                        FindGold();
+                    if ( gold == GOLD_POSITIONS.UNKNOWN_POS )
+                    {
+                        FindGold( );
+                    }
 
                     // Display mineral position on phone
                     telemetry.addLine().addData( "GP: ", gold.toString() );
@@ -171,8 +246,8 @@ public class Auton_Facing_Depot extends AutonLinearBase
 
             }
 
-            telemetry.addData("IsAligned", GoldAligned()); // Is the bot aligned with the gold mineral
-            telemetry.addData("X Pos", GoldXPosition());    // Gold X pos.
+            telemetry.addData("Is Found", GoldIsFound() );  // Is there a gold in view
+            telemetry.addData("Y Pos", GoldYPosition());    // Gold Y pos.
 
             AddStdAutonTelemetry(true);
             telemetry.update();
@@ -202,6 +277,12 @@ public class Auton_Facing_Depot extends AutonLinearBase
                 // start positioning the arm for dropping the team marker and drive forward to
                 // the depot, ready to unload the marker.
                 arm.position_wrist(Arm.WRIST_POS.MOVE, WRIST_SPEED);
+                if (DRIVE_DEPOT_FWD_NEAR_DEPOT_LEFT_IN != 0)
+                    go.AutonMove(Drive.DIRECTION.FORWARD, DRIVE_DEPOT_FWD_NEAR_DEPOT_LEFT_IN);
+                if (DRIVE_DEPOT_STRAFE_2_WALL_LEFT_IN != 0)
+                    go.AutonMove(Drive.DIRECTION.LEFT, DRIVE_DEPOT_STRAFE_2_WALL_LEFT_IN);
+                if (DRIVE_DEPOT_STRAFE_AWAY_FROM_WALL_LEFT_IN != 0)
+                    go.AutonMove(Drive.DIRECTION.RIGHT, DRIVE_DEPOT_STRAFE_AWAY_FROM_WALL_LEFT_IN);
                 go.AutonMove(Drive.DIRECTION.FORWARD, DRIVE_DEPOT_FWD_2_DEPOT_LEFT_IN);
                 break;
 
@@ -218,6 +299,12 @@ public class Auton_Facing_Depot extends AutonLinearBase
                 // start positioning the arm for dropping the team marker and drive forward to
                 // the depot, ready to unload the marker.
                 arm.position_wrist(Arm.WRIST_POS.MOVE, WRIST_SPEED);
+                if (DRIVE_DEPOT_FWD_NEAR_DEPOT_MID_IN != 0)
+                    go.AutonMove(Drive.DIRECTION.FORWARD, DRIVE_DEPOT_FWD_NEAR_DEPOT_MID_IN);
+                if (DRIVE_DEPOT_STRAFE_2_WALL_MID_IN != 0)
+                    go.AutonMove(Drive.DIRECTION.LEFT, DRIVE_DEPOT_STRAFE_2_WALL_MID_IN);
+                if (DRIVE_DEPOT_STRAFE_AWAY_FROM_WALL_MID_IN != 0)
+                    go.AutonMove(Drive.DIRECTION.RIGHT, DRIVE_DEPOT_STRAFE_AWAY_FROM_WALL_MID_IN);
                 go.AutonMove(Drive.DIRECTION.FORWARD, DRIVE_DEPOT_FWD_2_DEPOT_MID_IN);
                 break;
 
@@ -234,6 +321,12 @@ public class Auton_Facing_Depot extends AutonLinearBase
                 // start positioning the arm for dropping the team marker and drive forward to
                 // the depot, ready to unload the marker.
                 arm.position_wrist(Arm.WRIST_POS.MOVE, WRIST_SPEED);
+                if (DRIVE_DEPOT_FWD_NEAR_DEPOT_RIGHT_IN != 0)
+                    go.AutonMove(Drive.DIRECTION.FORWARD, DRIVE_DEPOT_FWD_NEAR_DEPOT_RIGHT_IN);
+                if (DRIVE_DEPOT_STRAFE_2_WALL_RIGHT_IN != 0)
+                    go.AutonMove(Drive.DIRECTION.LEFT, DRIVE_DEPOT_STRAFE_2_WALL_RIGHT_IN);
+                if (DRIVE_DEPOT_STRAFE_AWAY_FROM_WALL_RIGHT_IN != 0)
+                    go.AutonMove(Drive.DIRECTION.LEFT, DRIVE_DEPOT_STRAFE_AWAY_FROM_WALL_RIGHT_IN);
                 go.AutonMove(Drive.DIRECTION.FORWARD, DRIVE_DEPOT_FWD_2_DEPOT_RIGHT_IN);
                 break;
         }
@@ -245,8 +338,11 @@ public class Auton_Facing_Depot extends AutonLinearBase
         // arm should already be in correct position
 
         // Unload gold sample and adjust robot rotation for backing into crater.
+        if (ROTATE_BEFORE_DROP_DEG != 0)
+            go.AutonMoveRotate(Drive.ROTATION.CLOCKWISE, ROTATE_BEFORE_DROP_DEG );
         loader.AutonUnload();
-        go.AutonMoveRotate(Drive.ROTATION.CLOCKWISE, ROTATE_AFTER_DROP_DEG );
+        if (ROTATE_AFTER_DROP_DEG != 0)
+            go.AutonMoveRotate(Drive.ROTATION.CLOCKWISE, ROTATE_AFTER_DROP_DEG );
     }
 
 
