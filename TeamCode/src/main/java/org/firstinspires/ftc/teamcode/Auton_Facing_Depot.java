@@ -29,6 +29,18 @@ public class Auton_Facing_Depot extends AutonLinearBase
     private double DRIVE_DEPOT_ROT_PARALLEL_2_WALL_MID_DEG = 60;
     private double DRIVE_DEPOT_ROT_PARALLEL_2_WALL_RIGHT_DEG = 55;
 
+    private double DRIVE_DEPOT_FWD_NEAR_DEPOT_LEFT_IN = 0;
+    private double DRIVE_DEPOT_FWD_NEAR_DEPOT_MID_IN = 0;
+    private double DRIVE_DEPOT_FWD_NEAR_DEPOT_RIGHT_IN = 0;
+
+    private double DRIVE_DEPOT_STRAFE_2_WALL_LEFT_IN = 0;
+    private double DRIVE_DEPOT_STRAFE_2_WALL_MID_IN = 0;
+    private double DRIVE_DEPOT_STRAFE_2_WALL_RIGHT_IN = 0;
+
+    private double DRIVE_DEPOT_STRAFE_AWAY_FROM_WALL_LEFT_IN = 0;
+    private double DRIVE_DEPOT_STRAFE_AWAY_FROM_WALL_MID_IN = 0;
+    private double DRIVE_DEPOT_STRAFE_AWAY_FROM_WALL_RIGHT_IN = 0;
+
     private double DRIVE_DEPOT_FWD_2_DEPOT_LEFT_IN = 26;
     private double DRIVE_DEPOT_FWD_2_DEPOT_MID_IN = 26;    // 33
     private double DRIVE_DEPOT_FWD_2_DEPOT_RIGHT_IN = 26;
@@ -115,21 +127,33 @@ public class Auton_Facing_Depot extends AutonLinearBase
             case team15106:
             {
                 DRIVE_DEPOT_TURN_2_WALL_LEFT_DEG = 113.0;
-                DRIVE_DEPOT_MOVE_2_WALL_LEFT_IN = 37.0;
-                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_LEFT_DEG = 62.0;
-                DRIVE_DEPOT_FWD_2_DEPOT_LEFT_IN = 33.0;
+                DRIVE_DEPOT_MOVE_2_WALL_LEFT_IN = 34.0; // 37
+                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_LEFT_DEG = 67.0; // 62
+                DRIVE_DEPOT_FWD_NEAR_DEPOT_LEFT_IN = 0;
+                DRIVE_DEPOT_STRAFE_2_WALL_LEFT_IN = 0;
+                DRIVE_DEPOT_STRAFE_AWAY_FROM_WALL_LEFT_IN = 0;
+                DRIVE_DEPOT_FWD_2_DEPOT_LEFT_IN = 24.0; // 33
 
                 DRIVE_DEPOT_TURN_2_WALL_MID_DEG = 88.0;
-                DRIVE_DEPOT_MOVE_2_WALL_MID_IN = 40.0;
-                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_MID_DEG = 65.0;
-                DRIVE_DEPOT_FWD_2_DEPOT_MID_IN = 30.0;
+                DRIVE_DEPOT_MOVE_2_WALL_MID_IN = 39.0; // 40
+                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_MID_DEG = 75.0; // 65
+                DRIVE_DEPOT_FWD_NEAR_DEPOT_MID_IN = 0;
+                DRIVE_DEPOT_STRAFE_2_WALL_MID_IN = 0;
+                DRIVE_DEPOT_STRAFE_AWAY_FROM_WALL_MID_IN = 0;
+                DRIVE_DEPOT_FWD_2_DEPOT_MID_IN = 24.0; // 30
 
                 DRIVE_DEPOT_TURN_2_WALL_RIGHT_DEG = 35.0;
-                DRIVE_DEPOT_MOVE_2_WALL_RIGHT_IN = 49.0;
-                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_RIGHT_DEG = 42.0;
-                DRIVE_DEPOT_FWD_2_DEPOT_RIGHT_IN = 50.0;
+                DRIVE_DEPOT_MOVE_2_WALL_RIGHT_IN = 47.0; // 49
+                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_RIGHT_DEG = 57.0; // 42
+                DRIVE_DEPOT_FWD_NEAR_DEPOT_RIGHT_IN = 0;
+                DRIVE_DEPOT_STRAFE_2_WALL_RIGHT_IN = 0;
+                DRIVE_DEPOT_STRAFE_AWAY_FROM_WALL_RIGHT_IN = 0;
+                DRIVE_DEPOT_FWD_2_DEPOT_RIGHT_IN = 32.0; // 50
 
-                ROTATE_BEFORE_DROP_DEG = 7;
+                ROTATE_BEFORE_DROP_DEG = 0;
+                if (gold == GOLD_POSITIONS.MID_POS)
+                    ROTATE_BEFORE_DROP_DEG = 7;
+
                 ROTATE_AFTER_DROP_DEG = 0;
 
                 break;
@@ -253,6 +277,12 @@ public class Auton_Facing_Depot extends AutonLinearBase
                 // start positioning the arm for dropping the team marker and drive forward to
                 // the depot, ready to unload the marker.
                 arm.position_wrist(Arm.WRIST_POS.MOVE, WRIST_SPEED);
+                if (DRIVE_DEPOT_FWD_NEAR_DEPOT_LEFT_IN != 0)
+                    go.AutonMove(Drive.DIRECTION.FORWARD, DRIVE_DEPOT_FWD_NEAR_DEPOT_LEFT_IN);
+                if (DRIVE_DEPOT_STRAFE_2_WALL_LEFT_IN != 0)
+                    go.AutonMove(Drive.DIRECTION.LEFT, DRIVE_DEPOT_STRAFE_2_WALL_LEFT_IN);
+                if (DRIVE_DEPOT_STRAFE_AWAY_FROM_WALL_LEFT_IN != 0)
+                    go.AutonMove(Drive.DIRECTION.RIGHT, DRIVE_DEPOT_STRAFE_AWAY_FROM_WALL_LEFT_IN);
                 go.AutonMove(Drive.DIRECTION.FORWARD, DRIVE_DEPOT_FWD_2_DEPOT_LEFT_IN);
                 break;
 
@@ -269,6 +299,12 @@ public class Auton_Facing_Depot extends AutonLinearBase
                 // start positioning the arm for dropping the team marker and drive forward to
                 // the depot, ready to unload the marker.
                 arm.position_wrist(Arm.WRIST_POS.MOVE, WRIST_SPEED);
+                if (DRIVE_DEPOT_FWD_NEAR_DEPOT_MID_IN != 0)
+                    go.AutonMove(Drive.DIRECTION.FORWARD, DRIVE_DEPOT_FWD_NEAR_DEPOT_MID_IN);
+                if (DRIVE_DEPOT_STRAFE_2_WALL_MID_IN != 0)
+                    go.AutonMove(Drive.DIRECTION.LEFT, DRIVE_DEPOT_STRAFE_2_WALL_MID_IN);
+                if (DRIVE_DEPOT_STRAFE_AWAY_FROM_WALL_MID_IN != 0)
+                    go.AutonMove(Drive.DIRECTION.RIGHT, DRIVE_DEPOT_STRAFE_AWAY_FROM_WALL_MID_IN);
                 go.AutonMove(Drive.DIRECTION.FORWARD, DRIVE_DEPOT_FWD_2_DEPOT_MID_IN);
                 break;
 
@@ -285,6 +321,12 @@ public class Auton_Facing_Depot extends AutonLinearBase
                 // start positioning the arm for dropping the team marker and drive forward to
                 // the depot, ready to unload the marker.
                 arm.position_wrist(Arm.WRIST_POS.MOVE, WRIST_SPEED);
+                if (DRIVE_DEPOT_FWD_NEAR_DEPOT_RIGHT_IN != 0)
+                    go.AutonMove(Drive.DIRECTION.FORWARD, DRIVE_DEPOT_FWD_NEAR_DEPOT_RIGHT_IN);
+                if (DRIVE_DEPOT_STRAFE_2_WALL_RIGHT_IN != 0)
+                    go.AutonMove(Drive.DIRECTION.LEFT, DRIVE_DEPOT_STRAFE_2_WALL_RIGHT_IN);
+                if (DRIVE_DEPOT_STRAFE_AWAY_FROM_WALL_RIGHT_IN != 0)
+                    go.AutonMove(Drive.DIRECTION.LEFT, DRIVE_DEPOT_STRAFE_AWAY_FROM_WALL_RIGHT_IN);
                 go.AutonMove(Drive.DIRECTION.FORWARD, DRIVE_DEPOT_FWD_2_DEPOT_RIGHT_IN);
                 break;
         }
