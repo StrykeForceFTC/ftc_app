@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
@@ -22,11 +21,11 @@ public class Auton_Testcode extends AutonLinearBase
 
     // Constants for drive to depot. These are not common with
     // the facing depot auton, so the values are set up here.
-    private final static double DRIVE_DEPOT_TURN_2_WALL_DEG = 75.0;
-    private final static double DRIVE_DEPOT_MOVE_2_WALL_IN = 37.0;
-    private final static double DRIVE_DEPOT_ROT_PARALLEL_2_WALL_DEG = 27.5;
-    private final static double DRIVE_DEPOT_STRAFE_2_WALL_IN = 11.0;
-    private final static double DRIVE_DEPOT_FWD_2_DEPOT = 32.5;
+    private static double DRIVE_DEPOT_TURN_2_WALL_DEG = 75.0;
+    private static double DRIVE_DEPOT_MOVE_2_WALL_IN = 37.0;
+    private static double DRIVE_DEPOT_ROT_PARALLEL_2_WALL_DEG = 27.5;
+    private static double DRIVE_DEPOT_STRAFE_2_WALL_IN = 11.0;
+    private static double DRIVE_DEPOT_FWD_2_DEPOT = 32.5;
 
     /*
      * There is only runOpMode for linear op modes
@@ -38,12 +37,37 @@ public class Auton_Testcode extends AutonLinearBase
          */
         InitHardware();
 
+        // Tune parameters based on robot as needed
+        // these values are copied in from facing crater
+        switch ( TeamId )
+        {
+            case team7228:
+            {
+
+                break;
+            }
+
+            case team8553:
+            {
+                break;
+            }
+
+            case team15106:
+            {
+                break;
+            }
+        }
+
         // Wait hit till start button pressed
         waitForStart();
         runtime.reset();
 
         // Set state you want to start in here
         step = AUTON_STEPS.RELEASE_LANDER;
+
+        // Ensure gold position is unknown for testing
+        // release, find gold and move to mineral
+        gold = GOLD_POSITIONS.UNKNOWN_POS;
 
         // Loop until stop or forced to end
         while ( opModeIsActive( ) )
@@ -57,7 +81,7 @@ public class Auton_Testcode extends AutonLinearBase
                     // Run common method from AutonLinearBase and
                     // go to next step
                     ReleaseLander();
-                    step = AUTON_STEPS.STOP;
+                    step = step.Next();
                     break;
                 }
 
@@ -65,62 +89,36 @@ public class Auton_Testcode extends AutonLinearBase
                 {
                     // Use common method to find gold, commented out until
                     // it can be fully developed / tuned.
-                    // FindGold();
-
-                    // Display mineral position on phone
-                    telemetry.addLine().addData( "GP: ", gold.toString() );
+                    FindGold();
 
                     // Move to next step
+                    //step = step.Next();
                     step = step.Next();
                     break;
                 }
 
                 case MOVE_TO_MINERAL:
                 {
-                    // Move in front of gold mineral
+                    // Sample gold mineral
                     GoToGold();
-                    step = step.Next();
-                    break;
-                }
-
-                case LOAD_GOLD:
-                {
-                    LoadGold();
-                    step = step.Next();
-                    break;
-                }
-
-                case DRIVE_DEPOT:
-                {
-                    DriveToDepot( );
-                    step = step.Next();
-                    break;
-                }
-
-                case UNLOAD:
-                {
-                    // Drop marker and gold sample
-                    UnloadGoldAndMarker();
-                    step = AUTON_STEPS.PARK;
-                    break;
-                }
-
-                case PARK:
-                {
-                    ParkTheRobot();
-                    step = AUTON_STEPS.STOP;
+                    step = step.STOP;
                     break;
                 }
 
                 case STOP:
                 {
+                    // Auton is complete.
                     StopActions();
                     break;
                 }
+
+                default:
+                    break;
             }
 
-            telemetry.addData("IsAligned", GoldAligned()); // Is the bot aligned with the gold mineral
-            telemetry.addData("X Pos", GoldXPosition());    // Gold X pos.
+            telemetry.addData("Is Found", GoldIsFound());   // Is the bot aligned with the gold mineral
+            telemetry.addData("Y Pos", GoldYPosition());    // Gold Y pos.
+            telemetry.addLine( gold.toString() );
 
             telemetry.addLine("Encoders ")
                     .addData("FL ", go.GetEncoderFrontLeft())
@@ -131,6 +129,7 @@ public class Auton_Testcode extends AutonLinearBase
                     .addData("Team", TeamId.name());
 
             telemetry.update();
+
         }
 
     }

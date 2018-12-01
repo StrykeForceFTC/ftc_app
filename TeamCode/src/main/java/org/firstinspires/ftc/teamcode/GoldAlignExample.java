@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.DogeCV;
 import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
+import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetectorVertical;
 import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -41,14 +42,14 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 public class GoldAlignExample extends OpMode
 {
-    private GoldAlignDetector detector;
+    private GoldAlignDetectorVertical detector;
 
 
     @Override
     public void init() {
         telemetry.addData("Status", "DogeCV 2018.0 - Gold Align Example");
 
-        detector = new GoldAlignDetector();
+        detector = new GoldAlignDetectorVertical();
         detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
         detector.useDefaults();
 
@@ -85,7 +86,8 @@ public class GoldAlignExample extends OpMode
     @Override
     public void loop() {
         telemetry.addData( "IsAligned" , detector.getAligned()); // Is the bot aligned with the gold mineral
-        telemetry.addData("X Pos" , detector.getXPosition()); // Gold X pos.
+        telemetry.addData("Y Pos" , detector.getYPosition()); // Gold Y pos.
+        telemetry.addData("IsFound", detector.isFound());
     }
 
     /*

@@ -34,6 +34,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 
 
 /**
@@ -52,6 +53,8 @@ public class Tele_Op_Test extends Tele_Op_Base
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
     private Arm arm = null;
+    private DigitalChannel io1 = null;
+    private DigitalChannel io2 = null;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -62,6 +65,8 @@ public class Tele_Op_Test extends Tele_Op_Base
         // Use base class to init HW
         HwInit();
         arm = new Arm( hardwareMap );
+        io1 = hardwareMap.digitalChannel.get("io1");
+        io2 = hardwareMap.digitalChannel.get("io2");
     }
 
     /*
@@ -96,17 +101,11 @@ public class Tele_Op_Test extends Tele_Op_Base
         ProcessRaiseArm( );
         ProcessLoadingInput();
 
-        telemetry.addLine("Encoders ")
-                .addData("FL ", go.GetEncoderFrontLeft() )
-                .addData("FR ", go.GetEncoderFrontRight() )
-                .addData("RL ", go.GetEncoderRearLeft() )
-                .addData("RR ", go.GetEncoderRearRight() )
-                .addData("stick ", gamepad2.left_stick_y)
-                .addData("Lift ", arm.LiftEncoderValue())
-                .addData( "Wrist ", arm.WristEncoderValue() );
-        telemetry.addLine("Team Id"  )
-                .addData("team", TeamId.name());
+        telemetry.addLine("Digital IO: ")
+                .addData("io1", io1.getState())
+                .addData("io2", io2.getState());
 
+        AddStdTeleOpTelemetry();
         telemetry.update();
     }
 

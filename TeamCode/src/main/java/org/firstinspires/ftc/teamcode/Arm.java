@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -17,17 +16,18 @@ public class Arm {
 
     private boolean allow_neg_lift;
     private boolean allow_neg_wrist;
-
+    private Auto_Robot_Detect.teamId TeamId = Auto_Robot_Detect.teamId.teamUnknown;
 
     // Constructor - doesn't zero encoders
     public Arm( HardwareMap ahwMap ) {
-        this( ahwMap, false );
+        this( ahwMap, false, Auto_Robot_Detect.teamId.teamUnknown );
     }
 
     // Constructor
     // Initialize HardWare and variables
-    public Arm(HardwareMap ahwMap, boolean resetEncoders ) {
+    public Arm(HardwareMap ahwMap, boolean resetEncoders, Auto_Robot_Detect.teamId id ) {
 
+        TeamId = id;
         lift = ahwMap.dcMotor.get("arm_lift_motor");
         wrist = ahwMap.dcMotor.get("arm_wrist_motor");
 
@@ -48,6 +48,11 @@ public class Arm {
 
         lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         wrist.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        if ( TeamId == Auto_Robot_Detect.teamId.team7228 )
+        {
+            MIN_WRIST_STICK_POS = -5000;
+        }
     }
 
 
@@ -58,11 +63,11 @@ public class Arm {
     }
 
     public enum lift_pos {
-        fulldown, fullup, hook_lander, mid2
+        ZERO, fulldown, fullup, hook_lander, sampling
     }
 
     public enum WRIST_POS {
-        START, UNLOAD, MOVE, LOAD
+        ZERO, START, UNLOAD, MOVE, LOAD
     }
 
     public void position_lift(lift_pos pos, int speed) {
@@ -98,7 +103,8 @@ public class Arm {
 
     public boolean isInPos()
     {
-        if(lift.isBusy() || wrist.isBusy())
+        if((lift.isBusy() && (Math.abs(lift.getTargetPosition() - lift.getCurrentPosition()) > 25)) ||
+                (wrist.isBusy() && (Math.abs(wrist.getTargetPosition() - wrist.getCurrentPosition()) > 25)))
             return (false);
         return (true);
     }
@@ -147,14 +153,27 @@ public class Arm {
     {
         switch(pos)
         {
+            case ZERO:
+                return 0;
             case fulldown:
                 return 100;
             case fullup:
                 return 4800;
             case hook_lander:
                 return 4400;
-            case mid2:
-                return 4000;
+            case sampling:
+            {
+                switch (TeamId)
+                {
+                    case team7228:
+                        return 1300;
+                    case team8553:
+                        return 600;
+                    case team15106:
+                        return 600;
+                }
+                return 1200;
+            }
             default:
                 return lift.getCurrentPosition();
         }
@@ -164,13 +183,16 @@ public class Arm {
     {
         switch(pos)
         {
-
+            case ZERO:
+                return 0;
             case START:            // Folded down at start or end, offset for some margin
                 return 200;
             case UNLOAD:           // Leaned a little bit forward of vertical
                 return 2550;
             case MOVE:             // Pointed out to front high enough to not get in way when moving
-                return 4000;
+                if ( ( TeamId == Auto_Robot_Detect.teamId.team15106 ) || ( TeamId == Auto_Robot_Detect.teamId.team7228 ) )
+                    return 4650;
+                return 4250;       // 4000
             case LOAD:             // Pointed towards ground in front of robot
                 return 4875;
             default:
@@ -182,14 +204,14 @@ public class Arm {
     private static int MIN_LIFT_ADJUST_VALUE = 20;
 
     private static int MAX_LIFT_POS = 4850;             // Absolute maximum for lift pos
-    private static int MIN_LIFT_STICK_POS = 100;        // Minimum pos allowed for stick pos if not adjusting zero
+    private static int MIN_LIFT_STICK_POS = 0;        // Minimum pos allowed for stick pos if not adjusting zero
     private static int MIN_LIFT_POS = -5000;            // Absolute minumum for lift pos
 
     private static int MAX_WRIST_ADJUST_VALUE = 100;
     private static int MIN_WRIST_ADJUST_VALUE = 5;
 
-    private static int MAX_WRIST_POS = 5200;            // Absolute maximum for lift pos
-    private static int MIN_WRIST_STICK_POS = 100;       // Minimum pos allowed for stick pos if not adjusting zero
+    private static int MAX_WRIST_POS = 5500;            // Absolute maximum for lift pos
+    private static int MIN_WRIST_STICK_POS = 0;       // Minimum pos allowed for stick pos if not adjusting zero
     private static int MIN_WRIST_POS = -5400;           // Absolute minumum for lift pos
 
 
@@ -208,7 +230,7 @@ public class Arm {
     {
         if (pos > MAX_WRIST_POS)
             return MAX_WRIST_POS;
-        if ((allow_neg_wrist == false) && (pos < MIN_WRIST_STICK_POS))
+        if ( (allow_neg_wrist == false) && ( pos < MIN_WRIST_STICK_POS ) && ( TeamId != Auto_Robot_Detect.teamId.team7228 ) )
             return MIN_WRIST_STICK_POS;
         if (pos < MIN_WRIST_POS)
             return MIN_WRIST_POS;
@@ -224,7 +246,7 @@ public class Arm {
 
         int offset = (int) (adjustrate * MAX_LIFT_ADJUST_VALUE +.5);
 
-        if (lift.getCurrentPosition() < 5 )
+        if ((lift.getCurrentPosition() < 20 ) && (dir == lift_dir.down))
             offset = MIN_LIFT_ADJUST_VALUE;
 
         switch(dir)
@@ -250,7 +272,7 @@ public class Arm {
 
         int offset = (int) (adjustrate * MAX_WRIST_ADJUST_VALUE +.5);
 
-        if (wrist.getCurrentPosition() < 10 )
+        if ((wrist.getCurrentPosition() < 20 ) && (dir == WRIST_DIR.BACKWARD) && ( TeamId != Auto_Robot_Detect.teamId.team7228 ) )
             offset = MIN_WRIST_ADJUST_VALUE;
 
         switch(dir)

@@ -10,6 +10,27 @@
 // Custom definitions may go here
 // Include common definitions from above.
 apply from: '../build.common.gradle'
+android {
+    defaultConfig {
+        resValue "string", "TeamCode_BuildID", buildID()
+    }
+}
+
+def buildID() {
+    def date = new Date()
+    def buildID = gitBranch() + "_" + date.format("yyyyMMdd_HHmmss")
+    buildID
+}
+
+def gitBranch() {
+    def branch = ""
+    def proc = "git rev-parse --abbrev-ref HEAD".execute()
+    proc.in.eachLine{ line -> branch = line }
+    proc.err.eachLine { line -> println line }
+    proc.waitFor()
+    branch
+}
+
 dependencies {
     implementation project(':openCVLibrary3')
     implementation project(':dogecv')

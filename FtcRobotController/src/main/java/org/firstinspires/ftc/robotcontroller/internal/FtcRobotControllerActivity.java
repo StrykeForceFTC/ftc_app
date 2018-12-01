@@ -317,6 +317,16 @@ public class FtcRobotControllerActivity extends Activity
     programmingModeController = new ProgrammingModeControllerImpl(
             this, (TextView) findViewById(R.id.textRemoteProgrammingMode), programmingWebHandlers);
 
+    // Display TeamCode Build ID on RC screen
+    TextView buildID = (TextView) findViewById(R.id.textTeamCodeBuild);
+    try {
+      int resID = getResources().getIdentifier("TeamCode_BuildID", "string", getPackageName());
+      String str = "TeamCode Build ID: " + getString(resID);
+      buildID.setText(str);
+      buildID.setVisibility(View.VISIBLE);
+    }
+    catch (Exception e) { }
+
     updateUI = createUpdateUI();
     callback = createUICallback(updateUI);
 
