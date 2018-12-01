@@ -172,13 +172,30 @@ public abstract class AutonLinearBase extends LinearOpMode
 
             case team15106:
             {
-                RELEASE_ROTATE_DEG = 172.0;
-                GO_TO_GOLD_ROTATE_TO_LEFT_DEG = 40;
-                GO_TO_GOLD_FWD_LEFT_IN = 8.25;
-                GO_TO_GOLD_ROTATE_TO_MID_DEG = 15;
-                GO_TO_GOLD_FWD_RIGHT_IN = 8.25;
-// (DO NOT DELETE) Crater skew adjustment
-//(DO NOT DELETE)              PARK_DISTANCE_IN = 48;
+                UPPER_Y_LIMIT_FOR_RIGHT = 200;
+
+                LIFT_SPEED = 10;
+                WRIST_SPEED = 10;
+
+                RELEASE_STRAFE_IN = 4.0;
+                RELEASE_MOVE_AWAY_IN = 7.0;
+                RELEASE_ROTATE_DEG = 172.0; // 172
+
+                LOAD_GOLD_FWD_IN = 4.0;
+
+                GO_TO_GOLD_ROTATE_TO_LEFT_DEG = 40; // 40
+                GO_TO_GOLD_FWD_LEFT_IN = 8.25;  // 8.25
+
+                GO_TO_GOLD_ROTATE_TO_MID_DEG = 15;  // 15
+                GO_TO_GOLD_FWD_MID_IN = 4.75;   // 4.25
+
+                GO_TO_GOLD_ROTATE_TO_RIGHT_DEG = 22; // 25
+                GO_TO_GOLD_FWD_RIGHT_IN = 9.25; // 8.25
+
+                ROTATE_TO_KNOCK_OFF_SAMPLE_DEG = 35; // 30
+
+                PARK_DISTANCE_IN = 44.0; // 44
+
                 break;
             }
         }
