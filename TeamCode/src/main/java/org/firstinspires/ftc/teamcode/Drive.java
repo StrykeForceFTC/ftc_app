@@ -433,6 +433,8 @@ public class Drive
         // Loop while waiting for motors to get to target, and set a timeout
         while ( notAtTarget && ( limitTimer.seconds() < MAX_SECONDS ) )
         {
+            // Allow other processes to run; same as idle() in linear op mode
+            Thread.yield();
 
             //! If any motor finishes, we stop
             notAtTarget = motors[ FRONT_AXLE ][ LEFT ].isBusy() && motors[ FRONT_AXLE ][ RIGHT ].isBusy() &&
@@ -464,6 +466,8 @@ public class Drive
 
         while ( notAtTarget && ( limitTimer.seconds() < MAX_SECONDS ) )
         {
+            // Allow other processes to run; same as idle() in linear op mode
+            Thread.yield();
 
             //! If any motor finishes, we stop
             notAtTarget = motors[ FRONT_AXLE ][ LEFT ].isBusy() && motors[ FRONT_AXLE ][ RIGHT ].isBusy() &&
