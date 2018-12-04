@@ -106,7 +106,7 @@ public abstract class AutonLinearBase extends LinearOpMode
         // Find what robot you are running and set up hardware
         robotDetector = new Auto_Robot_Detect( hardwareMap );
         TeamId = robotDetector.TeamId;
-        go = new Drive( hardwareMap );
+        go = new Drive( hardwareMap, true );
         loader = new Loader( hardwareMap );
         arm = new Arm( hardwareMap, true, TeamId );
 
