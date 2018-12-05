@@ -23,6 +23,7 @@ public abstract class AutonLinearBase extends LinearOpMode
     public Loader loader = null;
     public Auto_Robot_Detect robotDetector = null;
     public Arm arm = null;
+    protected Gyro gyro = null;
 
     // Detectors
     private GoldAlignDetectorVertical detector;
@@ -109,6 +110,7 @@ public abstract class AutonLinearBase extends LinearOpMode
         go = new Drive( hardwareMap, true );
         loader = new Loader( hardwareMap );
         arm = new Arm( hardwareMap, true, TeamId );
+        gyro = new Gyro( hardwareMap );
 
         /*
          ** Rest of this method is about starting up a Gold detector from
