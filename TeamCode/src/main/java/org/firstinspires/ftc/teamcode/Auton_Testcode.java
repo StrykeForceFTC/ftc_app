@@ -73,6 +73,7 @@ public class Auton_Testcode extends AutonLinearBase
         // simple states for stepping through release
         double rotateDeg = 5.0;
         double driveIn = 2.0;
+        double strafeIn = 2.0;
 
         // Ensure gold position is unknown for testing
         // release, find gold and move to mineral
@@ -121,7 +122,29 @@ public class Auton_Testcode extends AutonLinearBase
                 {
                     rotateDeg -= 5.0;
                 }
-                while ( gamepad1.dpad_right )
+                while ( gamepad1.dpad_left )
+                {
+
+                }
+            }
+
+            if ( gamepad2.dpad_right )
+            {
+                strafeIn += 1.0;
+
+                while ( gamepad2.dpad_right )
+                {
+
+                }
+
+            }
+            else if ( gamepad2.dpad_left )
+            {
+                if ( strafeIn >= 2.0 )
+                {
+                    strafeIn -= 1.0;
+                }
+                while ( gamepad2.dpad_left )
                 {
 
                 }
@@ -143,6 +166,28 @@ public class Auton_Testcode extends AutonLinearBase
             else if ( gamepad1.y )
             {
                 go.AutonMove( Drive.DIRECTION.REVERSE, driveIn );
+            }
+
+            if ( gamepad2.dpad_up )
+            {
+                // Lower the bot
+                arm.position_lift( Arm.lift_pos.hook_lander, LIFT_SPEED );
+                arm.WaitForInPos();
+            }
+            else if ( gamepad2.dpad_down )
+            {
+                // Raise the bot
+                arm.position_lift( Arm.lift_pos.ZERO, LIFT_SPEED );
+                arm.WaitForInPos();
+            }
+
+            if ( gamepad2.a )
+            {
+                go.AutonMove( Drive.DIRECTION.RIGHT, strafeIn );
+            }
+            else if ( gamepad2.b )
+            {
+                go.AutonMove( Drive.DIRECTION.LEFT, strafeIn );
             }
 
             /*    REMOVE STANDARD STATE MACHINE WHILE TRYING NEW THINGS
@@ -193,7 +238,12 @@ public class Auton_Testcode extends AutonLinearBase
             zAngle = gyro.GetZAngle();
             telemetry.addData( " Z: ", zAngle )
                      .addData( " Drive inches: ", driveIn )
-                     .addData( " Rotate deg: ", rotateDeg );
+                     .addData( " Rotate deg: ", rotateDeg )
+                     .addData( " Strafe In: ", strafeIn );
+            telemetry.addLine( "Gamepad1 Dpad: Up: +1 drive, Down: -1 drive, Right: +5deg, Left: -5deg");
+            telemetry.addLine( "Gamepad1 Buttons: A: Rotate CW, B: Rotate CCW, X: Drive FWD, Y: Drive REV" );
+            telemetry.addLine( "Gamepad2 Dpad: Up: Lower robot, Down: Raise robot, Right: +1 Strafe, Left: -1 Strafe" );
+            telemetry.addLine( "Gamepad2 Buttons: A: Strafe right, B: Strafe Left" );
             AddStdAutonTelemetry( true );
 
             telemetry.update();
