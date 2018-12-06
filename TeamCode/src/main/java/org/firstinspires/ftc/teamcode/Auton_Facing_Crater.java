@@ -158,6 +158,10 @@ public class Auton_Facing_Crater extends AutonLinearBase
             }
         }
 
+        double zAngle = gyro.GetZAngle();
+        telemetry.addData( " Z: ", zAngle );
+        telemetry.update();
+
         // Wait hit till start button pressed
         waitForStart();
         runtime.reset();
@@ -247,6 +251,8 @@ public class Auton_Facing_Crater extends AutonLinearBase
 
             }
 
+            zAngle = gyro.GetZAngle();
+            telemetry.addData( " Z Angle: ", zAngle );
             telemetry.addData("Is Found", GoldIsFound());   // Is there a gold block in view
             telemetry.addData("Y Pos", GoldYPosition());    // Gold Y pos.
 
