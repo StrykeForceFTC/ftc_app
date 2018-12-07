@@ -46,15 +46,15 @@ public class Drive
 
     // Constants for power in auton
     final private static double[] AUTON_POWER = {
-                                                    0.8,   // Forward
-                                                    0.8,   // Reverse
-                                                    0.8,   // Right
-                                                    0.8    // Left
+                                                    0.9,   // Forward
+                                                    0.9,   // Reverse
+                                                    0.9,   // Right
+                                                    0.9    // Left
                                                 };
 
     final private static double[] AUTON_POWER_ROTATE = {
-                                                            0.7,   // Clockwise
-                                                            0.7,   // Counterclockwise
+                                                            0.8,   // Clockwise
+                                                            0.8,   // Counterclockwise
                                                        };
 
     final private static double AUTON_POWER_FINAL = 0.5;
