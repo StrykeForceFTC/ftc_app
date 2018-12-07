@@ -190,7 +190,6 @@ public class Auton_Testcode extends AutonLinearBase
                 go.AutonMove( Drive.DIRECTION.LEFT, strafeIn );
             }
 
-            /*    REMOVE STANDARD STATE MACHINE WHILE TRYING NEW THINGS
             //Auton steps
             switch( step )
             {
@@ -211,7 +210,7 @@ public class Auton_Testcode extends AutonLinearBase
 
                     // Move to next step
                     //step = step.Next();
-                    step = step.Next();
+                    // step = step.Next();
                     break;
                 }
 
@@ -219,7 +218,15 @@ public class Auton_Testcode extends AutonLinearBase
                 {
                     // Sample gold mineral
                     GoToGold();
-                    step = step.STOP;
+                    step = step.LOAD_GOLD;
+                    break;
+                }
+
+                case LOAD_GOLD:
+                {
+                    // Can't load gold at this time
+                    //LoadGold();
+                    // step = step.Next();
                     break;
                 }
 
@@ -233,7 +240,6 @@ public class Auton_Testcode extends AutonLinearBase
                 default:
                     break;
             }
-            */
 
             zAngle = gyro.GetZAngle();
             telemetry.addData( " Z: ", zAngle )

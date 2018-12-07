@@ -101,6 +101,8 @@ public abstract class AutonLinearBase extends LinearOpMode
 
     protected double ROTATE_TO_KNOCK_OFF_SAMPLE_DEG = 30;
 
+    protected double startingZAngle = 0;
+
     // Method to initialize any connected hardware
     public void InitHardware( )
     {
@@ -141,7 +143,7 @@ public abstract class AutonLinearBase extends LinearOpMode
             case team7228:
             {
                 RELEASE_ROTATE_DEG = 160;
-                RELEASE_MOVE_AWAY_IN = 9.0;
+                RELEASE_MOVE_AWAY_IN = 7.0;
                 RELEASE_STRAFE_IN = 4.0;
 
                 UPPER_Y_LIMIT_FOR_RIGHT = 250;
@@ -212,6 +214,7 @@ public abstract class AutonLinearBase extends LinearOpMode
 
     protected void AddStdAutonTelemetry(boolean tfShowEncoderValues)
     {
+        telemetry.addData( "Gold Position ", gold.toString() );
         if (tfShowEncoderValues) {
             telemetry.addLine("Drive Encoders: ")
                     .addData("FL ", go.GetEncoderFrontLeft())
@@ -267,6 +270,9 @@ public abstract class AutonLinearBase extends LinearOpMode
     */
     protected void ReleaseLander( )
     {
+        // Record starting angle
+        startingZAngle = gyro.GetZAngle();
+
         // Raise lift to drop the robot to the ground & update telemetry
         arm.position_lift( Arm.lift_pos.hook_lander, LIFT_SPEED );
         telemetry.addLine("LOWERING");
@@ -281,6 +287,7 @@ public abstract class AutonLinearBase extends LinearOpMode
 
         // Strafe robot hook off of lander & back away from lander
         go.AutonMove( Drive.DIRECTION.RIGHT, RELEASE_STRAFE_IN );
+        GyroCorrect();
         go.AutonMove( Drive.DIRECTION.REVERSE, RELEASE_MOVE_AWAY_IN );
 
         // Start raising the arm to a near vertical position and strafe back to near center on the lander side
@@ -289,6 +296,7 @@ public abstract class AutonLinearBase extends LinearOpMode
         go.AutonMove( Drive.DIRECTION.LEFT, RELEASE_STRAFE_IN );
 
         // Rotate to face the minerals
+        RELEASE_ROTATE_DEG = RELEASE_ROTATE_DEG - ( gyro.GetZAngle() - startingZAngle );
         go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, RELEASE_ROTATE_DEG );
 
         // Wrist is now left in unload position while finding gold position
@@ -347,6 +355,8 @@ public abstract class AutonLinearBase extends LinearOpMode
             attempts++;
         }
     }
+
+
 
 
     // Method to move to gold mineral position
@@ -467,6 +477,23 @@ public abstract class AutonLinearBase extends LinearOpMode
         // Raise arm to move position?
         go.AutonMove( Drive.DIRECTION.REVERSE, PARK_DISTANCE_IN );
 
+    }
+
+    public void GyroCorrect ( )
+    {
+        double angle = gyro.GetZAngle() - startingZAngle;
+
+        if ( Math.abs( angle ) > 4.0 )
+        {
+            if ( angle > 0.0 )
+            {
+                go.AutonMoveRotate(Drive.ROTATION.CLOCKWISE, angle);
+            }
+            else
+            {
+                go.AutonMoveRotate(Drive.ROTATION.COUNTERCLOCKWISE, -angle);
+            }
+        }
     }
 
 }
