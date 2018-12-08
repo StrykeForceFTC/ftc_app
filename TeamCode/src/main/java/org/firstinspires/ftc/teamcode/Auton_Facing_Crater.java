@@ -230,7 +230,7 @@ public class Auton_Facing_Crater extends AutonLinearBase
                 {
                     // Drop marker and gold sample
                     UnloadGoldAndMarker();
-                    step = step.Next();
+                    step = step.STOP;
                     break;
                 }
 

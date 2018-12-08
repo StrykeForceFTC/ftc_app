@@ -57,7 +57,7 @@ public class Drive
                                                             0.8,   // Counterclockwise
                                                        };
 
-    final private static double AUTON_POWER_FINAL = 0.5;
+    final private static double AUTON_POWER_FINAL = 0.4;
 
     // Time delay while waiting for wheels to get to targets in auton
     final private static double DELAY_DURING_GO_TO_POSITION_ms = 40.0;
@@ -455,6 +455,11 @@ public class Drive
         boolean notAtTarget = true;
         limitTimer.reset();
         boolean power_reduced = false;
+        double ticks_4_slowdown = TICKS_LEFT_FOR_SLOWDOWN;
+        if ( distance_in > 12.0 )
+        {
+            ticks_4_slowdown = 2.0  * ticks_4_slowdown;
+        }
 
         // Loop while waiting for motors to get to target, and set a timeout
         while ( notAtTarget && ( limitTimer.seconds() < MAX_SECONDS ) )
@@ -468,7 +473,7 @@ public class Drive
             // When we get close to objective, slow down to lower speed
             int delta = Math.abs( motors[ FRONT_AXLE ][ RIGHT ].getCurrentPosition() - front_right_start );
             int ticks_left = Math.abs( ticks_2_move - delta );
-            if ( !power_reduced && ( ticks_left <= TICKS_LEFT_FOR_SLOWDOWN ) )
+            if ( !power_reduced && ( ticks_left <= ticks_4_slowdown ) )
             {
                 power_reduced = true;
                 SetMotorPowersAuton( direction, AUTON_POWER_FINAL );
