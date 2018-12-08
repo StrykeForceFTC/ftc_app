@@ -79,21 +79,21 @@ public class Auton_Facing_Crater extends AutonLinearBase
                 DRIVE_DEPOT_TURN_2_WALL_MID_DEG = 87;
 
                 DRIVE_DEPOT_MOVE_2_WALL_MID_IN = 47;
-                DRIVE_DEPOT_MOVE_2_WALL_LEFT_IN = 42;
+                DRIVE_DEPOT_MOVE_2_WALL_LEFT_IN = 44;
                 DRIVE_DEPOT_MOVE_2_WALL_RIGHT_IN = 50;
 
-                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_LEFT_DEG = 28;
+                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_LEFT_DEG = 24;
                 DRIVE_DEPOT_ROT_PARALLEL_2_WALL_MID_DEG = 21;
                 DRIVE_DEPOT_ROT_PARALLEL_2_WALL_RIGHT_DEG = 18;
 
-                DRIVE_DEPOT_FWD_2_DEPOT_LEFT_IN = 23 ;
-                DRIVE_DEPOT_FWD_2_DEPOT_MID_IN = 21;
-                DRIVE_DEPOT_FWD_2_DEPOT_RIGHT_IN = 21;
+                DRIVE_DEPOT_FWD_2_DEPOT_LEFT_IN = 22 ;
+                DRIVE_DEPOT_FWD_2_DEPOT_MID_IN = 18;
+                DRIVE_DEPOT_FWD_2_DEPOT_RIGHT_IN = 18;
 
                 ROTATE_BEFORE_DROP_DEG = 0;
                 ROTATE_AFTER_DROP_DEG = 7;
 
-                PARK_DISTANCE_IN = 44.0;
+                PARK_DISTANCE_IN = 47.0;
 
                 break;
             }
@@ -230,7 +230,7 @@ public class Auton_Facing_Crater extends AutonLinearBase
                 {
                     // Drop marker and gold sample
                     UnloadGoldAndMarker();
-                    step = step.STOP;
+                    step = step.Next();
                     break;
                 }
 
