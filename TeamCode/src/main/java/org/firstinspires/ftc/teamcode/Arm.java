@@ -166,7 +166,7 @@ public class Arm {
                 switch (TeamId)
                 {
                     case team7228:
-                        return 1300;
+                        return 1250;
                     case team8553:
                         return 600;
                     case team15106:
