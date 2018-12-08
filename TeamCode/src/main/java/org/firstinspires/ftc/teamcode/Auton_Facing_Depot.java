@@ -78,26 +78,26 @@ public class Auton_Facing_Depot extends AutonLinearBase
         {
             case team7228:
             {
-                DRIVE_DEPOT_TURN_2_WALL_LEFT_DEG = 90.0;
+                DRIVE_DEPOT_TURN_2_WALL_LEFT_DEG = 86.5;
                 DRIVE_DEPOT_TURN_2_WALL_MID_DEG = 60;
                 DRIVE_DEPOT_TURN_2_WALL_RIGHT_DEG = 23;
 
-                DRIVE_DEPOT_MOVE_2_WALL_LEFT_IN = 30.5;
+                DRIVE_DEPOT_MOVE_2_WALL_LEFT_IN = 32;
                 DRIVE_DEPOT_MOVE_2_WALL_MID_IN = 37.5;
                 DRIVE_DEPOT_MOVE_2_WALL_RIGHT_IN = 40;
 
-                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_LEFT_DEG = 62;
+                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_LEFT_DEG = 57;
                 DRIVE_DEPOT_ROT_PARALLEL_2_WALL_MID_DEG = 55;
                 DRIVE_DEPOT_ROT_PARALLEL_2_WALL_RIGHT_DEG = 53 ;
 
                 DRIVE_DEPOT_FWD_2_DEPOT_LEFT_IN = 32;
-                DRIVE_DEPOT_FWD_2_DEPOT_MID_IN = 31;
+                DRIVE_DEPOT_FWD_2_DEPOT_MID_IN = 34;
                 DRIVE_DEPOT_FWD_2_DEPOT_RIGHT_IN = 32;
 
                 ROTATE_BEFORE_DROP_DEG = 0;
-                ROTATE_AFTER_DROP_DEG = 7;
+                ROTATE_AFTER_DROP_DEG = 15;
 
-                PARK_DISTANCE_IN = 49;
+                PARK_DISTANCE_IN = 40;
                 
                 break;
             }
@@ -229,7 +229,7 @@ public class Auton_Facing_Depot extends AutonLinearBase
                 {
                     // Drop marker and gold sample
                     UnloadGoldAndMarker();
-                    step = step.STOP;
+                    step = step.Next();
                     break;
                 }
 
