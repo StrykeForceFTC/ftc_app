@@ -86,7 +86,7 @@ public class Auton_Facing_Crater extends AutonLinearBase
                 DRIVE_DEPOT_ROT_PARALLEL_2_WALL_MID_DEG = 25;
                 DRIVE_DEPOT_ROT_PARALLEL_2_WALL_RIGHT_DEG = 18;
 
-                DRIVE_DEPOT_FWD_2_DEPOT_LEFT_IN = 26;
+                DRIVE_DEPOT_FWD_2_DEPOT_LEFT_IN = 26 ;
                 DRIVE_DEPOT_FWD_2_DEPOT_MID_IN = 24;
                 DRIVE_DEPOT_FWD_2_DEPOT_RIGHT_IN = 24;
 
