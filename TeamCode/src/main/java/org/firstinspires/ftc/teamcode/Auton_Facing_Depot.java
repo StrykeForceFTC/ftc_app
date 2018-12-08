@@ -78,19 +78,19 @@ public class Auton_Facing_Depot extends AutonLinearBase
         {
             case team7228:
             {
-                DRIVE_DEPOT_TURN_2_WALL_LEFT_DEG = 82.0;
-                DRIVE_DEPOT_TURN_2_WALL_MID_DEG = 75;
+                DRIVE_DEPOT_TURN_2_WALL_LEFT_DEG = 105.0;
+                DRIVE_DEPOT_TURN_2_WALL_MID_DEG = 70;
                 DRIVE_DEPOT_TURN_2_WALL_RIGHT_DEG = 30;
 
-                DRIVE_DEPOT_MOVE_2_WALL_LEFT_IN = 29.25;
-                DRIVE_DEPOT_MOVE_2_WALL_MID_IN = 36;
+                DRIVE_DEPOT_MOVE_2_WALL_LEFT_IN = 33.5;
+                DRIVE_DEPOT_MOVE_2_WALL_MID_IN = 34.5;
                 DRIVE_DEPOT_MOVE_2_WALL_RIGHT_IN = 38;
 
-                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_LEFT_DEG = 51;
+                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_LEFT_DEG = 62;
                 DRIVE_DEPOT_ROT_PARALLEL_2_WALL_MID_DEG = 67;
                 DRIVE_DEPOT_ROT_PARALLEL_2_WALL_RIGHT_DEG = 62;
 
-                DRIVE_DEPOT_FWD_2_DEPOT_LEFT_IN = 31.5;
+                DRIVE_DEPOT_FWD_2_DEPOT_LEFT_IN = 32;
                 DRIVE_DEPOT_FWD_2_DEPOT_MID_IN = 29;
                 DRIVE_DEPOT_FWD_2_DEPOT_RIGHT_IN = 29;
 
@@ -221,7 +221,7 @@ public class Auton_Facing_Depot extends AutonLinearBase
                 {
                     // Move from completion of sampling to Depot
                     DriveToDepot( );
-                    step = step.STOP;
+                    step = step.Next();
                     break;
                 }
 
@@ -229,7 +229,7 @@ public class Auton_Facing_Depot extends AutonLinearBase
                 {
                     // Drop marker and gold sample
                     UnloadGoldAndMarker();
-                    step = step.Next();
+                    step = step.STOP;
                     break;
                 }
 
