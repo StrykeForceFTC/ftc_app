@@ -209,8 +209,7 @@ public class Auton_Testcode extends AutonLinearBase
                     FindGold();
 
                     // Move to next step
-                    //step = step.Next();
-                    // step = step.Next();
+                    step = step.Next();
                     break;
                 }
 
