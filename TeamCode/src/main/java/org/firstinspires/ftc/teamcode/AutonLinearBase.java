@@ -23,6 +23,7 @@ public abstract class AutonLinearBase extends LinearOpMode
     public Loader loader = null;
     public Auto_Robot_Detect robotDetector = null;
     public Arm arm = null;
+    protected Gyro gyro = null;
 
     // Detectors
     private GoldAlignDetectorVertical detector;
@@ -100,15 +101,18 @@ public abstract class AutonLinearBase extends LinearOpMode
 
     protected double ROTATE_TO_KNOCK_OFF_SAMPLE_DEG = 30;
 
+    protected double startingZAngle = 0;
+
     // Method to initialize any connected hardware
     public void InitHardware( )
     {
         // Find what robot you are running and set up hardware
         robotDetector = new Auto_Robot_Detect( hardwareMap );
         TeamId = robotDetector.TeamId;
-        go = new Drive( hardwareMap );
+        go = new Drive( hardwareMap, true );
         loader = new Loader( hardwareMap );
         arm = new Arm( hardwareMap, true, TeamId );
+        gyro = new Gyro( hardwareMap );
 
         /*
          ** Rest of this method is about starting up a Gold detector from
@@ -138,20 +142,20 @@ public abstract class AutonLinearBase extends LinearOpMode
         {
             case team7228:
             {
-                RELEASE_ROTATE_DEG = 160;
+                RELEASE_ROTATE_DEG = 162;
                 RELEASE_MOVE_AWAY_IN = 9.0;
-                RELEASE_STRAFE_IN = 4.0;
+                RELEASE_STRAFE_IN = 5.0;
 
                 UPPER_Y_LIMIT_FOR_RIGHT = 250;
 
-                GO_TO_GOLD_FWD_MID_IN = 4.75;
+                GO_TO_GOLD_FWD_MID_IN = 3;
                 GO_TO_GOLD_ROTATE_TO_MID_DEG = 15;              // Counter clockwise
 
-                GO_TO_GOLD_FWD_LEFT_IN = 9.5;
-                GO_TO_GOLD_ROTATE_TO_LEFT_DEG = 36;            // Mid rotate plus extra to get to left, CCW
+                GO_TO_GOLD_FWD_LEFT_IN = 6.5;
+                GO_TO_GOLD_ROTATE_TO_LEFT_DEG = 38;            // Mid rotate plus extra to get to left, CCW
 
-                GO_TO_GOLD_FWD_RIGHT_IN = 9 ;
-                GO_TO_GOLD_ROTATE_TO_RIGHT_DEG = 17 ;           // Clockwise! to get to right
+                GO_TO_GOLD_FWD_RIGHT_IN = 7.5 ;
+                GO_TO_GOLD_ROTATE_TO_RIGHT_DEG = 18 ;           // Clockwise! to get to right
 
                 ROTATE_TO_KNOCK_OFF_SAMPLE_DEG = 30;
 
@@ -210,6 +214,7 @@ public abstract class AutonLinearBase extends LinearOpMode
 
     protected void AddStdAutonTelemetry(boolean tfShowEncoderValues)
     {
+        telemetry.addData( "Gold Position ", gold.toString() );
         if (tfShowEncoderValues) {
             telemetry.addLine("Drive Encoders: ")
                     .addData("FL ", go.GetEncoderFrontLeft())
@@ -265,6 +270,9 @@ public abstract class AutonLinearBase extends LinearOpMode
     */
     protected void ReleaseLander( )
     {
+        // Record starting angle
+        startingZAngle = gyro.GetZAngle();
+
         // Raise lift to drop the robot to the ground & update telemetry
         arm.position_lift( Arm.lift_pos.hook_lander, LIFT_SPEED );
         telemetry.addLine("LOWERING");
@@ -279,6 +287,7 @@ public abstract class AutonLinearBase extends LinearOpMode
 
         // Strafe robot hook off of lander & back away from lander
         go.AutonMove( Drive.DIRECTION.RIGHT, RELEASE_STRAFE_IN );
+        GyroCorrect();
         go.AutonMove( Drive.DIRECTION.REVERSE, RELEASE_MOVE_AWAY_IN );
 
         // Start raising the arm to a near vertical position and strafe back to near center on the lander side
@@ -287,6 +296,7 @@ public abstract class AutonLinearBase extends LinearOpMode
         go.AutonMove( Drive.DIRECTION.LEFT, RELEASE_STRAFE_IN );
 
         // Rotate to face the minerals
+        RELEASE_ROTATE_DEG = RELEASE_ROTATE_DEG - ( gyro.GetZAngle() - startingZAngle );
         go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, RELEASE_ROTATE_DEG );
 
         // Wrist is now left in unload position while finding gold position
@@ -345,6 +355,8 @@ public abstract class AutonLinearBase extends LinearOpMode
             attempts++;
         }
     }
+
+
 
 
     // Method to move to gold mineral position
@@ -465,6 +477,23 @@ public abstract class AutonLinearBase extends LinearOpMode
         // Raise arm to move position?
         go.AutonMove( Drive.DIRECTION.REVERSE, PARK_DISTANCE_IN );
 
+    }
+
+    public void GyroCorrect ( )
+    {
+        double angle = gyro.GetZAngle() - startingZAngle;
+
+        if ( Math.abs( angle ) > 4.0 )
+        {
+            if ( angle > 0.0 )
+            {
+                go.AutonMoveRotate(Drive.ROTATION.CLOCKWISE, angle);
+            }
+            else
+            {
+                go.AutonMoveRotate(Drive.ROTATION.COUNTERCLOCKWISE, -angle);
+            }
+        }
     }
 
 }

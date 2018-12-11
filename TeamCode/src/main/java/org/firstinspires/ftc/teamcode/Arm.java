@@ -160,13 +160,13 @@ public class Arm {
             case fullup:
                 return 4800;
             case hook_lander:
-                return 4400;
+                return 4450;
             case sampling:
             {
                 switch (TeamId)
                 {
                     case team7228:
-                        return 1300;
+                        return 1250;
                     case team8553:
                         return 600;
                     case team15106:
