@@ -6,7 +6,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  *
- * Auton Program mainly here to test Auton Drive and other Functions in
+ * Auton Program mainly here to test Auton Drive and other Functions. Also
+ * configured to be used as a "short" auton on crater side that just samples
+ * and then parks on crater in front of robot.
  *
  */
 @Autonomous(name = "Auton_Testcode", group = "Linear Opmode")
@@ -82,7 +84,7 @@ public class Auton_Testcode extends AutonLinearBase
         // Loop until stop or forced to end
         while ( opModeIsActive( ) )
         {
-
+/* Removing gamepad controls from auton test in case it gets used
             if ( gamepad1.dpad_up )
             {
                 driveIn += 1.0;
@@ -189,6 +191,7 @@ public class Auton_Testcode extends AutonLinearBase
             {
                 go.AutonMove( Drive.DIRECTION.LEFT, strafeIn );
             }
+*/
 
             //Auton steps
             switch( step )
@@ -217,7 +220,7 @@ public class Auton_Testcode extends AutonLinearBase
                 {
                     // Sample gold mineral
                     GoToGold();
-                    step = step.LOAD_GOLD;
+                    step = step.PARK;
                     break;
                 }
 
@@ -226,6 +229,14 @@ public class Auton_Testcode extends AutonLinearBase
                     // Can't load gold at this time
                     //LoadGold();
                     // step = step.Next();
+                    break;
+                }
+
+                case PARK:
+                {
+                    // Park the robot on crater
+                    ParkTheRobot();
+                    step = step.Next();
                     break;
                 }
 
@@ -241,14 +252,16 @@ public class Auton_Testcode extends AutonLinearBase
             }
 
             zAngle = gyro.GetZAngle();
-            telemetry.addData( " Z: ", zAngle )
-                     .addData( " Drive inches: ", driveIn )
+            telemetry.addData( " Z: ", zAngle );
+/* Remove unneeded telemetry to avoid confusion
+            telemetry.addData( " Drive inches: ", driveIn )
                      .addData( " Rotate deg: ", rotateDeg )
                      .addData( " Strafe In: ", strafeIn );
             telemetry.addLine( "Gamepad1 Dpad: Up: +1 drive, Down: -1 drive, Right: +5deg, Left: -5deg");
             telemetry.addLine( "Gamepad1 Buttons: A: Rotate CW, B: Rotate CCW, X: Drive FWD, Y: Drive REV" );
             telemetry.addLine( "Gamepad2 Dpad: Up: Lower robot, Down: Raise robot, Right: +1 Strafe, Left: -1 Strafe" );
             telemetry.addLine( "Gamepad2 Buttons: A: Strafe right, B: Strafe Left" );
+*/
             AddStdAutonTelemetry( true );
 
             telemetry.update();
@@ -271,6 +284,42 @@ public class Auton_Testcode extends AutonLinearBase
         go.AutonMove( Drive.DIRECTION.FORWARD, DRIVE_DEPOT_FWD_2_DEPOT );
 
     }
+
+    // Method to get to park position - hard coded to attempt to park on crater in front of robot
+    // after sampling crater side
+    @Override
+    protected void ParkTheRobot( )
+    {
+        // At end of going to gold, wrist starts moving to unload, so use gold position
+        // to determine how to move to crater
+        switch ( gold )
+        {
+            case LEFT_POS:
+            {
+                // For left, wait for wrist to finish and then drive forward
+                arm.WaitForInPos();
+                go.AutonMove( Drive.DIRECTION.FORWARD, 10.0 );
+                break;
+            }
+
+            case MID_POS:
+            case RIGHT_POS:
+            {
+                // rotate CCW 15deg and then move fwd 10" to park, remember, wrist is
+                // moving to load during this. Right & mid are same.
+                go.AutonMoveRotate( Drive.ROTATION.COUNTERCLOCKWISE, 15.0 );
+                go.AutonMove( Drive.DIRECTION.FORWARD, 10.0 );
+                break;
+            }
+
+        }
+
+        // Position wrist out front to give best chance of being over crater
+        arm.position_wrist( Arm.WRIST_POS.MOVE, WRIST_SPEED );
+        arm.WaitForInPos();
+    }
+
+
 
 }
 
