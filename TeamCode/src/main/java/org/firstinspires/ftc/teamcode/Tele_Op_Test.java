@@ -52,9 +52,6 @@ public class Tele_Op_Test extends Tele_Op_Base
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    private Arm arm = null;
-    private DigitalChannel io1 = null;
-    private DigitalChannel io2 = null;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -64,9 +61,6 @@ public class Tele_Op_Test extends Tele_Op_Base
     {
         // Use base class to init HW
         HwInit();
-        arm = new Arm( hardwareMap );
-        io1 = hardwareMap.digitalChannel.get("io1");
-        io2 = hardwareMap.digitalChannel.get("io2");
     }
 
     /*
@@ -100,10 +94,6 @@ public class Tele_Op_Test extends Tele_Op_Base
         go.MoveSimple( robotLeftRight, robotForwardBack, robotRotate );
         ProcessRaiseArm( );
         ProcessLoadingInput();
-
-        telemetry.addLine("Digital IO: ")
-                .addData("io1", io1.getState())
-                .addData("io2", io2.getState());
 
         AddStdTeleOpTelemetry();
         telemetry.update();

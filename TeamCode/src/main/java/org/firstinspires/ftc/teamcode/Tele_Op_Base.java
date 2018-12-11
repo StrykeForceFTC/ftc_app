@@ -80,7 +80,7 @@ public abstract class Tele_Op_Base extends OpMode
         */
         robotDetector = new Auto_Robot_Detect( hardwareMap );
         TeamId = robotDetector.TeamId;
-        go = new Drive( hardwareMap );
+        go = new Drive( hardwareMap, false );
         loader = new Loader( hardwareMap );
         arm = new Arm( hardwareMap );
 

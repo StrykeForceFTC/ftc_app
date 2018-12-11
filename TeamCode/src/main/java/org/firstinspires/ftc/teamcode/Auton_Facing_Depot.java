@@ -78,26 +78,26 @@ public class Auton_Facing_Depot extends AutonLinearBase
         {
             case team7228:
             {
-                DRIVE_DEPOT_TURN_2_WALL_LEFT_DEG = 82.0;
-                DRIVE_DEPOT_TURN_2_WALL_MID_DEG = 55;
-                DRIVE_DEPOT_TURN_2_WALL_RIGHT_DEG = 25.0;
+                DRIVE_DEPOT_TURN_2_WALL_LEFT_DEG = 86.5;
+                DRIVE_DEPOT_TURN_2_WALL_MID_DEG = 60;
+                DRIVE_DEPOT_TURN_2_WALL_RIGHT_DEG = 23;
 
-                DRIVE_DEPOT_MOVE_2_WALL_LEFT_IN = 29.25;
-                DRIVE_DEPOT_MOVE_2_WALL_MID_IN = 37.5;
-                DRIVE_DEPOT_MOVE_2_WALL_RIGHT_IN = 41.0;
+                DRIVE_DEPOT_MOVE_2_WALL_LEFT_IN = 32;
+                DRIVE_DEPOT_MOVE_2_WALL_MID_IN = 37;
+                DRIVE_DEPOT_MOVE_2_WALL_RIGHT_IN = 40;
 
-                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_LEFT_DEG = 51;
-                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_MID_DEG = 50;
-                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_RIGHT_DEG = 52;
+                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_LEFT_DEG = 53;
+                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_MID_DEG = 57;
+                DRIVE_DEPOT_ROT_PARALLEL_2_WALL_RIGHT_DEG = 50 ;
 
-                DRIVE_DEPOT_FWD_2_DEPOT_LEFT_IN = 31.5;
-                DRIVE_DEPOT_FWD_2_DEPOT_MID_IN = 31.5;
-                DRIVE_DEPOT_FWD_2_DEPOT_RIGHT_IN = 31.5;
+                DRIVE_DEPOT_FWD_2_DEPOT_LEFT_IN = 35;
+                DRIVE_DEPOT_FWD_2_DEPOT_MID_IN = 31;
+                DRIVE_DEPOT_FWD_2_DEPOT_RIGHT_IN = 31;
 
                 ROTATE_BEFORE_DROP_DEG = 0;
-                ROTATE_AFTER_DROP_DEG = 7;
+                ROTATE_AFTER_DROP_DEG = 11;
 
-                PARK_DISTANCE_IN = 49;
+                PARK_DISTANCE_IN = 53;
                 
                 break;
             }
@@ -159,6 +159,10 @@ public class Auton_Facing_Depot extends AutonLinearBase
                 break;
             }
         }
+
+        double zAngle = gyro.GetZAngle();
+        telemetry.addData( " Z: ", zAngle );
+        telemetry.update();
 
         // Wait hit till start button pressed
         waitForStart();
@@ -246,6 +250,8 @@ public class Auton_Facing_Depot extends AutonLinearBase
 
             }
 
+            zAngle = gyro.GetZAngle();
+            telemetry.addData( " Z Angle: ", zAngle );
             telemetry.addData("Is Found", GoldIsFound() );  // Is there a gold in view
             telemetry.addData("Y Pos", GoldYPosition());    // Gold Y pos.
 
