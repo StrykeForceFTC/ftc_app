@@ -76,9 +76,9 @@ public class Auton_Facing_Crater extends AutonLinearBase
             {
                 DRIVE_DEPOT_TURN_2_WALL_LEFT_DEG = 55;
                 DRIVE_DEPOT_TURN_2_WALL_RIGHT_DEG = 129.0;
-                DRIVE_DEPOT_TURN_2_WALL_MID_DEG = 88;
+                DRIVE_DEPOT_TURN_2_WALL_MID_DEG = 85;
 
-                DRIVE_DEPOT_MOVE_2_WALL_MID_IN = 45;
+                DRIVE_DEPOT_MOVE_2_WALL_MID_IN = 44 ;
                 DRIVE_DEPOT_MOVE_2_WALL_LEFT_IN = 44;
                 DRIVE_DEPOT_MOVE_2_WALL_RIGHT_IN = 48;
 
