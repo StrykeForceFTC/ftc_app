@@ -42,7 +42,7 @@ public class Drive
     final private static double IN_PER_DEGREE = ROBOT_CIRCUM_IN / 360.0;
     final private static double TIX_PER_DEGREE = IN_PER_DEGREE * TICKS_PER_IN;
     final private static double TICKS_LEFT_FOR_SLOWDOWN_ROTATE = TIX_PER_DEGREE * 20.0;
-    final private static double MAX_SECONDS = 6.0;
+    final private static double MAX_SECONDS = 7.0;
 
     // Constants for power in auton
     final private static double[] AUTON_POWER = {
