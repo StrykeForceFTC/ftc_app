@@ -142,7 +142,7 @@ public abstract class AutonLinearBase extends LinearOpMode
         {
             case team7228:
             {
-                RELEASE_ROTATE_DEG = 155;
+                RELEASE_ROTATE_DEG = 162;
                 RELEASE_MOVE_AWAY_IN = 9.0;
                 RELEASE_STRAFE_IN = 5.0;
 
